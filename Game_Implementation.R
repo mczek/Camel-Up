@@ -1,3 +1,8 @@
+# Alex Lyford
+# Tom Rahr
+# Tina Chen
+# Michael Czekanski
+
 library(R6)
 library(stringr)
 library(data.table)
