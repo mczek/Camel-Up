@@ -734,14 +734,15 @@ system <- R6Class(classname = 'System',
                       return(sim$initial_record(name))
                     },
                     simNGames = function(action, nSims){
-                      #camelResults <- data.table()
+                      camelResults <- data.table()
                       #purseResults <- NULL
                       registerDoMC(detectCores()-1)
                       nDiceSeq <- 1:length(self$board$dice.left)
-                      camelResults <- foreach(i = 1:nSims, .combine = rbind) %dopar%{
-                        self$simGame(action, nDiceSeq)
+                      # camelResults <- data.frame()
+                      for(i in 1:nSims) {
+                        camelResults <- rbind(camelResults, self$simGame(action, nDiceSeq))
                       }
-                      registerDoMC(cores = 1)
+                      # registerDoMC(cores = 1)
                       ##   cR <- mclapply(1:nSims, function(i) {
                       ##   # print(paste("Sim Number:", i))
                       ##   self$simGame(action, nDiceSeq)
@@ -1486,7 +1487,7 @@ cleanColors <- function(subColors){
   return(outputColors)
 }
 
-
+# 
 # s <- system$new()
 # 3
 # Tom
@@ -1495,9 +1496,9 @@ cleanColors <- function(subColors){
 # s$take.turn("minus 4")
 # s$graphGame()
 # s$simGame("move", 1:5)
-# 
-# # s$take.turn("move")
-# # 
+
+# s$take.turn("move")
+#
 # a <- s$duplicate()
 # a$createSimGraphs("Blue", "move", 10)
 # a <- s$duplicate()

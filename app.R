@@ -271,7 +271,7 @@ server <- function(input, output) {
                            })
                            
                            observeEvent(input$Sim, {
-                            game$simNGames(simTurnString(), input$nSims)
+                             game$simNGames(simTurnString(), input$nSims)
                            })
                            
                            
@@ -297,7 +297,7 @@ server <- function(input, output) {
                              print(simTurnString())
                              #game$createSimGraphs(input$simColor, simTurnString(), 500)
                              print("print(input$vLinesBool)")
-                             print(input$vLinesBool) ####################################
+                             # print(input$vLinesBool) ####################################
                              game$createSimGraphs(input$simColor, simTurnString(), input$nSims, input$vLinesBool) #####HERE
                            })
                            
