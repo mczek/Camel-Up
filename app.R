@@ -3,8 +3,7 @@ library(tidyverse)
 library(gridExtra)
 library(grid)
 library(shinyalert)
-#setwd("~/Desktop/Camel_Up")
-source("Camel Up Prod.R")
+source("Game_Implementation.R")
 
 
 # Define UI for application that draws a histogram
