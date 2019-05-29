@@ -93,6 +93,7 @@ ui <- fluidPage(
                            checkboxGroupInput("vLinesBool", "Show Standard Deviations:", c("Mean" = TRUE,
                                                                                            "1 SD" = TRUE,
                                                                                            "2 SD" = TRUE)),
+                           textOutput("simTime"),
                            plotOutput("stackSims")),
                   tabPanel("Custom Game",
                            div(style="display: inline-block;vertical-align:top; width: 150px;",actionButton("clearBoard",
@@ -154,7 +155,8 @@ server <- function(input, output) {
                            print("game created")
                            variables <- reactiveValues(customDiceLeft = game$createDiceTable(),
                                                        players = paste(rep("Player", nPlayers), 1:nPlayers),
-                                                       tiles = game$board$getTileSpaces())
+                                                       tiles = game$board$getTileSpaces(),
+                                                       simTime = NULL)
                            
                            output$playerName <- renderUI({
                              selectInput("player", "Select Player", variables$players)
@@ -271,8 +273,16 @@ server <- function(input, output) {
                            })
                            
                            observeEvent(input$Sim, {
-                             game$simNGames(simTurnString(), input$nSims)
+                             
+                             time <- system.time({
+                               action <- simTurnString()
+                               game$simNGames(action, input$nSims)
+                             })
+                             # force(game)
+                             variables$simTime <- paste("Simulation took", floor(time[3]), "seconds.")
                            })
+                           
+                           output$simTime <- renderText(variables$simTime)
                            
                            
                            output$playerData <- renderTable({

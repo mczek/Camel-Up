@@ -7,7 +7,6 @@ library(R6)
 library(stringr)
 library(data.table)
 library(tidyverse)
-library(doMC)
 library(ggplot2)
 library(gridExtra)
 library(grid)
@@ -712,7 +711,7 @@ system <- R6Class(classname = 'System',
                     current.player = NULL,
                     simData = NULL,
                     simGame = function(action, nDiceSeq){
-                      print("sim game")
+                      # print("sim game")
                       sim <- self$duplicate()
                       name <- self$players[[self$current.player]]$name
                       #nDiceLeft <- length(self$board$dice.left)
@@ -731,17 +730,40 @@ system <- R6Class(classname = 'System',
                           sim$take.turn("move")
                         }
                       }
-                      return(sim$initial_record(name))
+                      result <- sim$initial_record(name)
+                      # print(result)
+                      result <- result %>%
+                        as.data.table()
+                      
+                      return(result)
                     },
                     simNGames = function(action, nSims){
                       camelResults <- data.table()
                       #purseResults <- NULL
-                      registerDoMC(detectCores()-1)
+                      # registerDoMC(detectCores()-1)
                       nDiceSeq <- 1:length(self$board$dice.left)
                       # camelResults <- data.frame()
-                      for(i in 1:nSims) {
-                        camelResults <- rbind(camelResults, self$simGame(action, nDiceSeq))
-                      }
+                      
+                      # for(i in 1:nSims) {
+                      #   camelResults <- rbind(camelResults, self$simGame(action, nDiceSeq))
+                      # }
+                      # num_cores <- detectCores() - 1
+                      # my_cluster <- makeCluster(num_cores)
+                      # force(self)
+                      temp <- self$duplicate()
+                      sims <- mclapply(1:nSims, FUN = function(x){
+                        print(x)
+                        force(temp)
+                        temp$simGame(action, nDiceSeq)
+                      })
+                      
+                      print(sims)
+                      simsDF <- sims %>%
+                        rbindlist() %>%
+                        as.data.frame()
+                      
+                      # simsDF$Color <- rep(x = c("Yellow", "White", "Blue", "Green", "Orange", "Player"),
+                      #                     nSims)
                       # registerDoMC(cores = 1)
                       ##   cR <- mclapply(1:nSims, function(i) {
                       ##   # print(paste("Sim Number:", i))
@@ -751,7 +773,7 @@ system <- R6Class(classname = 'System',
                       ## }, mc.cores = 2, mc.preschedule = FALSE)
                       ##camelResults <- rbindlist(cR)
                       print("finished simNGames")
-                      self$simData <- camelResults
+                      self$simData <- simsDF
                       #return(camelResults)
                     },
                     initialize = function(nPlayers = NULL, players = NULL, isDup = FALSE){ #NEW
@@ -1487,7 +1509,7 @@ cleanColors <- function(subColors){
   return(outputColors)
 }
 
-# 
+
 # s <- system$new()
 # 3
 # Tom
@@ -1496,9 +1518,15 @@ cleanColors <- function(subColors){
 # s$take.turn("minus 4")
 # s$graphGame()
 # s$simGame("move", 1:5)
-
+# 
+# system.time(s$simNGames("move", 500))
+# 
+# 
+# 
+# a <- s$simNGames("move", 5)
+# 
 # s$take.turn("move")
-#
+# 
 # a <- s$duplicate()
 # a$createSimGraphs("Blue", "move", 10)
 # a <- s$duplicate()
@@ -1513,7 +1541,7 @@ cleanColors <- function(subColors){
 # n <- Sys.time() - m
 # n
 # 
-#system.time({testData <- s$simNGames("move", 500)})
+# x <- system.time({testData <- s$simNGames("move", 500)})
 # 
 # p1 <- s$createSimGraphs()
 # 
