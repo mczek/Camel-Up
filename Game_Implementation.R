@@ -10,6 +10,7 @@ library(tidyverse)
 library(ggplot2)
 library(gridExtra)
 library(grid)
+library(parallel)
 
 #implements a classic stack with push, pop and a few other methods
 stack <- R6Class(classname = 'Stack',
@@ -747,11 +748,11 @@ system <- R6Class(classname = 'System',
                       # for(i in 1:nSims) {
                       #   camelResults <- rbind(camelResults, self$simGame(action, nDiceSeq))
                       # }
-                      # num_cores <- detectCores() - 1
+                      numCores <- detectCores() - 1
                       # my_cluster <- makeCluster(num_cores)
                       # force(self)
                       temp <- self$duplicate()
-                      sims <- mclapply(1:nSims, FUN = function(x){
+                      sims <- mclapply(1:nSims, mc.cores = numCores, FUN = function(x){
                         print(x)
                         force(temp)
                         temp$simGame(action, nDiceSeq)
