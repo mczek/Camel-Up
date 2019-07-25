@@ -3,6 +3,7 @@ library(tidyverse)
 library(gridExtra)
 library(grid)
 library(shinyalert)
+library(parallel)
 source("Game_Implementation.R")
 
 
@@ -96,10 +97,12 @@ ui <- fluidPage(
                            textOutput("simTime"),
                            plotOutput("stackSims")),
                   tabPanel("Custom Game",
+                           verbatimTextOutput("customDesc"),
                            div(style="display: inline-block;vertical-align:top; width: 150px;",actionButton("clearBoard",
                                                                                                             "Clear Board"),
                                # div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
-                               div(style="display: inline-block;vertical-align:top; width: 150px;",actionButton(inputId="customCopy", label="Copy Board"))),
+                               div(style="display: inline-block;vertical-align:top; width: 150px;",actionButton(inputId="customCopy", label="Set Game Board"))),
+                           
                            selectInput("customType", "Select Object to Add to the Board", c("Camel", "Tile")),
                            conditionalPanel(condition = "input.customType == 'Camel'",
                                             selectInput("customSpace", "Space",
@@ -148,6 +151,7 @@ server <- function(input, output) {
                            # s <- system$new(4, players = c("Michael", "Tom", "Alex", "Tina"), isDup = TRUE)
                            # variables <- reactiveValues("game" = s,
                            #                             "custom" = game$duplicate)
+                           output$customDesc <- renderText("Use this tab to create a custom game board. Use Set Game Board to set this as the current game board.")
                            players <- paste(rep("Player", nPlayers), 1:nPlayers)
                            print("players made")
                            
@@ -279,7 +283,7 @@ server <- function(input, output) {
                                game$simNGames(action, input$nSims)
                              })
                              # force(game)
-                             variables$simTime <- paste("Simulation took", floor(time[3]), "seconds.")
+                             variables$simTime <- paste("Simulation took", floor(time[3]), "seconds. Using", detectCores() - 1, "cores.")
                            })
                            
                            output$simTime <- renderText(variables$simTime)

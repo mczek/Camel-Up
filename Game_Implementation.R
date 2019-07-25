@@ -1224,11 +1224,12 @@ system <- R6Class(classname = 'System',
                       }
                       
                       if(type == "stack"){
-                        plt <- filteredData %>%
+                        tempData <- filteredData %>%
                           group_by(X, Y) %>%
                           summarize("count" = n()) %>%
-                          mutate(Probability = count/100) %>%
-                          ggplot(aes(x = X, y = Y), width = 10) +
+                          mutate(Probability = count/100)
+                        
+                        plt <- ggplot(tempData, aes(x = X, y = Y), width = 10) +
                           geom_tile(aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
                                                                                              "black",
                                                                                              color)) +
@@ -1236,15 +1237,21 @@ system <- R6Class(classname = 'System',
                           ylim(0.49, 5.49) +
                           scale_x_continuous(breaks = 1:19) +
                           geom_vline(xintercept = vLines) +
-                          theme_classic()
+                          theme_classic() +
+                          labs(x = "Space",
+                               y = "Height",
+                               title = paste("2-Dimensional Plot of Camel Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
+                        print("test")
+                        print(mean(tempData$X))
                       }
                       if(type == "space"){
-                        plt <- data %>%
+                        tempData <- filteredData %>%
                           filter(Color == color) %>%
                           group_by(X) %>%
                           summarize("count" = n()) %>%
-                          mutate("Probability" = count/nSims) %>%
-                          ggplot(aes(x = X, y = Probability)) +
+                          mutate("Probability" = count/nSims)
+                        
+                        plt <- ggplot(tempData, aes(x = X, y = Probability)) +
                           geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
@@ -1255,15 +1262,18 @@ system <- R6Class(classname = 'System',
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
                           geom_vline(xintercept = vLines) +
-                          theme_classic()
+                          theme_classic() +
+                          labs(x = "Space",
+                               y = "Probability",
+                               title = paste("Space vs. Probability Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
                       }   
                       if(type == "purse"){
-                        plt <- data %>%
+                        tempData <- filteredData %>%
                           filter(Color == "Player") %>%
                           group_by(X) %>%
                           summarize("count" = n()) %>%
-                          mutate("Probability" = count/nSims) %>%
-                          ggplot(aes(x = X, y = Probability)) +
+                          mutate("Probability" = count/nSims) 
+                        plt <- ggplot(tempData, aes(x = X, y = Probability)) +
                           geom_bar(stat = "identity", 
                                    fill = ifelse(color == "White",
                                                  "black",
@@ -1273,8 +1283,11 @@ system <- R6Class(classname = 'System',
                           coord_cartesian(xlim = c(1, 19)) +
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
-                          geom_vline(xintercept = 17) +
-                          theme_classic()
+                          geom_vline(xintercept = vLines) +
+                          theme_classic()+
+                          labs(x = "Number of Coins",
+                               y = "Probability",
+                               title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
                         #coord_cartesian(xlim = c(1, 19)) +
                         #scale_x_continuous(breaks = 1:19) +
                         #geom_vline(xintercept = 17) +
@@ -1494,7 +1507,7 @@ system <- R6Class(classname = 'System',
                       boardSpace$tile.placed.by <- name
                       
                     }
-                  ))
+                    ))
 
 cleanColors <- function(subColors){
   #creates camel colors for graphing based on the list of colors provided
