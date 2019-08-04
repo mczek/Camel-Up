@@ -5,9 +5,6 @@ account: mczekanski
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 550216
-bundleId: 2288875
+bundleId: 2288888
 url: https://mczekanski.shinyapps.io/CamelUp/
-when: 1564879448.68196
-asMultiple: FALSE
-asStatic: FALSE
-ignoredFiles: .gitignore~
+when: 1564880569.27291

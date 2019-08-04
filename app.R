@@ -1,16 +1,5 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
-# # Run the application
-# shinyApp(ui = ui, server = server)
-install.packages('camelUp', lib.loc = './camelUp/')
-library('camelUp', lib.loc = './camelUp/')
+# Run the application using package from GitHub
+library(camelUp)
 playCamelUp()

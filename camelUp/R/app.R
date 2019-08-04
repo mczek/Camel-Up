@@ -2,8 +2,8 @@
 #' @importFrom shinyalert useShinyalert
 #' @importFrom shinyalert shinyalert
 #' @import shiny
+#' @import magrittr
 #' @importFrom parallel detectCores
-#' @import data.table
 
 # Define UI for application that draws a histogram
 generateUI <- function(){

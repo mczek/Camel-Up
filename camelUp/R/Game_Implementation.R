@@ -8,7 +8,6 @@
 
 
 
-
 #' Implements a classic stack with push, pop and a few other methods
 #'
 #' @import R6
@@ -653,6 +652,7 @@ player <- R6Class(classname = 'Player',
 
 #' System class that manages overall gameplay
 #'
+#' @import tidyverse
 #'
 #' @export system
 #' @exportClass system
@@ -689,7 +689,6 @@ system <- R6Class(classname = 'System',
 
                     },
 
-                    #' @import data.table
                     simGame = function(action, nDiceSeq){
                       # print("sim game")
                       sim <- self$duplicate()
@@ -712,17 +711,17 @@ system <- R6Class(classname = 'System',
                       }
                       result <- sim$initial_record(name)
                       # print(result)
-                      result <- as.data.table(result)
+                      result <- data.table::as.data.table(result)
 
 
                       return(result)
                     },
 
-                    #' @import data.table, tidyverse
+                    #' @import tidyverse
                     #'
                     #' @import parallel
                     simNGames = function(action, nSims){
-                      camelResults <- data.table()
+                      camelResults <- data.table::data.table()
                       #purseResults <- NULL
                       # registerDoMC(detectCores()-1)
                       nDiceSeq <- 1:length(self$board$dice.left)
@@ -998,7 +997,6 @@ system <- R6Class(classname = 'System',
 
                     },
 
-                    #' @import data.table
                     initial_record = function(name = NULL){
 
 
@@ -1038,7 +1036,7 @@ system <- R6Class(classname = 'System',
                             current.purse <- p$purse
                           }
                         }
-                      output.table <- data.table("Color" = c(camels.in.order, "Player"), "X" = c(x.values, current.purse), "Y" = c(y.values, current.purse))
+                      output.table <- data.table::data.table("Color" = c(camels.in.order, "Player"), "X" = c(x.values, current.purse), "Y" = c(y.values, current.purse))
 
                       return(output.table)
 
@@ -1103,14 +1101,14 @@ system <- R6Class(classname = 'System',
                       return(newSystem)
                     },
 
+                    #' @import magrittr
                     graphGame = function(){
                       data <- self$initial_record()
                       tiles <- self$board$getTileSpaces()
                       #fullColors <- c("blue", "darkgreen", "orange", "white", "yellow")
                       camelColors <- cleanColors(data$Color)
                       if(nrow(data) == 1){
-                        plt <- data %>%
-                          ggplot(aes(x = X, y = Y)) +
+                        plt <- ggplot2::ggplot(data, aes(x = X, y = Y)) +
                           geom_blank() +
                           coord_cartesian(xlim = c(1, 19),
                                           ylim = c(0.49, 5.49)) +
@@ -1122,9 +1120,9 @@ system <- R6Class(classname = 'System',
                                 legend.key = element_rect(color = "black"))
                         return(plt)
                       }
-                      plt <- data %>%
-                        filter(Color != "Player") %>%
-                        ggplot(mapping = aes(x = X, y = Y, fill = Color, color = "black", width = 1)) +
+
+                      filteredData <- dplyr::filter(data, Color != "Player")
+                      plt <- ggplot2::ggplot(filteredData, mapping = aes(x = X, y = Y, fill = Color, color = "black", width = 1)) +
                         geom_tile() +
                         scale_fill_manual(values = camelColors) +
                         coord_cartesian(xlim = c(1, 19),
@@ -1138,7 +1136,6 @@ system <- R6Class(classname = 'System',
                       return(plt)
                     },
 
-                    #' @import data.table
                     purseTable = function(){
                       purses <- c()
                       names <- c()
@@ -1146,15 +1143,14 @@ system <- R6Class(classname = 'System',
                         purses <- c(purses, p$purse)
                         names <- c(names, p$name)
                       }
-                      result <- data.table("Name" = names, "Purse" = purses)
+                      result <- data.table::data.table("Name" = names, "Purse" = purses)
                       return(result)
                     },
                     graphCamelSim = function(color, data, action, type, vLinesBool) {
                       nSims <- nrow(data)/6
                       vLines <- c(16.5)
 
-                      filteredData <- data %>%
-                        filter(Color == color)
+                      filteredData <- dplyr::filter(data, Color == color)
 
                       avg <- mean(filteredData$X)
                       stdDevX <- sd(filteredData$X)
@@ -1180,12 +1176,11 @@ system <- R6Class(classname = 'System',
                       }
 
                       if(type == "stack"){
-                        tempData <- filteredData %>%
-                          group_by(X, Y) %>%
-                          summarize("count" = n()) %>%
-                          mutate(Probability = count/100)
+                        tempData <- group_by(filteredData, X, Y)
+                        tempData <- summarize(tempData, "count" = n())
+                        tempData <- mutate(tempData, Probability = count/100)
 
-                        plt <- ggplot(tempData, aes(x = X, y = Y), width = 10) +
+                        plt <- ggplot2::ggplot(tempData, aes(x = X, y = Y), width = 10) +
                           geom_tile(aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
                                                                                              "black",
                                                                                              color)) +
@@ -1201,13 +1196,12 @@ system <- R6Class(classname = 'System',
                         #print(mean(tempData$X))
                       }
                       if(type == "space"){
-                        tempData <- filteredData %>%
-                          filter(Color == color) %>%
-                          group_by(X) %>%
-                          summarize("count" = n()) %>%
-                          mutate("Probability" = count/nSims)
+                        tempData <- dplyr::filter(filteredData, Color == color)
+                        tempData <- group_by(tempData, X)
+                        tempData <- summarize(tempData, "count" = n())
+                        tempData <- mutate(tempData, "Probability" = count/nSims)
 
-                        plt <- ggplot(tempData, aes(x = X, y = Probability)) +
+                        plt <- ggplot2::ggplot(tempData, aes(x = X, y = Probability)) +
                           geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
@@ -1224,12 +1218,11 @@ system <- R6Class(classname = 'System',
                                title = paste("Space vs. Probability Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
                       }
                       if(type == "purse"){
-                        tempData <- filteredData %>%
-                          filter(Color == "Player") %>%
-                          group_by(X) %>%
-                          summarize("count" = n()) %>%
-                          mutate("Probability" = count/nSims)
-                        plt <- ggplot(tempData, aes(x = X, y = Probability)) +
+                        tempData <- dplyr::filter(filteredData, Color == "Player")
+                        tempData <- group_by(tempData, X)
+                        tempData <- summarize(tempData, "count" = n())
+                        tempData <- mutate(tempData, "Probability" = count/nSims)
+                        plt <- ggplot2::ggplot(tempData, aes(x = X, y = Probability)) +
                           geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
@@ -1284,7 +1277,6 @@ system <- R6Class(classname = 'System',
                       self$board$dice.rolled <- NULL
                     },
 
-                    #' @import data.table
                     changeCamel = function(color, space){
                       colors <- c('Yellow','White','Blue','Green','Orange')
                       i <- 0
@@ -1300,7 +1292,6 @@ system <- R6Class(classname = 'System',
                       #c$position <- space
                     },
 
-                    #' @import data.table
                     createBetsTable = function(){
                       selfBoard <- self$board
 
@@ -1375,14 +1366,13 @@ system <- R6Class(classname = 'System',
                       for(i in gN:1){
                         selfBoard$g.bets$push(tempG[i])
                       }
-                      return(data.table("Yellow" = yellow[1],
-                                        "White" = white[1],
-                                        "Blue" = blue[1],
-                                        "Green" = green[1],
-                                        "Orange" = orange[1]))
+                      return(data.table::data.table("Yellow" = yellow[1],
+                                                    "White" = white[1],
+                                                    "Blue" = blue[1],
+                                                    "Green" = green[1],
+                                                    "Orange" = orange[1]))
                     },
 
-                    #' @import data.table
                     createDiceTable = function(){
                       selfBoard <- self$board
                       colors <- NULL
@@ -1390,9 +1380,9 @@ system <- R6Class(classname = 'System',
                         colors <- c(colors, die$color)
                       }
                       if(length(colors) == 0){
-                        return(data.table("Dice Remaining" = "None"))
+                        return(data.table::data.table("Dice Remaining" = "None"))
                       }
-                      return(data.table("Dice Remaining" = colors))
+                      return(data.table::data.table("Dice Remaining" = colors))
                     },
                     changeBets = function(color, num){
                       betVals <- c(2, 3, 5)
