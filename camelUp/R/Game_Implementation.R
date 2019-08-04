@@ -3,16 +3,17 @@
 # Tina Chen
 # Michael Czekanski
 
-library(R6)
-library(stringr)
-library(data.table)
-library(tidyverse)
-library(ggplot2)
-library(gridExtra)
-library(grid)
-library(parallel)
 
-#implements a classic stack with push, pop and a few other methods
+
+
+
+
+
+#' Implements a classic stack with push, pop and a few other methods
+#'
+#' @import R6
+#' @export stack
+#' @exportClass stack
 stack <- R6Class(classname = 'Stack',
                  public = list(
                    s = NULL, #vector representing the stack itself
@@ -38,7 +39,7 @@ stack <- R6Class(classname = 'Stack',
                        self$n <- 0
                      }
                      return(temp)
-                     
+
                    },
                    top = function(){
                      #returns element at the top of the stack
@@ -51,7 +52,7 @@ stack <- R6Class(classname = 'Stack',
                      #prints elements of the stack
                      temp = NULL
                      for(x in self$s){
-                       if(is.environment(self$s[[1]]) == TRUE)   
+                       if(is.environment(self$s[[1]]) == TRUE)
                          temp <- c(temp, x$print())
                        else
                          temp <- c(temp, x)
@@ -61,10 +62,12 @@ stack <- R6Class(classname = 'Stack',
                  ))
 
 
-#implements camel class based off of the board game pieces
+#' Implements camel class based off of the board game pieces
+#' @export camel
+#' @exportClass camel
 camel <- R6Class(classname = 'Camel',
                  public = list(
-                   color = NA, 
+                   color = NA,
                    position = NA,
                    index = NA,
                    initialize = function(color, position = 1, index) {
@@ -76,7 +79,7 @@ camel <- R6Class(classname = 'Camel',
                      return(self$color)
                    },
                    move = function(dis){
-                     print("move in camel")
+                     #print("move in camel")
                      self$position <- self$position + dis
                    },
                    print = function(){
@@ -85,11 +88,13 @@ camel <- R6Class(classname = 'Camel',
                    duplicate = function(){
                      return(self$clone())
                    }
-                   
+
                  )
 )
 
-#implements spaces on the board
+#' Implements spaces on the board
+#' @export space
+#' @exportClass space
 space <- R6Class(classname = 'Space',
                  public = list(
                    camels = NULL,
@@ -115,7 +120,7 @@ space <- R6Class(classname = 'Space',
                        } else if(plus.minus == 'minus'){
                          self$minus.tile = TRUE
                        }
-                     } 
+                     }
                    },
                    print = function(){
                      return(paste(c(self$camels$print(), '///', self$plus.tile, self$minus.tile),collapse = ' '))
@@ -126,7 +131,7 @@ space <- R6Class(classname = 'Space',
                      temp <- NULL
                      # if(nCamels > 0){
                      #   for(i in 1:nCamels){
-                     #     
+                     #
                      #     temp <- c(self$pop.camel(), temp)
                      #   }
                      #   for(i in 1:nCamels){
@@ -145,6 +150,9 @@ space <- R6Class(classname = 'Space',
                    }
                  ))
 
+#' A three sided die, assigned a color corresponding to a camel
+#' @export die
+#' @exportClass die
 die <- R6Class(classname = 'Die',
                public = list(
                  color = NA,
@@ -162,6 +170,9 @@ die <- R6Class(classname = 'Die',
                  }
                ))
 
+#' A bet object that is placed for a leg on a given camel
+#' @export bet
+#' @exportClass bet
 bet <- R6Class(classname = 'Bet',
                public = list(
                  color = NULL,
@@ -170,7 +181,7 @@ bet <- R6Class(classname = 'Bet',
                    self$color <- color
                    self$value <- value
                  },
-                 
+
                  print = function() {
                    return(paste(c(substr(self$color,1,1), self$value), collapse = ''))
                  },
@@ -179,6 +190,9 @@ bet <- R6Class(classname = 'Bet',
                  }
                ))
 
+#' A bet object that is placed overall on a given camel
+#' @export overall.bet
+#' @exportClass overall.bet
 overall.bet <- R6Class(classname = 'Overall.Bet',
                        public = list(
                          color = NULL,
@@ -187,7 +201,7 @@ overall.bet <- R6Class(classname = 'Overall.Bet',
                            self$color <- color
                            self$player <- player
                          },
-                         
+
                          print = function(){
                            return(paste(c(substr(self$color,1,1), self$player$print()), collapse = ''))
                          },
@@ -196,6 +210,9 @@ overall.bet <- R6Class(classname = 'Overall.Bet',
                          }
                        ))
 
+#' A board object on which the game is played
+#' @export board
+#' @exportClass board
 board <- R6Class(classname = 'Board',
                  public = list(
                    spaces = NULL,
@@ -208,7 +225,7 @@ board <- R6Class(classname = 'Board',
                    b.bets = NULL,
                    g.bets = NULL,
                    o.bets = NULL,
-                   
+
                    winner.bets = NULL,
                    loser.bets = NULL,
                    initialize = function(sys){
@@ -232,7 +249,7 @@ board <- R6Class(classname = 'Board',
                      }
                      self$winner.bets = stack$new()
                      self$loser.bets = stack$new()
-                     
+
                      colors <- c('Yellow','White','Blue','Green','Orange')
                      for(i in 1:5){
                        self$tot.camels <- c(self$tot.camels, camel$new(color = colors[i], index = i))
@@ -245,9 +262,9 @@ board <- R6Class(classname = 'Board',
                        i$position <- pos
                      }
                    },
-                   
+
                    choose.die = function(){
-                     
+
                      x <- sample.int(length(self$dice.left),1)
                      t <- NULL
                      for(y in 1:length(self$dice.left)){
@@ -260,29 +277,29 @@ board <- R6Class(classname = 'Board',
                      self$dice.rolled <- c(self$dice.rolled, temp)
                      self$dice.left <- self$dice.left[t]
                      return(temp)
-                     
+
                    },
-                   
+
                    move.camel = function(die, dis){
                      # print(c('move.camel in board', die$print()))
                      cam.colors <- NULL
                      for(cam in self$tot.camels){
                        cam.colors <- c(cam.colors, cam$getColor())
                      }
-                     
+
                      index <- match(die$color, cam.colors)
-                     
-                     
+
+
                      camel.m <- self$tot.camels[[index]]
                      # print(c(camel.m$print(), camel.m$position))
                      if(self$spaces[[camel.m$position + dis]]$plus.tile == FALSE &
                         self$spaces[[camel.m$position + dis]]$minus.tile == FALSE){
                        camel.m$move(dis)
-                       
+
                        temp.stack <- stack$new()
                        for(c in 1:self$spaces[[camel.m$position-dis]]$camels$n){
-                         print(paste("camel", camel.m$position, "   ", dis))
-                         print(camel.m$position-dis)
+                         #print(paste("camel", camel.m$position, "   ", dis))
+                         #print(camel.m$position-dis)
                          t <- self$spaces[[camel.m$position-dis]]$pop.camel()
                          temp.stack$push(t)
                          if(t$color == die$color){
@@ -299,12 +316,12 @@ board <- R6Class(classname = 'Board',
                          # print(c(z$color, "after z position:",z$position))
                        }
                        # print(c("destination", self$spaces[[camel.m$position]]$print()))
-                       
+
                      }
                      else if(self$spaces[[camel.m$position + dis]]$plus.tile == TRUE){
                        self$system$increment.purse(self$spaces[[camel.m$position+dis]]$tile.placed.by)
                        camel.m$move(dis + 1)
-                       
+
                        temp.stack <- stack$new()
                        for(c in 1:self$spaces[[camel.m$position-dis-1]]$camels$n){
                          t <- self$spaces[[camel.m$position-dis-1]]$pop.camel()
@@ -318,12 +335,12 @@ board <- R6Class(classname = 'Board',
                          self$spaces[[camel.m$position]]$push.camel(z)
                          z$position <- camel.m$position
                        }
-                       
+
                      }
                      else if(self$spaces[[camel.m$position + dis]]$minus.tile == TRUE){
                        self$system$increment.purse(self$spaces[[camel.m$position+dis]]$tile.placed.by)
                        camel.m$move(dis - 1)
-                       
+
                        temp.stack <- stack$new()
                        for(c in 1:self$spaces[[camel.m$position-dis+1]]$camels$n){
                          t <- self$spaces[[camel.m$position-dis+1]]$pop.camel()
@@ -332,15 +349,15 @@ board <- R6Class(classname = 'Board',
                            break
                          }
                        }
-                       
+
                        temp.stack2 <- stack$new()
-                       if(self$spaces[[camel.m$position]]$camels$n > 0){ 
+                       if(self$spaces[[camel.m$position]]$camels$n > 0){
                          for(c in 1:self$spaces[[camel.m$position]]$camels$n){
                            t2 <- self$spaces[[camel.m$position]]$pop.camel()
                            temp.stack2$push(t2)
                          }
                        }
-                       
+
                        for(t in 1:temp.stack$n){
                          z <- temp.stack$pop()
                          self$spaces[[camel.m$position]]$push.camel(z)
@@ -354,10 +371,10 @@ board <- R6Class(classname = 'Board',
                          }
                        }
                      }
-                     
-                     
+
+
                    },
-                   
+
                    reset.leg = function(){
                      bet.values <- c(2,3,5)
                      self$y.bets = stack$new()
@@ -383,14 +400,14 @@ board <- R6Class(classname = 'Board',
                      }
                      self$dice.rolled <- NULL
                    },
-                   
+
                    check.end.leg = function() {
                      if(length(self$dice.left) == 0)
                        return(TRUE)
-                     else 
+                     else
                        return(FALSE)
                    },
-                   
+
                    check.end.game = function() {
                      for(cam in self$tot.camels){
                        if(cam$position > 16)
@@ -398,18 +415,18 @@ board <- R6Class(classname = 'Board',
                      }
                      return(FALSE)
                    },
-                   
-                   
+
+
                    print = function(){
-                     
-                     
+
+
                      space.print.list <- NULL
                      for(space in 1:16){
                        space.print.list <- c(space.print.list, self$spaces[[space]]$print())
                      }
                      space.print <- paste(space.print.list, collapse = '-')
                      sps <- strsplit(space.print, split = '-')
-                     
+
                      y.bet.print.list <- NULL
                      if(self$y.bets$n > 0){
                        for(y in 1:self$y.bets$n){
@@ -419,7 +436,7 @@ board <- R6Class(classname = 'Board',
                      }
                      else
                        y.paste <- ''
-                     
+
                      w.bet.print.list <- NULL
                      if(self$w.bets$n > 0){
                        for(w in 1:self$w.bets$n){
@@ -429,7 +446,7 @@ board <- R6Class(classname = 'Board',
                      }
                      else
                        w.paste <- ''
-                     
+
                      b.bet.print.list <- NULL
                      if(self$b.bets$n > 0){
                        for(b in 1:self$b.bets$n){
@@ -439,7 +456,7 @@ board <- R6Class(classname = 'Board',
                      }
                      else
                        b.paste <- ''
-                     
+
                      g.bet.print.list <- NULL
                      if(self$g.bets$n > 0){
                        for(g in 1:self$g.bets$n){
@@ -449,7 +466,7 @@ board <- R6Class(classname = 'Board',
                      }
                      else
                        g.paste <- ''
-                     
+
                      o.bet.print.list <- NULL
                      if(self$o.bets$n > 0){
                        for(o in 1:self$o.bets$n){
@@ -459,99 +476,30 @@ board <- R6Class(classname = 'Board',
                      }
                      else
                        o.paste <- ''
-                     
+
                      bet.print <- paste(c(y.paste, w.paste, b.paste, g.paste, o.paste), collapse = '-')
-                     
+
                      bs <- strsplit(bet.print, split = '-')
-                     
+
                      # for(i in 1:5){
                      #   print(c("in board$print()", self$tot.camels[[i]]$color, self$tot.camels[[i]]$position))
                      # }
-                     # 
+                     #
                      # print("Dice Left")
                      # for(die in self$dice.left){
                      #   print(die$color)
                      # }
-                     # 
+                     #
                      # print("Dice Rolled")
                      # for(die in self$dice.rolled){
                      #   print(die$color)
                      # }
-                     
+
                      return(list(sps, bs))
                    },
                    duplicate = function(system){
                      newBoard = board$new(system) #relates board to new system
-                     # for(i in 1:19){ #duplicate each space
-                     #   newBoard$spaces <- c(newBoard$spaces, self$spaces[[i]]$duplicate)
-                     # }
-                     
-                     # temp <- stack$new() #create temporary stack that will be used to duplicate bets
-                     # nYBets <- self$y.bets$n
-                     # for(i in 1:nYBets){
-                     #   temp$push(self$y.bets$pop())
-                     # }
-                     # for(i in 1:nYBets){
-                     #   bet <- temp$pop()
-                     #   self$y.bets$push(bet)
-                     #   #newBoard$y.bets$push(bet$duplicate())
-                     # }
-                     # 
-                     # nOBets <- self$o.bets$n
-                     # for(i in 1:nOBets){
-                     #   temp$push(self$o.bets$pop())
-                     # }
-                     # for(i in 1:nOBets){
-                     #   bet <- temp$pop()
-                     #   self$o.bets$push(bet)
-                     #   #newBoard$o.bets$push(bet$duplicate())
-                     # }
-                     # 
-                     # nWBets <- self$w.bets$n
-                     # for(i in 1:nWBets){
-                     #   temp$push(self$w.bets$pop())
-                     # }
-                     # for(i in 1:nWBets){
-                     #   bet <- temp$pop()
-                     #   self$w.bets$push(bet)
-                     #   #newBoard$w.bets$push(bet$duplicate())
-                     # }
-                     # 
-                     # nGBets <- self$g.bets$n
-                     # for(i in 1:nGBets){
-                     #   temp$push(self$g.bets$pop())
-                     # }
-                     # for(i in 1:nGBets){
-                     #   bet <- temp$pop()
-                     #   self$g.bets$push(bet)
-                     #   #newBoard$y.bets$push(bet$duplicate())
-                     # }
-                     # 
-                     # nBBets <- self$b.bets$n
-                     # for(i in 1:nBBets){
-                     #   temp$push(self$b.bets$pop())
-                     # }
-                     # for(i in 1:nBBets){
-                     #   bet <- temp$pop()
-                     #   self$b.bets$push(bet)
-                     #   #newBoard$b.bets$push(bet$duplicate())
-                     # }
-                     
-                     #duplicate dice
-                     # newBoard$dice.left <- NULL
-                     # for(i in self$dice.left){
-                     #   newBoard$dice.left <- c(newBoard$dice.left, i$duplicate())
-                     # }
-                     # for(i in self$dice.rolled){
-                     #   newBoard$dice.rolled <- c(newBoard$dice.rolled, i$duplicate())
-                     # }
-                     
-                     # 
-                     # #duplicate camel
-                     # for(i in 1:5){ #There are five camels
-                     #   #newBoard$tot.camels <- c(newBoard$tot.camels, self$tot.camels[[i]]$duplicate())
-                     #   print(c("before: ", self$tot.camels[[i]]$print(), self$tot.camels[[i]]$position))
-                     # }
+
                      newBoard$tot.camels <- NULL
                      for(c in self$tot.camels){
                        newCamel <- c$duplicate()
@@ -572,7 +520,7 @@ board <- R6Class(classname = 'Board',
                          newBoard$winner.bets$push(bet$duplicate())
                        }
                      }
-                     
+
                      nLoseBets <- self$loser.bets$n
                      if(nLoseBets > 0){
                        for(i in 1:nLoseBets){
@@ -584,7 +532,7 @@ board <- R6Class(classname = 'Board',
                          newBoard$loser.bets$push(bet$duplicate())
                        }
                      }
-                     
+
                      return(newBoard)
                    },
                    getTileSpaces = function(){
@@ -600,17 +548,16 @@ board <- R6Class(classname = 'Board',
                          tileDir[i] <- paste("-1", self$system$players[[currentSpace$tile.placed.by]]$name)
                        }
                      }
-                     print("getTileSpaces")
-                     print(tileSpaces[tileDir == ""])
+                     #print("getTileSpaces")
+                     #print(tileSpaces[tileDir == ""])
                      return(list(tileSpaces[tileDir == ""], tileDir))
                    }
-                   
-                   
-                   
                  ))
 
 
-
+#' Player object to represent each player using bets and a purse
+#' @export player
+#' @exportClass player
 player <- R6Class(classname = 'Player',
                   public = list(
                     purse = NULL,
@@ -628,7 +575,7 @@ player <- R6Class(classname = 'Player',
                       self$minus.tile = 0
                       self$leg.bets = NULL
                     },
-                    
+
                     place.bet = function(color){
                       if(color == 'Yellow' && self$board$y.bets$n != 0){
                         self$leg.bets <- c(self$leg.bets, self$board$y.bets$pop())
@@ -652,15 +599,15 @@ player <- R6Class(classname = 'Player',
                       }
                       return(FALSE)
                     },
-                    
+
                     place.winner.bet = function(color){
                       self$board$winner.bets$push(overall.bet$new(color, self))
                     },
-                    
+
                     place.loser.bet = function(color){
                       self$board$loser.bets$push(overall.bet$new(color, self))
                     },
-                    
+
                     make.move = function(){
                       # print('make.move')
                       d <- self$board$choose.die()
@@ -669,26 +616,26 @@ player <- R6Class(classname = 'Player',
                       message(c(d$print(), ' ', dis))
                       self$board$move.camel(die = d, dis = dis)
                       self$purse <- self$purse + 1
-                      
+
                       return(c(TRUE, paste0(color, ' Die rolled ', dis)))
                     },
-                    
-                    
-                    
+
+
+
                     print = function(){
-                      
+
                       print.bets <- NULL
                       for(b in self$leg.bets){
                         print.bets <- paste(c(print.bets, b$print()), collapse = '')
                       }
-                      
-                      player.objs <- strsplit(x = paste(c(paste(c('Name:', self$name), collapse = ' '), 
-                                                          paste(c('Purse:', self$purse), collapse = ' '), 
-                                                          paste(c('Bets:', print.bets),collapse = ' '), 
-                                                          paste(c('Plus Tile:', self$plus.tile), collapse = ' '), 
-                                                          paste(c('Minus Tile:', self$minus.tile), collapse = ' ')), 
+
+                      player.objs <- strsplit(x = paste(c(paste(c('Name:', self$name), collapse = ' '),
+                                                          paste(c('Purse:', self$purse), collapse = ' '),
+                                                          paste(c('Bets:', print.bets),collapse = ' '),
+                                                          paste(c('Plus Tile:', self$plus.tile), collapse = ' '),
+                                                          paste(c('Minus Tile:', self$minus.tile), collapse = ' ')),
                                                         collapse = '-'), split = '-')
-                      
+
                       return(player.objs)
                     },
                     duplicate = function(board){
@@ -701,9 +648,14 @@ player <- R6Class(classname = 'Player',
                       }
                       return(newPlayer)
                     }
-                    
+
                   ))
 
+#' System class that manages overall gameplay
+#'
+#'
+#' @export system
+#' @exportClass system
 system <- R6Class(classname = 'System',
                   public = list(
                     board = NULL,
@@ -711,6 +663,33 @@ system <- R6Class(classname = 'System',
                     players = NULL,
                     current.player = NULL,
                     simData = NULL,
+
+                    #' Initialize system object
+                    initialize = function(nPlayers = NULL, players = NULL, isDup = FALSE){ #NEW
+                      self$board = board$new(self)
+                      self$n.players <- nPlayers
+                      if(is.null(nPlayers)){
+                        self$n.players = as.numeric(readline(prompt = 'Enter number of players: '))
+                      }
+                      temp <- !is.null(players)
+                      if(temp){
+                        for (p in players){
+                          self$players <- c(self$players, player$new(p, self$board))
+                        }
+                      }
+                      if(!isDup & !temp){
+                        for(p in 1:self$n.players){
+                          p.name <- readline(prompt = paste(c("Enter Player ", p, "'s name: "), collapse = ''))
+                          self$players <- c(self$players, player$new(p.name, self$board))
+                        }
+                      }
+
+
+                      self$current.player = 1
+
+                    },
+
+                    #' @import data.table
                     simGame = function(action, nDiceSeq){
                       # print("sim game")
                       sim <- self$duplicate()
@@ -733,18 +712,22 @@ system <- R6Class(classname = 'System',
                       }
                       result <- sim$initial_record(name)
                       # print(result)
-                      result <- result %>%
-                        as.data.table()
-                      
+                      result <- as.data.table(result)
+
+
                       return(result)
                     },
+
+                    #' @import data.table, tidyverse
+                    #'
+                    #' @import parallel
                     simNGames = function(action, nSims){
                       camelResults <- data.table()
                       #purseResults <- NULL
                       # registerDoMC(detectCores()-1)
                       nDiceSeq <- 1:length(self$board$dice.left)
                       # camelResults <- data.frame()
-                      
+
                       # for(i in 1:nSims) {
                       #   camelResults <- rbind(camelResults, self$simGame(action, nDiceSeq))
                       # }
@@ -752,65 +735,34 @@ system <- R6Class(classname = 'System',
                       # my_cluster <- makeCluster(num_cores)
                       # force(self)
                       temp <- self$duplicate()
-                      sims <- mclapply(1:nSims, mc.cores = numCores, FUN = function(x){
-                        print(x)
+                      sims <- parallel::mclapply(1:nSims, mc.cores = numCores, FUN = function(x){
+                        #print(x)
                         force(temp)
                         temp$simGame(action, nDiceSeq)
                       })
-                      
-                      print(sims)
+
+                      #print(sims)
                       simsDF <- sims %>%
                         rbindlist() %>%
                         as.data.frame()
-                      
-                      # simsDF$Color <- rep(x = c("Yellow", "White", "Blue", "Green", "Orange", "Player"),
-                      #                     nSims)
-                      # registerDoMC(cores = 1)
-                      ##   cR <- mclapply(1:nSims, function(i) {
-                      ##   # print(paste("Sim Number:", i))
-                      ##   self$simGame(action, nDiceSeq)
-                      ##   #camelResults <- rbind(camelResults, simResults[[1]])
-                      ##   #purseResults <- c(purseResults, simResults[[2]])
-                      ## }, mc.cores = 2, mc.preschedule = FALSE)
-                      ##camelResults <- rbindlist(cR)
-                      print("finished simNGames")
+
+
+                      #print("finished simNGames")
                       self$simData <- simsDF
                       #return(camelResults)
                     },
-                    initialize = function(nPlayers = NULL, players = NULL, isDup = FALSE){ #NEW
-                      self$board = board$new(self)
-                      self$n.players <- nPlayers
-                      if(is.null(nPlayers)){
-                        self$n.players = as.numeric(readline(prompt = 'Enter number of players: '))
-                      }
-                      temp <- !is.null(players)
-                      if(temp){
-                        for (p in players){
-                          self$players <- c(self$players, player$new(p, self$board))
-                        }
-                      }
-                      if(!isDup & !temp){
-                        for(p in 1:self$n.players){
-                          p.name <- readline(prompt = paste(c("Enter Player ", p, "'s name: "), collapse = ''))
-                          self$players <- c(self$players, player$new(p.name, self$board))
-                        }
-                      }
-                      
-                      
-                      self$current.player = 1
-                      
-                    },
-                    
+
+
                     take.turn = function(input = NULL){
                       if(is.null(input)){
                         input <- readline(prompt = paste(c(self$players[[self$current.player]]$name, ", it is your turn. What would you like to do? "), collapse = ''))
                       }
-                      
+
                       dispText <- NULL
                       #message(input)
                       # command <- str_sub(input, 1, str_locate(input, ' ')[1])
                       # message(command)
-                      print(input)
+                      #print(input)
                       valid <- FALSE
                       if(str_detect(input, 'bet') == TRUE){
                         temp <- str_sub(input, (str_locate(input, ' ')[1]+1), nchar(input))
@@ -824,7 +776,7 @@ system <- R6Class(classname = 'System',
                         # print('move called')
                         if(length(self$board$dice.left) > 0){
                           temp <- self$players[[self$current.player]]$make.move()
-                          print(temp)
+                          #print(temp)
                           valid <- temp[1]
                           dispText <- temp[2]
                         }
@@ -852,7 +804,7 @@ system <- R6Class(classname = 'System',
                       else if(str_detect(input, 'minus') == TRUE){
                         if(self$players[[self$current.player]]$plus.tile == 0 & self$players[[self$current.player]]$minus.tile == 0){
                           if(self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$plus.tile == FALSE &
-                             self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$minus.tile == FALSE){  
+                             self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$minus.tile == FALSE){
                             if(self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$camels$n == 0){
                               self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$minus.tile <- TRUE
                               self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$tile.placed.by <- self$current.player
@@ -869,7 +821,7 @@ system <- R6Class(classname = 'System',
                         else
                           valid <- FALSE
                       }
-                      
+
                       else if(str_detect(input, 'winner') == TRUE){
                         self$players[[self$current.player]]$place.winner.bet(color = str_sub(input,(str_locate(input, ' ')[1]+1)))
                         dispText <- "Overall Winner bet placed"
@@ -883,13 +835,13 @@ system <- R6Class(classname = 'System',
                       if(valid == TRUE){
                         self$increase.current.player()
                       }
-                      
-                      
+
+
                       if(self$board$check.end.game() == TRUE){
-                        
+
                         self$eval.leg()
                         self$eval.end.game()
-                        
+
                         max <- 0
                         game.winner <- NA
                         for(p in self$players){
@@ -901,36 +853,36 @@ system <- R6Class(classname = 'System',
                         self$print()
                         dispText <- paste(c("Game Over! ", game.winner, " is the winner!"), collapse = '')
                         message(dispText)
-                        
+
                       }
-                      
-                      
+
+
                       else{
                         if(self$board$check.end.leg() == TRUE){
                           self$eval.leg()
                           self$reset.leg()
                         }
                       }
-                      
-                      
+
+
                       self$print()
                       return(dispText)
                     },
-                    
+
                     increase.current.player = function(){
                       if(self$current.player == self$n.players)
                         self$current.player <- 1
                       else
                         self$current.player <- self$current.player + 1
                     },
-                    
+
                     increment.purse = function(player){
                       self$players[[player]]$purse <- self$players[[player]]$purse + 1
                     }
                     ,
-                    
+
                     eval.leg = function(){
-                      
+
                       for(i in 19:1){
                         if(self$board$spaces[[i]]$camels$n > 1){
                           winner <- self$board$spaces[[i]]$camels$pop()
@@ -950,7 +902,7 @@ system <- R6Class(classname = 'System',
                         }
                       }
                       message(c("Winner: ", winner$print(), "  Runner-Up: ", r.up$print()))
-                      
+
                       for(p in self$players){
                         for(b in p$leg.bets){
                           if(b$color == winner$color)
@@ -960,10 +912,10 @@ system <- R6Class(classname = 'System',
                           else
                             p$purse <- p$purse - 1
                         }
-                        
+
                       }
                     },
-                    
+
                     reset.leg = function(){
                       self$board$reset.leg()
                       for(p in self$players){
@@ -972,9 +924,9 @@ system <- R6Class(classname = 'System',
                         p$minus.tile <- 0
                       }
                     },
-                    
+
                     eval.end.game = function(){
-                      
+
                       for(i in 19:1){
                         if(self$board$spaces[[i]]$camels$n > 0){
                           winner <- self$board$spaces[[i]]$camels$pop()
@@ -1026,7 +978,7 @@ system <- R6Class(classname = 'System',
                       for(i in c(1,2,3,5,8)){
                         bet.vals$push(i)
                       }
-                      
+
                       temp2 <- stack$new()
                       if(self$board$loser.bets$n > 0){
                         for(p in 1:self$board$loser.bets$n){
@@ -1043,13 +995,14 @@ system <- R6Class(classname = 'System',
                           }
                         }
                       }
-                      
+
                     },
-                    
+
+                    #' @import data.table
                     initial_record = function(name = NULL){
-                      
-                      
-                      
+
+
+
                       camels.in.order <- NULL
                       x.values <- NULL
                       y.values <- NULL
@@ -1076,8 +1029,8 @@ system <- R6Class(classname = 'System',
                           self$board$spaces[[i]]$camels$push(temp)
                         }
                       }
-                      
-                      
+
+
                       current.purse <- self$players[[self$current.player]]$purse
                       if(!is.null(name))
                         for(p in self$players){
@@ -1086,32 +1039,32 @@ system <- R6Class(classname = 'System',
                           }
                         }
                       output.table <- data.table("Color" = c(camels.in.order, "Player"), "X" = c(x.values, current.purse), "Y" = c(y.values, current.purse))
-                      
+
                       return(output.table)
-                      
+
                     },
-                    
+
                     post_record = function(initial.camel.order, initial.camel.positions, previous.player, initial.purse){
-                      
+
                       output.vector <- c()
                       for(c in 1:5){
                         output.vector <- c(output.vector, initial.camel.order[[i]]$position - initial.camel.positions[[i]])
                       }
-                      
+
                       output.vector <- c(output.vector, self$players[[previous.player]]$purse - initial.purse)
-                      
+
                       # print(paste(output.vector, collapse=''))
-                      
+
                     },
-                    
+
                     print = function(){
-                      
+
                       b.print <- self$board$print()
                       p.print <- NULL
                       for(p in self$players){
                         p.print <- c(p.print, p$print())
                       }
-                      
+
                       return(list(b.print, p.print, paste(c('Current player: ', self$players[[self$current.player]]$name), collapse = '')))
                     },
                     duplicate = function(){
@@ -1133,7 +1086,7 @@ system <- R6Class(classname = 'System',
                         while(self$board$spaces[[i]]$camels$n > 0){
                           temp <- c(self$board$spaces[[i]]$pop.camel(), temp)
                         }
-                        
+
                         nCamel <- length(temp)
                         if(nCamel > 0){
                           for(j in 1:nCamel){
@@ -1146,18 +1099,19 @@ system <- R6Class(classname = 'System',
                           }
                         }
                       }
-                      
+
                       return(newSystem)
                     },
+
                     graphGame = function(){
-                      data <- self$initial_record() 
+                      data <- self$initial_record()
                       tiles <- self$board$getTileSpaces()
                       #fullColors <- c("blue", "darkgreen", "orange", "white", "yellow")
                       camelColors <- cleanColors(data$Color)
                       if(nrow(data) == 1){
                         plt <- data %>%
                           ggplot(aes(x = X, y = Y)) +
-                          geom_blank() + 
+                          geom_blank() +
                           coord_cartesian(xlim = c(1, 19),
                                           ylim = c(0.49, 5.49)) +
                           scale_x_continuous(breaks = 1:19) +
@@ -1171,7 +1125,7 @@ system <- R6Class(classname = 'System',
                       plt <- data %>%
                         filter(Color != "Player") %>%
                         ggplot(mapping = aes(x = X, y = Y, fill = Color, color = "black", width = 1)) +
-                        geom_tile() + 
+                        geom_tile() +
                         scale_fill_manual(values = camelColors) +
                         coord_cartesian(xlim = c(1, 19),
                                         ylim = c(0.49, 5.49)) +
@@ -1183,6 +1137,8 @@ system <- R6Class(classname = 'System',
                               legend.key = element_rect(color = "black"))
                       return(plt)
                     },
+
+                    #' @import data.table
                     purseTable = function(){
                       purses <- c()
                       names <- c()
@@ -1196,39 +1152,39 @@ system <- R6Class(classname = 'System',
                     graphCamelSim = function(color, data, action, type, vLinesBool) {
                       nSims <- nrow(data)/6
                       vLines <- c(16.5)
-                      
+
                       filteredData <- data %>%
                         filter(Color == color)
-                      
+
                       avg <- mean(filteredData$X)
                       stdDevX <- sd(filteredData$X)
-                      
+
                       if(length(vLinesBool) >0){
                         expVal <- eval(vLinesBool[1])
                         std1 <- eval(vLinesBool[2])
                         std2 <- eval(vLinesBool[3])
-                        
+
                         if (!is.na(std2)){
                           vLines <- c(vLines, avg + 2*stdDevX, avg - 2*stdDevX)
                           std1 <- TRUE
                         }
-                        
+
                         if (!is.na(std1)){
                           vLines <- c(vLines, avg + stdDevX, avg - stdDevX)
                           expVal <- TRUE
                         }
-                        
+
                         if(!is.na(expVal)){
                           vLines <- c(vLines, avg)
                         }
                       }
-                      
+
                       if(type == "stack"){
                         tempData <- filteredData %>%
                           group_by(X, Y) %>%
                           summarize("count" = n()) %>%
                           mutate(Probability = count/100)
-                        
+
                         plt <- ggplot(tempData, aes(x = X, y = Y), width = 10) +
                           geom_tile(aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
                                                                                              "black",
@@ -1241,8 +1197,8 @@ system <- R6Class(classname = 'System',
                           labs(x = "Space",
                                y = "Height",
                                title = paste("2-Dimensional Plot of Camel Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
-                        print("test")
-                        print(mean(tempData$X))
+                        #print("test")
+                        #print(mean(tempData$X))
                       }
                       if(type == "space"){
                         tempData <- filteredData %>%
@@ -1250,14 +1206,14 @@ system <- R6Class(classname = 'System',
                           group_by(X) %>%
                           summarize("count" = n()) %>%
                           mutate("Probability" = count/nSims)
-                        
+
                         plt <- ggplot(tempData, aes(x = X, y = Probability)) +
                           geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color),
                                    width = 0.9) +
-                          geom_text(aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) + 
+                          geom_text(aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
                           coord_cartesian(xlim = c(1, 19)) +
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
@@ -1266,20 +1222,20 @@ system <- R6Class(classname = 'System',
                           labs(x = "Space",
                                y = "Probability",
                                title = paste("Space vs. Probability Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
-                      }   
+                      }
                       if(type == "purse"){
                         tempData <- filteredData %>%
                           filter(Color == "Player") %>%
                           group_by(X) %>%
                           summarize("count" = n()) %>%
-                          mutate("Probability" = count/nSims) 
+                          mutate("Probability" = count/nSims)
                         plt <- ggplot(tempData, aes(x = X, y = Probability)) +
-                          geom_bar(stat = "identity", 
+                          geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color)
                                    , width = 0.9) +
-                          geom_text(aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) + 
+                          geom_text(aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
                           coord_cartesian(xlim = c(1, 19)) +
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
@@ -1292,7 +1248,7 @@ system <- R6Class(classname = 'System',
                         #scale_x_continuous(breaks = 1:19) +
                         #geom_vline(xintercept = 17) +
                         #theme_classic()
-                      }   
+                      }
                       return(plt)
                     },
                     createSimGraphs = function(color, action, nSims, vLinesBool = rep(FALSE, 3)){
@@ -1304,14 +1260,14 @@ system <- R6Class(classname = 'System',
                       space <- self$graphCamelSim(color, data, action, type = "space", vLinesBool)
                       if(str_detect(action, "bet") | str_detect(action, "winner") | str_detect(action, "loser")){
                         p <- self$graphCamelSim(color, data, action, type = "purse", vLinesBool)
-                        a <- grid.arrange(stack, space, p, nrow = 3)
+                        a <- gridExtra::grid.arrange(stack, space, p, nrow = 3)
                         # pushViewport(viewport(layout = grid.layout(3, 1), xscale = c(0,19)))
                         # purse <- self$graphCamelSim(color, data, action, type = "purse")
                         # grid::print(purse, vp = viewport(layout.pos.row = 3, layout.pos.col = 1))
                         # grid::print(space, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
                         # grid::print(stack, vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
                       } else {
-                        a <- grid.arrange(stack, space, nrow = 2)
+                        a <- gridExtra::grid.arrange(stack, space, nrow = 2)
                         # pushViewport(viewport(layout = grid.layout(2, 1), xscale = c(0,19)))
                         # grid::print(space, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
                         # grid::print(stack, vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
@@ -1327,13 +1283,9 @@ system <- R6Class(classname = 'System',
                       self$board$dice.left <- NULL
                       self$board$dice.rolled <- NULL
                     },
+
+                    #' @import data.table
                     changeCamel = function(color, space){
-                      # i <- 1
-                      # c <- self$board$tot.camels[[i]]
-                      # while(c$color != color){
-                      #   self$board$tot.camels[[i]]
-                      #   i <- i+1
-                      # }
                       colors <- c('Yellow','White','Blue','Green','Orange')
                       i <- 0
                       #c <- colors[i]
@@ -1347,9 +1299,11 @@ system <- R6Class(classname = 'System',
                       self$board$tot.camels[[i]] <- newCamel
                       #c$position <- space
                     },
+
+                    #' @import data.table
                     createBetsTable = function(){
                       selfBoard <- self$board
-                      
+
                       yellow <- rep("None", 3)
                       tempY <- NULL
                       yN <- selfBoard$y.bets$n
@@ -1360,8 +1314,8 @@ system <- R6Class(classname = 'System',
                           yellow[i] <- currentBet$value
                         }
                       }
-                      
-                      
+
+
                       blue <- rep("None", 3)
                       tempB <- NULL
                       bN <- selfBoard$b.bets$n
@@ -1372,7 +1326,7 @@ system <- R6Class(classname = 'System',
                           blue[i] <- currentBet$value
                         }
                       }
-                      
+
                       white <- rep("None", 3)
                       tempW <- NULL
                       wN <- selfBoard$w.bets$n
@@ -1383,7 +1337,7 @@ system <- R6Class(classname = 'System',
                           white[i] <- currentBet$value
                         }
                       }
-                      
+
                       orange <- rep("None", 3)
                       tempO <- NULL
                       oN <- selfBoard$o.bets$n
@@ -1394,7 +1348,7 @@ system <- R6Class(classname = 'System',
                           orange[i] <- currentBet$value
                         }
                       }
-                      
+
                       green <- rep("None", 3)
                       tempG <- NULL
                       gN <- selfBoard$g.bets$n
@@ -1405,7 +1359,7 @@ system <- R6Class(classname = 'System',
                           green[i] <- currentBet$value
                         }
                       }
-                      
+
                       for(i in yN:1){
                         selfBoard$y.bets$push(tempY[i])
                       }
@@ -1427,6 +1381,8 @@ system <- R6Class(classname = 'System',
                                         "Green" = green[1],
                                         "Orange" = orange[1]))
                     },
+
+                    #' @import data.table
                     createDiceTable = function(){
                       selfBoard <- self$board
                       colors <- NULL
@@ -1450,16 +1406,16 @@ system <- R6Class(classname = 'System',
                         self$board$y.bets <- newBets
                       }
                       if(color == "Green"){
-                        self$board$g.bets <- newBets                      
+                        self$board$g.bets <- newBets
                       }
                       if(color == "Blue"){
-                        self$board$b.bets <- newBets                      
+                        self$board$b.bets <- newBets
                       }
                       if(color == "White"){
-                        self$board$w.bets <- newBets                      
+                        self$board$w.bets <- newBets
                       }
                       if(color == "Orange"){
-                        self$board$o.bets <- newBets                      
+                        self$board$o.bets <- newBets
                       }
                     },
                     changeDie = function(color, left){
@@ -1486,16 +1442,16 @@ system <- R6Class(classname = 'System',
                     },
                     placeTile = function(type, num, name){
                       i <- 2
-                      print("selecting player 1")
+                      #print("selecting player 1")
                       player <- self$players[[1]]
                       currentName <- player$name
-                      print("finding player")
+                      #print("finding player")
                       while(currentName != name){
                         player <- self$players[[i]]
                         currentName <- player$name
                         i <- i + 1
                       }
-                      
+
                       boardSpace <- self$board$spaces[[num]]
                       if (type == "Plus"){
                         player$plus.tile <- num
@@ -1505,10 +1461,13 @@ system <- R6Class(classname = 'System',
                         boardSpace$minus.tile <- TRUE
                       }
                       boardSpace$tile.placed.by <- name
-                      
-                    }
-                    ))
 
+                    }
+                  ))
+
+#' Correctly orders colors for graphing
+#'
+#' @param subColors a subset of the full set of colors of camels
 cleanColors <- function(subColors){
   #creates camel colors for graphing based on the list of colors provided
   #useful in graphing custom games when not all camels are on the board
@@ -1523,88 +1482,3 @@ cleanColors <- function(subColors){
   return(outputColors)
 }
 
-
-# s <- system$new()
-# 3
-# Tom
-# Alex
-# Michael
-# s$take.turn("minus 4")
-# s$graphGame()
-# s$simGame("move", 1:5)
-# 
-# system.time(s$simNGames("move", 500))
-# 
-# 
-# 
-# a <- s$simNGames("move", 5)
-# 
-# s$take.turn("move")
-# 
-# a <- s$duplicate()
-# a$createSimGraphs("Blue", "move", 10)
-# a <- s$duplicate()
-# a$createSimGraphs("Blue", "winner Yellow", 10)
-# 
-# 
-# 
-# 
-# s$simGame("move", 1:5)
-# m <- Sys.time()
-# testData <- a$simNGames("move", 1000)
-# n <- Sys.time() - m
-# n
-# 
-# x <- system.time({testData <- s$simNGames("move", 500)})
-# 
-# p1 <- s$createSimGraphs()
-# 
-# 
-# p1 <- testData %>%
-#   as.data.frame() %>%
-#   filter(Color == "Blue") %>%
-#   group_by(X, Y) %>%
-#   summarize("count" = n()) %>%
-#   mutate(Probability = count/100) %>%
-#   ggplot(aes(x = X, y = Y)) +
-#   geom_tile(aes(alpha = Probability), color = "black", fill = "blue") +
-#   coord_cartesian(xlim = c(1, 19)) +
-#   coord_cartesian(ylim = c(0.49, 5.49)) +
-#   scale_x_continuous(breaks = 1:19) +
-#   geom_vline(xintercept = 17) +
-#   theme_classic()
-# 
-# testData %>%
-#   filter(Color == "Player") %>%
-#   ggplot(aes(x = X), width = 10) + 
-#   geom_bar()+
-#   scale_x_continuous(breaks = 1:19)
-# # 
-# # 
-# s$initial_record() %>%
-#   filter(Color != "Player") %>%
-#   ggplot(mapping = aes(x = X, y = Y, fill = Color, color = "black")) +
-#   geom_tile() + 
-#   scale_fill_manual(values = c("blue", "darkgreen", "orange", "white", "yellow")) +
-#   coord_cartesian(xlim = c(1, 19)) +
-#   scale_x_continuous(breaks = 1:19) +
-#   geom_vline(xintercept = 17) +
-#   theme_classic() +
-#   guides(color = FALSE) +
-#   theme(legend.background = element_rect(colour = 'black', fill = 'white', linetype='solid'),
-#         legend.key = element_rect(color = "black"))
-# # 
-# # hist(testData[[1]]$X)
-# 
-# g1 <- ggplotGrob(p1)
-# g1 <- gtable_add_cols(g1, unit(0,"mm")) # add a column for missing legend
-# g2 <- ggplotGrob(p2)
-# g <- rbind(g1, g2, size="first") # stack the two plots
-# g$widths <- unit.pmax(g1$widths, g2$widths) # use the largest widths
-# # center the legend vertically
-# g$layout[grepl("guide", g$layout$name),c("t","b")] <- c(1,nrow(g))
-# grid.newpage()
-# grid.draw(g)
-# 
-# gl <- c(g1, g2)
-# grid.arrange(p1,p2,p3, nrow = 3)
