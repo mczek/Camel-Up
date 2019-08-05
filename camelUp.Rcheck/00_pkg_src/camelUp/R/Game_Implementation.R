@@ -742,7 +742,7 @@ system <- R6Class(classname = 'System',
 
                       #print(sims)
                       simsDF <- sims %>%
-                        data.table::rbindlist() %>%
+                        rbindlist() %>%
                         as.data.frame()
 
 
@@ -1107,7 +1107,7 @@ system <- R6Class(classname = 'System',
                       #fullColors <- c("blue", "darkgreen", "orange", "white", "yellow")
                       camelColors <- cleanColors(data$Color)
                       if(nrow(data) == 1){
-                        plt <- ggplot2::ggplot(data, ggplot2::aes(x = X, y = Y)) +
+                        plt <- ggplot2::ggplot(data, aes(x = X, y = Y)) +
                           geom_blank() +
                           coord_cartesian(xlim = c(1, 19),
                                           ylim = c(0.49, 5.49)) +
@@ -1121,7 +1121,7 @@ system <- R6Class(classname = 'System',
                       }
 
                       filteredData <- dplyr::filter(data, Color != "Player")
-                      plt <- ggplot2::ggplot(filteredData, mapping = ggplot2::aes(x = X, y = Y, fill = Color, color = "black", width = 1)) +
+                      plt <- ggplot2::ggplot(filteredData, mapping = aes(x = X, y = Y, fill = Color, color = "black", width = 1)) +
                         geom_tile() +
                         scale_fill_manual(values = camelColors) +
                         coord_cartesian(xlim = c(1, 19),
@@ -1179,8 +1179,8 @@ system <- R6Class(classname = 'System',
                         tempData <- summarize(tempData, "count" = n())
                         tempData <- mutate(tempData, Probability = count/100)
 
-                        plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Y), width = 10) +
-                          geom_tile(ggplot2::aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
+                        plt <- ggplot2::ggplot(tempData, aes(x = X, y = Y), width = 10) +
+                          geom_tile(aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
                                                                                              "black",
                                                                                              color)) +
                           coord_cartesian(xlim = c(1, 19)) +
@@ -1190,7 +1190,7 @@ system <- R6Class(classname = 'System',
                           theme_classic() +
                           labs(x = "Space",
                                y = "Height",
-                               title = paste("2-Dimensional Plot of Camel Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
+                               title = paste("2-Dimensional Plot of Camel Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
                         #print("test")
                         #print(mean(tempData$X))
                       }
@@ -1200,13 +1200,13 @@ system <- R6Class(classname = 'System',
                         tempData <- summarize(tempData, "count" = n())
                         tempData <- mutate(tempData, "Probability" = count/nSims)
 
-                        plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
+                        plt <- ggplot2::ggplot(tempData, aes(x = X, y = Probability)) +
                           geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color),
                                    width = 0.9) +
-                          geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
+                          geom_text(aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
                           coord_cartesian(xlim = c(1, 19)) +
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
@@ -1214,20 +1214,20 @@ system <- R6Class(classname = 'System',
                           theme_classic() +
                           labs(x = "Space",
                                y = "Probability",
-                               title = paste("Space vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
+                               title = paste("Space vs. Probability Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
                       }
                       if(type == "purse"){
                         tempData <- dplyr::filter(filteredData, Color == "Player")
                         tempData <- group_by(tempData, X)
                         tempData <- summarize(tempData, "count" = n())
                         tempData <- mutate(tempData, "Probability" = count/nSims)
-                        plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
+                        plt <- ggplot2::ggplot(tempData, aes(x = X, y = Probability)) +
                           geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color)
                                    , width = 0.9) +
-                          geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
+                          geom_text(aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
                           coord_cartesian(xlim = c(1, 19)) +
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
@@ -1235,7 +1235,7 @@ system <- R6Class(classname = 'System',
                           theme_classic()+
                           labs(x = "Number of Coins",
                                y = "Probability",
-                               title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
+                               title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(avg,2), ". ", "Std. Dev. = ", round(stdDevX,2)))
                         #coord_cartesian(xlim = c(1, 19)) +
                         #scale_x_continuous(breaks = 1:19) +
                         #geom_vline(xintercept = 17) +

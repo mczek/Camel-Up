@@ -437,6 +437,6 @@ server <- function(input, output) {
 #' @import parallel
 #' @export
 playCamelUp <- function(){
-  shinyApp(ui = generateUI(), server = server)
+  shinyApp(ui = generateUI, server = server)
 }
 
