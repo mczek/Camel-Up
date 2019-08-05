@@ -1108,11 +1108,11 @@ system <- R6Class(classname = 'System',
                       camelColors <- cleanColors(data$Color)
                       if(nrow(data) == 1){
                         plt <- ggplot2::ggplot(data, ggplot2::aes(x = X, y = Y)) +
-                          geom_blank() +
+                          ggplot2::geom_blank() +
                           coord_cartesian(xlim = c(1, 19),
                                           ylim = c(0.49, 5.49)) +
                           scale_x_continuous(breaks = 1:19) +
-                          geom_vline(xintercept = 16.5) +
+                          ggplot2::geom_vline(xintercept = 16.5) +
                           theme_classic() +
                           guides(color = FALSE, size = FALSE) +
                           theme(legend.background = element_rect(colour = 'black', fill = 'white', linetype='solid'),
@@ -1122,12 +1122,12 @@ system <- R6Class(classname = 'System',
 
                       filteredData <- dplyr::filter(data, Color != "Player")
                       plt <- ggplot2::ggplot(filteredData, mapping = ggplot2::aes(x = X, y = Y, fill = Color, color = "black", width = 1)) +
-                        geom_tile() +
+                        ggplot2::geom_tile() +
                         scale_fill_manual(values = camelColors) +
                         coord_cartesian(xlim = c(1, 19),
                                         ylim = c(0.49, 5.49)) +
                         scale_x_continuous(breaks = 1:19, labels = (paste(1:19, tiles[[2]], sep = "\n"))) +
-                        geom_vline(xintercept = 16.5) +
+                        ggplot2::geom_vline(xintercept = 16.5) +
                         theme_classic() +
                         guides(color = FALSE, size = FALSE) +
                         theme(legend.background = element_rect(colour = 'black', fill = 'white', linetype='solid'),
@@ -1180,13 +1180,13 @@ system <- R6Class(classname = 'System',
                         tempData <- mutate(tempData, Probability = count/100)
 
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Y), width = 10) +
-                          geom_tile(ggplot2::aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
+                          ggplot2::geom_tile(ggplot2::aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
                                                                                              "black",
                                                                                              color)) +
                           coord_cartesian(xlim = c(1, 19)) +
                           ylim(0.49, 5.49) +
                           scale_x_continuous(breaks = 1:19) +
-                          geom_vline(xintercept = vLines) +
+                          ggplot2::geom_vline(xintercept = vLines) +
                           theme_classic() +
                           labs(x = "Space",
                                y = "Height",
@@ -1201,16 +1201,16 @@ system <- R6Class(classname = 'System',
                         tempData <- mutate(tempData, "Probability" = count/nSims)
 
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
-                          geom_bar(stat = "identity",
+                          ggplot2::geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color),
                                    width = 0.9) +
-                          geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
+                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
                           coord_cartesian(xlim = c(1, 19)) +
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
-                          geom_vline(xintercept = vLines) +
+                          ggplot2::geom_vline(xintercept = vLines) +
                           theme_classic() +
                           labs(x = "Space",
                                y = "Probability",
@@ -1222,23 +1222,23 @@ system <- R6Class(classname = 'System',
                         tempData <- summarize(tempData, "count" = n())
                         tempData <- mutate(tempData, "Probability" = count/nSims)
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
-                          geom_bar(stat = "identity",
+                          ggplot2::geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color)
                                    , width = 0.9) +
-                          geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
+                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
                           coord_cartesian(xlim = c(1, 19)) +
                           scale_x_continuous(breaks = 1:19) +
                           ylim(0,1)+
-                          geom_vline(xintercept = vLines) +
+                          ggplot2::geom_vline(xintercept = vLines) +
                           theme_classic()+
                           labs(x = "Number of Coins",
                                y = "Probability",
                                title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                         #coord_cartesian(xlim = c(1, 19)) +
                         #scale_x_continuous(breaks = 1:19) +
-                        #geom_vline(xintercept = 17) +
+                        #ggplot2::geom_vline(xintercept = 17) +
                         #theme_classic()
                       }
                       return(plt)
