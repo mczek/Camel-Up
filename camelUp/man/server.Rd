@@ -6,6 +6,11 @@
 \usage{
 server(input, output)
 }
+\arguments{
+\item{input}{input for shiny web app}
+
+\item{output}{output for shiny web app}
+}
 \description{
 Define server logic required to draw a histogram
 }

@@ -1217,7 +1217,7 @@ system <- R6Class(classname = 'System',
                                title = paste("Space vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                       }
                       if(type == "purse"){
-                        tempData <- dplyr::filter(filteredData, Color == "Player")
+                        tempData <- dplyr::filter(data, Color == "Player")
                         tempData <- group_by(tempData, X)
                         tempData <- summarize(tempData, "count" = n())
                         tempData <- mutate(tempData, "Probability" = count/nSims)
@@ -1244,6 +1244,7 @@ system <- R6Class(classname = 'System',
                       return(plt)
                     },
                     createSimGraphs = function(color, action, nSims, vLinesBool = rep(FALSE, 3)){
+                      print(action)
                       if(is.null(self$simData)){
                         self$simNGames(action, nSims)
                       }

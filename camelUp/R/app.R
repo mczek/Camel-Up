@@ -135,6 +135,10 @@ generateUI <- function(){
 
 
 #' Define server logic required to draw a histogram
+#'
+#' @param input input for shiny web app
+#' @param output output for shiny web app
+#'
 #' @import tidyverse
 #' @import data.table
 #' @import parallel
