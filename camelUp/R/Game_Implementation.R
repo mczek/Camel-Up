@@ -695,6 +695,7 @@ system <- R6Class(classname = 'System',
                     },
 
                     simGame = function(action, nDiceSeq){
+                      currentPurse <- self$players[[self$current.player]]$purse
                       # print("sim game")
                       sim <- self$duplicate()
                       name <- self$players[[self$current.player]]$name
@@ -714,7 +715,7 @@ system <- R6Class(classname = 'System',
                           sim$take.turn("move")
                         }
                       }
-                      result <- sim$initial_record(name)
+                      result <- sim$initial_record(name, currentPurse)
                       # print(result)
                       result <- data.table::as.data.table(result)
 
@@ -1002,7 +1003,7 @@ system <- R6Class(classname = 'System',
 
                     },
 
-                    initial_record = function(name = NULL){
+                    initial_record = function(name = NULL, originalPurse = 0){
 
 
 
@@ -1041,7 +1042,7 @@ system <- R6Class(classname = 'System',
                             current.purse <- p$purse
                           }
                         }
-                      output.table <- data.table::data.table("Color" = c(camels.in.order, "Player"), "X" = c(x.values, current.purse), "Y" = c(y.values, current.purse))
+                      output.table <- data.table::data.table("Color" = c(camels.in.order, "Player"), "X" = c(x.values, current.purse - originalPurse), "Y" = c(y.values, current.purse - originalPurse))
 
                       return(output.table)
 
@@ -1223,6 +1224,7 @@ system <- R6Class(classname = 'System',
                       }
                       if(type == "purse"){
                         tempData <- dplyr::filter(data, Color == "Player")
+
                         tempData <- group_by(tempData, X)
                         tempData <- summarize(tempData, "count" = n())
                         tempData <- mutate(tempData, "Probability" = count/nSims)
