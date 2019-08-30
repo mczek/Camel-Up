@@ -532,6 +532,11 @@ board <- R6Class(classname = 'Board',
                        }
                      }
 
+                     newBoard$dice.left <- NULL
+                     for(i in 1:length(self$dice.left)){
+                       newBoard$dice.left[[i]] <- self$dice.left[[i]]$duplicate()
+                     }
+
                      return(newBoard)
                    },
                    getTileSpaces = function(){

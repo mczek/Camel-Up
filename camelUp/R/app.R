@@ -339,7 +339,7 @@ server <- function(input, output) {
                                          if(input$customType == "Camel"){
                                            rept <- FALSE
                                            colors <- NULL
-                                           if(length(game$board$tot.camels) > 0){
+                                           if(length(game$board$tot.camels) > 0){#collect colors already on the board
                                              for(i in 1:length(game$board$tot.camels)){
                                                colors <- c(game$board$tot.camels[[i]]$color, colors)
                                              }
