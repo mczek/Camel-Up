@@ -658,6 +658,7 @@ player <- R6Class(classname = 'Player',
 #' System class that manages overall gameplay
 #'
 #' @import tidyverse
+#' @import ggplot2
 #'
 #' @export system
 #' @exportClass system
@@ -1115,29 +1116,29 @@ system <- R6Class(classname = 'System',
                       if(nrow(data) == 1){
                         plt <- ggplot2::ggplot(data, ggplot2::aes(x = X, y = Y)) +
                           ggplot2::geom_blank() +
-                          coord_cartesian(xlim = c(1, 19),
+                          ggplot2::coord_cartesian(xlim = c(1, 19),
                                           ylim = c(0.49, 5.49)) +
-                          scale_x_continuous(breaks = 1:19) +
+                          ggplot2::scale_x_continuous(breaks = 1:19) +
                           ggplot2::geom_vline(xintercept = 16.5) +
-                          theme_classic() +
-                          guides(color = FALSE, size = FALSE) +
-                          theme(legend.background = element_rect(colour = 'black', fill = 'white', linetype='solid'),
-                                legend.key = element_rect(color = "black"))
+                          ggplot2::theme_classic() +
+                          ggplot2::guides(color = FALSE, size = FALSE) +
+                          ggplot2::theme(legend.background = ggplot2::element_rect(colour = 'black', fill = 'white', linetype='solid'),
+                                legend.key = ggplot2::element_rect(color = "black"))
                         return(plt)
                       }
 
                       filteredData <- dplyr::filter(data, Color != "Player")
                       plt <- ggplot2::ggplot(filteredData, mapping = ggplot2::aes(x = X, y = Y, fill = Color, color = "black", width = 1)) +
                         ggplot2::geom_tile() +
-                        scale_fill_manual(values = camelColors) +
-                        coord_cartesian(xlim = c(1, 19),
+                        ggplot2::scale_fill_manual(values = camelColors) +
+                        ggplot2::coord_cartesian(xlim = c(1, 19),
                                         ylim = c(0.49, 5.49)) +
-                        scale_x_continuous(breaks = 1:19, labels = (paste(1:19, tiles[[2]], sep = "\n"))) +
+                        ggplot2::scale_x_continuous(breaks = 1:19, labels = (paste(1:19, tiles[[2]], sep = "\n"))) +
                         ggplot2::geom_vline(xintercept = 16.5) +
-                        theme_classic() +
-                        guides(color = FALSE, size = FALSE) +
-                        theme(legend.background = element_rect(colour = 'black', fill = 'white', linetype='solid'),
-                              legend.key = element_rect(color = "black"))
+                        ggplot2::theme_classic() +
+                        ggplot2::guides(color = FALSE, size = FALSE) +
+                        ggplot2::theme(legend.background = ggplot2::element_rect(colour = 'black', fill = 'white', linetype='solid'),
+                              legend.key = ggplot2::element_rect(color = "black"))
                       return(plt)
                     },
 
