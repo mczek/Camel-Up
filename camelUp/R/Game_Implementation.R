@@ -612,14 +612,17 @@ player <- R6Class(classname = 'Player',
                       self$board$loser.bets$push(overall.bet$new(color, self))
                     },
 
-                    make.move = function(){
+                    make.move = function(isSim = FALSE){
                       # print('make.move')
                       d <- self$board$choose.die()
                       color <- d$color
                       dis <- d$roll()
                       message(c(d$print(), ' ', dis))
                       self$board$move.camel(die = d, dis = dis)
-                      self$purse <- self$purse + 1
+
+                      if(!isSim){
+                        self$purse <- self$purse + 1
+                      }
 
                       return(c(TRUE, paste0(color, ' Die rolled ', dis)))
                     },
@@ -696,26 +699,27 @@ system <- R6Class(classname = 'System',
                     },
 
                     simGame = function(action, nDiceSeq){
-                      currentPurse <- self$players[[self$current.player]]$purse
+
                       # print("sim game")
                       sim <- self$duplicate()
                       name <- self$players[[self$current.player]]$name
                       #nDiceLeft <- length(self$board$dice.left)
                       if (action == "move"){
                         for(i in nDiceSeq){
-                          sim$take.turn("move")
+                          sim$take.turn("move", TRUE)
                         }
-                      } else if (str_detect(action, "winner") | str_detect(action, "loser")){
+                      } else if (stringr::str_detect(action, "winner") | stringr::str_detect(action, "loser")){
                         sim$take.turn(action)
                         while(!sim$board$check.end.game()){
-                          sim$take.turn("move")
+                          sim$take.turn("move", TRUE)
                         }
                       } else {
                         sim$take.turn(action)
                         for(i in nDiceSeq){
-                          sim$take.turn("move")
+                          sim$take.turn("move", TRUE)
                         }
                       }
+                      currentPurse <- 3 #self$players[[self$current.player]]$purse
                       result <- sim$initial_record(name, currentPurse)
                       # print(result)
                       result <- data.table::as.data.table(result)
@@ -747,10 +751,9 @@ system <- R6Class(classname = 'System',
                         temp$simGame(action, nDiceSeq)
                       })
 
-                      #print(sims)
-                      simsDF <- sims %>%
-                        data.table::rbindlist() %>%
-                        as.data.frame()
+                      print(sims)
+                      simsDF <- data.table::rbindlist(sims)
+                      simsDF <- as.data.frame(simsDF)
 
 
                       #print("finished simNGames")
@@ -759,43 +762,43 @@ system <- R6Class(classname = 'System',
                     },
 
 
-                    take.turn = function(input = NULL){
+                    take.turn = function(input = NULL, isSim = FALSE){
                       if(is.null(input)){
                         input <- readline(prompt = paste(c(self$players[[self$current.player]]$name, ", it is your turn. What would you like to do? "), collapse = ''))
                       }
 
                       dispText <- NULL
                       #message(input)
-                      # command <- str_sub(input, 1, str_locate(input, ' ')[1])
+                      # command <- stringr::str_sub(input, 1, stringr::str_locate(input, ' ')[1])
                       # message(command)
                       #print(input)
                       valid <- FALSE
-                      if(str_detect(input, 'bet') == TRUE){
-                        temp <- str_sub(input, (str_locate(input, ' ')[1]+1), nchar(input))
+                      if(stringr::str_detect(input, 'bet') == TRUE){
+                        temp <- stringr::str_sub(input, (stringr::str_locate(input, ' ')[1]+1), nchar(input))
                         message(temp)
                         dispText <-  temp
-                        valid <- self$players[[self$current.player]]$place.bet(str_sub(input, (str_locate(input, ' ')[1]+1), nchar(input)))
+                        valid <- self$players[[self$current.player]]$place.bet(stringr::str_sub(input, (stringr::str_locate(input, ' ')[1]+1), nchar(input)))
                         message(valid)
                         #dispText <-  c(dispText, valid)
                       }
-                      else if(str_detect(input, 'move') == TRUE){
+                      else if(stringr::str_detect(input, 'move') == TRUE){
                         # print('move called')
                         if(length(self$board$dice.left) > 0){
-                          temp <- self$players[[self$current.player]]$make.move()
+                          temp <- self$players[[self$current.player]]$make.move(isSim)
                           #print(temp)
                           valid <- temp[1]
                           dispText <- temp[2]
                         }
                       }
-                      else if(str_detect(input, 'plus') == TRUE){
+                      else if(stringr::str_detect(input, 'plus') == TRUE){
                         if(self$players[[self$current.player]]$plus.tile == 0 & self$players[[self$current.player]]$minus.tile == 0){
-                          if(self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$plus.tile == FALSE &
-                             self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$minus.tile == FALSE){
-                            if(self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$camels$n == 0){
-                              self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$plus.tile <- TRUE
-                              self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$tile.placed.by <- self$current.player
-                              self$players[[self$current.player]]$plus.tile <- as.numeric(str_sub(input, (str_locate(input, ' ')[1]+1)))
-                              dispText <- paste0("Plus tile placed on space ", str_sub(input,(str_locate(input, ' ')[1]+1)), " by ", self$players[[self$current.player]]$name)
+                          if(self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$plus.tile == FALSE &
+                             self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$minus.tile == FALSE){
+                            if(self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$camels$n == 0){
+                              self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$plus.tile <- TRUE
+                              self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$tile.placed.by <- self$current.player
+                              self$players[[self$current.player]]$plus.tile <- as.numeric(stringr::str_sub(input, (stringr::str_locate(input, ' ')[1]+1)))
+                              dispText <- paste0("Plus tile placed on space ", stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)), " by ", self$players[[self$current.player]]$name)
                               valid <- TRUE
                             }
                             else
@@ -807,15 +810,15 @@ system <- R6Class(classname = 'System',
                         else
                           valid <- FALSE
                       }
-                      else if(str_detect(input, 'minus') == TRUE){
+                      else if(stringr::str_detect(input, 'minus') == TRUE){
                         if(self$players[[self$current.player]]$plus.tile == 0 & self$players[[self$current.player]]$minus.tile == 0){
-                          if(self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$plus.tile == FALSE &
-                             self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$minus.tile == FALSE){
-                            if(self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$camels$n == 0){
-                              self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$minus.tile <- TRUE
-                              self$board$spaces[[as.numeric(str_sub(input,(str_locate(input, ' ')[1]+1)))]]$tile.placed.by <- self$current.player
-                              self$players[[self$current.player]]$minus.tile <- as.numeric(str_sub(input, (str_locate(input, ' ')[1]+1)))
-                              dispText <- paste0("Minus tile placed on space ", str_sub(input,(str_locate(input, ' ')[1]+1)), "by ", self$players[[self$current.player]]$name)
+                          if(self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$plus.tile == FALSE &
+                             self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$minus.tile == FALSE){
+                            if(self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$camels$n == 0){
+                              self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$minus.tile <- TRUE
+                              self$board$spaces[[as.numeric(stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))]]$tile.placed.by <- self$current.player
+                              self$players[[self$current.player]]$minus.tile <- as.numeric(stringr::str_sub(input, (stringr::str_locate(input, ' ')[1]+1)))
+                              dispText <- paste0("Minus tile placed on space ", stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)), "by ", self$players[[self$current.player]]$name)
                               valid <- TRUE
                             }
                             else
@@ -828,13 +831,13 @@ system <- R6Class(classname = 'System',
                           valid <- FALSE
                       }
 
-                      else if(str_detect(input, 'winner') == TRUE){
-                        self$players[[self$current.player]]$place.winner.bet(color = str_sub(input,(str_locate(input, ' ')[1]+1)))
+                      else if(stringr::str_detect(input, 'winner') == TRUE){
+                        self$players[[self$current.player]]$place.winner.bet(color = stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))
                         dispText <- "Overall Winner bet placed"
                         valid <- TRUE
                       }
-                      else if(str_detect(input, 'loser') == TRUE){
-                        self$players[[self$current.player]]$place.loser.bet(color = str_sub(input,(str_locate(input, ' ')[1]+1)))
+                      else if(stringr::str_detect(input, 'loser') == TRUE){
+                        self$players[[self$current.player]]$place.loser.bet(color = stringr::str_sub(input,(stringr::str_locate(input, ' ')[1]+1)))
                         dispText <- "Overall Loser bet placed"
                         valid <- TRUE
                       }
@@ -1182,20 +1185,20 @@ system <- R6Class(classname = 'System',
                       }
 
                       if(type == "stack"){
-                        tempData <- group_by(filteredData, X, Y)
-                        tempData <- summarize(tempData, "count" = n())
-                        tempData <- mutate(tempData, Probability = count/100)
+                        tempData <- dplyr::group_by(filteredData, X, Y)
+                        tempData <- dplyr::summarize(tempData, "count" = n())
+                        tempData <- dplyr::mutate(tempData, Probability = count/100)
 
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Y), width = 10) +
                           ggplot2::geom_tile(ggplot2::aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
                                                                                              "black",
                                                                                              color)) +
-                          coord_cartesian(xlim = c(1, 19)) +
-                          ylim(0.49, 5.49) +
-                          scale_x_continuous(breaks = 1:19) +
+                          ggplot2::coord_cartesian(xlim = c(1, 19)) +
+                          ggplot2::ylim(0.49, 5.49) +
+                          ggplot2::scale_x_continuous(breaks = 1:19) +
                           ggplot2::geom_vline(xintercept = vLines) +
-                          theme_classic() +
-                          labs(x = "Space",
+                          ggplot2::theme_classic() +
+                          ggplot2::labs(x = "Space",
                                y = "Height",
                                title = paste("2-Dimensional Plot of Camel Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                         #print("test")
@@ -1203,9 +1206,9 @@ system <- R6Class(classname = 'System',
                       }
                       if(type == "space"){
                         tempData <- dplyr::filter(filteredData, Color == color)
-                        tempData <- group_by(tempData, X)
-                        tempData <- summarize(tempData, "count" = n())
-                        tempData <- mutate(tempData, "Probability" = count/nSims)
+                        tempData <- dplyr::group_by(tempData, X)
+                        tempData <- dplyr::summarize(tempData, "count" = n())
+                        tempData <- dplyr::mutate(tempData, "Probability" = count/nSims)
 
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
                           ggplot2::geom_bar(stat = "identity",
@@ -1213,39 +1216,38 @@ system <- R6Class(classname = 'System',
                                                  "black",
                                                  color),
                                    width = 0.9) +
-                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
-                          coord_cartesian(xlim = c(1, 19)) +
-                          scale_x_continuous(breaks = 1:19) +
-                          ylim(0,1)+
+                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
+                          ggplot2::coord_cartesian(xlim = c(1, 19)) +
+                          ggplot2::scale_x_continuous(breaks = 1:19) +
+                          ggplot2::ylim(0,1)+
                           ggplot2::geom_vline(xintercept = vLines) +
-                          theme_classic() +
-                          labs(x = "Space",
+                          ggplot2::theme_classic() +
+                          ggplot2::labs(x = "Space",
                                y = "Probability",
                                title = paste("Space vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                       }
                       if(type == "purse"){
                         tempData <- dplyr::filter(data, Color == "Player")
 
-                        tempData <- group_by(tempData, X)
-                        tempData <- summarize(tempData, "count" = n())
-                        tempData <- mutate(tempData, "Probability" = count/nSims)
+                        tempData <- dplyr::group_by(tempData, X)
+                        tempData <- dplyr::summarize(tempData, "count" = n())
+                        tempData <- dplyr::mutate(tempData, "Probability" = count/nSims)
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
                           ggplot2::geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color)
                                    , width = 0.9) +
-                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=position_dodge(width=0.9), vjust=-0.25) +
-                          coord_cartesian(xlim = c(1, 19)) +
-                          scale_x_continuous(breaks = 1:19) +
-                          ylim(0,1)+
+                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
+                          ggplot2::scale_x_continuous(breaks = -1:5) +
+                          ggplot2::ylim(0,1)+
                           ggplot2::geom_vline(xintercept = vLines) +
-                          theme_classic()+
-                          labs(x = "Number of Coins",
+                          ggplot2::theme_classic() +
+                          ggplot2::labs(x = "Number of Coins",
                                y = "Probability",
                                title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                         #coord_cartesian(xlim = c(1, 19)) +
-                        #scale_x_continuous(breaks = 1:19) +
+                        #ggplot2::scale_x_continuous(breaks = 1:19) +
                         #ggplot2::geom_vline(xintercept = 17) +
                         #theme_classic()
                       }
@@ -1259,7 +1261,7 @@ system <- R6Class(classname = 'System',
                       data <- self$simData
                       stack <- self$graphCamelSim(color, data, action, type = "stack", vLinesBool)
                       space <- self$graphCamelSim(color, data, action, type = "space", vLinesBool)
-                      if(str_detect(action, "bet") | str_detect(action, "winner") | str_detect(action, "loser")){
+                      if(stringr::str_detect(action, "bet") | stringr::str_detect(action, "winner") | stringr::str_detect(action, "loser")){
                         p <- self$graphCamelSim(color, data, action, type = "purse", vLinesBool)
                         a <- gridExtra::grid.arrange(stack, space, p, nrow = 3)
                         # pushViewport(viewport(layout = grid.layout(3, 1), xscale = c(0,19)))
