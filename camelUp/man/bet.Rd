@@ -11,4 +11,7 @@ bet
 \description{
 A bet object that is placed for a leg on a given camel
 }
+\examples{
+x <- bet$new("blue", 5)
+}
 \keyword{datasets}

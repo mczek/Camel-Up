@@ -11,4 +11,9 @@ overall.bet
 \description{
 A bet object that is placed overall on a given camel
 }
+\examples{
+s <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
+p <- s$players[[1]]
+x <- overall.bet$new("blue", p)
+}
 \keyword{datasets}

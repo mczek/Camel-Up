@@ -11,4 +11,7 @@ camel
 \description{
 Implements camel class based off of the board game pieces
 }
+\examples{
+x <- camel$new("blue", 1, 1)
+}
 \keyword{datasets}

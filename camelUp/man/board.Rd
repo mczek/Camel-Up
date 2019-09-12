@@ -11,4 +11,8 @@ board
 \description{
 A board object on which the game is played
 }
+\examples{
+y <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
+x <- board$new(y)
+}
 \keyword{datasets}

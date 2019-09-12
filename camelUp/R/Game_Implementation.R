@@ -13,6 +13,11 @@
 #' @import R6
 #' @export stack
 #' @exportClass stack
+#'
+#' @examples
+#' x <- stack$new()
+#' x$push(5)
+#' y <- x$pop()
 stack <- R6Class(classname = 'Stack',
                  public = list(
                    s = NULL, #vector representing the stack itself
@@ -64,6 +69,9 @@ stack <- R6Class(classname = 'Stack',
 #' Implements camel class based off of the board game pieces
 #' @export camel
 #' @exportClass camel
+#'
+#' @examples
+#' x <- camel$new("blue", 1, 1)
 camel <- R6Class(classname = 'Camel',
                  public = list(
                    color = NA,
@@ -78,7 +86,6 @@ camel <- R6Class(classname = 'Camel',
                      return(self$color)
                    },
                    move = function(dis){
-                     #print("move in camel")
                      self$position <- self$position + dis
                    },
                    print = function(){
@@ -94,6 +101,9 @@ camel <- R6Class(classname = 'Camel',
 #' Implements spaces on the board
 #' @export space
 #' @exportClass space
+#'
+#' @examples
+#' x <- space$new()
 space <- R6Class(classname = 'Space',
                  public = list(
                    camels = NULL,
@@ -152,6 +162,9 @@ space <- R6Class(classname = 'Space',
 #' A three sided die, assigned a color corresponding to a camel
 #' @export die
 #' @exportClass die
+#'
+#' @examples
+#' x <- die$new("blue")
 die <- R6Class(classname = 'Die',
                public = list(
                  color = NA,
@@ -172,6 +185,9 @@ die <- R6Class(classname = 'Die',
 #' A bet object that is placed for a leg on a given camel
 #' @export bet
 #' @exportClass bet
+#'
+#' @examples
+#' x <- bet$new("blue", 5)
 bet <- R6Class(classname = 'Bet',
                public = list(
                  color = NULL,
@@ -192,6 +208,11 @@ bet <- R6Class(classname = 'Bet',
 #' A bet object that is placed overall on a given camel
 #' @export overall.bet
 #' @exportClass overall.bet
+#'
+#' @examples
+#' s <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
+#' p <- s$players[[1]]
+#' x <- overall.bet$new("blue", p)
 overall.bet <- R6Class(classname = 'Overall.Bet',
                        public = list(
                          color = NULL,
@@ -212,6 +233,10 @@ overall.bet <- R6Class(classname = 'Overall.Bet',
 #' A board object on which the game is played
 #' @export board
 #' @exportClass board
+#'
+#' @examples
+#' y <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
+#' x <- board$new(y)
 board <- R6Class(classname = 'Board',
                  public = list(
                    spaces = NULL,
@@ -562,6 +587,11 @@ board <- R6Class(classname = 'Board',
 #' Player object to represent each player using bets and a purse
 #' @export player
 #' @exportClass player
+#'
+#' @examples
+#'
+#' s <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
+#' x <- player$new("Michael", s$board)
 player <- R6Class(classname = 'Player',
                   public = list(
                     purse = NULL,
@@ -658,13 +688,15 @@ player <- R6Class(classname = 'Player',
 
                   ))
 
-#' System class that manages overall gameplay
+#' System class that manages overall game play
 #'
 #' @import tidyverse
-#' @import ggplot2
 #'
 #' @export system
 #' @exportClass system
+#'
+#' @examples
+#' x <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
 system <- R6Class(classname = 'System',
                   public = list(
                     board = NULL,
@@ -673,7 +705,7 @@ system <- R6Class(classname = 'System',
                     current.player = NULL,
                     simData = NULL,
 
-                    #' Initialize system object
+                    # Initialize system object
                     initialize = function(nPlayers = NULL, players = NULL, isDup = FALSE){ #NEW
                       self$board = board$new(self)
                       self$n.players <- nPlayers
@@ -935,7 +967,6 @@ system <- R6Class(classname = 'System',
                     },
 
                     eval.end.game = function(){
-
                       for(i in 19:1){
                         if(self$board$spaces[[i]]$camels$n > 0){
                           winner <- self$board$spaces[[i]]$camels$pop()
@@ -1216,7 +1247,7 @@ system <- R6Class(classname = 'System',
                                                  "black",
                                                  color),
                                    width = 0.9) +
-                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
+                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 3)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
                           ggplot2::coord_cartesian(xlim = c(1, 19)) +
                           ggplot2::scale_x_continuous(breaks = 1:19) +
                           ggplot2::ylim(0,1)+
@@ -1232,13 +1263,14 @@ system <- R6Class(classname = 'System',
                         tempData <- dplyr::group_by(tempData, X)
                         tempData <- dplyr::summarize(tempData, "count" = n())
                         tempData <- dplyr::mutate(tempData, "Probability" = count/nSims)
+                        print(tempData)
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
                           ggplot2::geom_bar(stat = "identity",
                                    fill = ifelse(color == "White",
                                                  "black",
                                                  color)
                                    , width = 0.9) +
-                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 2)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
+                          ggplot2::geom_text(ggplot2::aes(label = round(Probability, 3)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
                           ggplot2::scale_x_continuous(breaks = -1:5) +
                           ggplot2::ylim(0,1)+
                           ggplot2::geom_vline(xintercept = vLines) +
@@ -1461,7 +1493,6 @@ system <- R6Class(classname = 'System',
                         boardSpace$minus.tile <- TRUE
                       }
                       boardSpace$tile.placed.by <- name
-
                     }
                   ))
 

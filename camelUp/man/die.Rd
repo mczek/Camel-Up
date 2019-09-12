@@ -11,4 +11,7 @@ die
 \description{
 A three sided die, assigned a color corresponding to a camel
 }
+\examples{
+x <- die$new("blue")
+}
 \keyword{datasets}

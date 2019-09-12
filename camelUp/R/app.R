@@ -65,7 +65,7 @@ generateUI <- function(){
                                          c("Move Camel","Place Leg Bet","Place Tile","Place Overall Bet"),
                                          selected = "Move Camel"),
                              sliderInput("nSims", "Select Number of Simulations",
-                                         min = 1, max = 1000, value = 500),
+                                         min = 1, max = 100000, value = 500),
                              actionButton('Sim',
                                           "Simulate!"),
                              conditionalPanel(condition = "input.simMove == 'Place Leg Bet'",
@@ -439,7 +439,6 @@ server <- function(input, output) {
 #' @description Run CamelUp in a local web browser. Running locally allows for using the app without an internet connection and running in parallel on the local computer
 #'
 #' @import parallel
-#' @import ggthemes
 #'
 #' @export
 playCamelUp <- function(){

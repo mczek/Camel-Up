@@ -11,4 +11,7 @@ space
 \description{
 Implements spaces on the board
 }
+\examples{
+x <- space$new()
+}
 \keyword{datasets}

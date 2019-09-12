@@ -3,12 +3,15 @@
 \docType{data}
 \name{system}
 \alias{system}
-\title{System class that manages overall gameplay}
+\title{System class that manages overall game play}
 \format{An object of class \code{R6ClassGenerator} of length 24.}
 \usage{
 system
 }
 \description{
-System class that manages overall gameplay
+System class that manages overall game play
+}
+\examples{
+x <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
 }
 \keyword{datasets}

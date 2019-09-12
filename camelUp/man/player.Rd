@@ -11,4 +11,9 @@ player
 \description{
 Player object to represent each player using bets and a purse
 }
+\examples{
+
+s <- system$new(nPlayers = 2, players = c("Michael", "Alex"))
+x <- player$new("Michael", s$board)
+}
 \keyword{datasets}

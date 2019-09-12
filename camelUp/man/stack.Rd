@@ -11,4 +11,9 @@ stack
 \description{
 Implements a classic stack with push, pop and a few other methods
 }
+\examples{
+x <- stack$new()
+x$push(5)
+y <- x$pop()
+}
 \keyword{datasets}
