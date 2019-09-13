@@ -1218,7 +1218,7 @@ system <- R6Class(classname = 'System',
                       if(type == "stack"){
                         tempData <- dplyr::group_by(filteredData, X, Y)
                         tempData <- dplyr::summarize(tempData, "count" = n())
-                        tempData <- dplyr::mutate(tempData, Probability = count/2*sum(tempData$count))
+                        tempData <- dplyr::mutate(tempData, Probability = count/sum(tempData$count))
 
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Y), width = 10) +
                           ggplot2::geom_tile(ggplot2::aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
