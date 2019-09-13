@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-camelUp
+CamelUp
 =======
 
 <!-- badges: start -->
@@ -29,7 +29,7 @@ Example
 The main function of this package is to allow the user to run this game locally. We have exported all of the objects in case the user would like to make use of them, but the main focus is on playing the game.
 
 ``` r
-library(camelUp)
+library(CamelUp)
 #playCamelUp()
 ```
 

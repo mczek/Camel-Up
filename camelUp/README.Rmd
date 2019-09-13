@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# camelUp
+# CamelUp
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -39,7 +39,7 @@ devtools::install_github("mczekanski1/Camel-Up/camelUp")
 The main function of this package is to allow the user to run this game locally. We have exported all of the objects in case the user would like to make use of them, but the main focus is on playing the game.
 
 ```{r example}
-library(camelUp)
+library(CamelUp)
 #playCamelUp()
 ```
 
