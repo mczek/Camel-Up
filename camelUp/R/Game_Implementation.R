@@ -252,6 +252,7 @@ board <- R6Class(classname = 'Board',
                    g.bets = NULL,
                    o.bets = NULL,
 
+
                    winner.bets = NULL,
                    loser.bets = NULL,
                    initialize = function(sys){
@@ -436,8 +437,10 @@ board <- R6Class(classname = 'Board',
 
                    check.end.game = function() {
                      for(cam in self$tot.camels){
-                       if(cam$position > 16)
+                       if(cam$position > 16){
+
                          return(TRUE)
+                       }
                      }
                      return(FALSE)
                    },
@@ -707,6 +710,7 @@ system <- R6Class(classname = 'System',
                     players = NULL,
                     current.player = NULL,
                     simData = NULL,
+                    gameOver = FALSE,
 
                     # Initialize system object
                     initialize = function(nPlayers = NULL, players = NULL, isDup = FALSE){ #NEW
@@ -740,12 +744,20 @@ system <- R6Class(classname = 'System',
                       sim <- self$duplicate()
                       name <- self$players[[self$current.player]]$name
                       #nDiceLeft <- length(self$board$dice.left)
+                      lastNumDice <- max(nDiceSeq)
                       if (action == "move"){
+                        for(i in nDiceSeq){
+                          if(!sim$gameOver){
+                            # lastNumDice <- length(sim$board$dice.left)
+                            sim$take.turn("move", TRUE)
 
-                        while(!sim$board$check.end.leg()){
-                          sim$take.turn("move", TRUE)
+                          }
 
                         }
+                        # while(!sim$board$check.end.leg()){
+                        #   sim$take.turn("move", TRUE)
+                        #
+                        # }
                       } else if (stringr::str_detect(action, "winner") | stringr::str_detect(action, "loser")){
                         sim$take.turn(action)
                         while(!sim$board$check.end.game()){
@@ -753,7 +765,8 @@ system <- R6Class(classname = 'System',
                         }
                       } else {
                         sim$take.turn(action)
-                        while(!sim$board$check.end.leg()){
+                        if(length(sim$board$dice.left) <= lastNumDice){
+                          lastNumDice <- length(sim$board$dice.left)
                           sim$take.turn("move", TRUE)
 
                         }
@@ -802,6 +815,7 @@ system <- R6Class(classname = 'System',
 
 
                     take.turn = function(input = NULL, isSim = FALSE){
+
                       if(is.null(input)){
                         input <- readline(prompt = paste(c(self$players[[self$current.player]]$name, ", it is your turn. What would you like to do? "), collapse = ''))
                       }
@@ -889,6 +903,7 @@ system <- R6Class(classname = 'System',
 
                         self$eval.leg()
                         self$eval.end.game()
+                        self$gameOver <- TRUE
 
                         max <- 0
                         game.winner <- NA
@@ -915,6 +930,7 @@ system <- R6Class(classname = 'System',
 
                       self$print()
                       return(dispText)
+
                     },
 
                     increase.current.player = function(){
