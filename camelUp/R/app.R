@@ -69,7 +69,7 @@ generateUI <- function(){
                                          c("Move Camel","Place Leg Bet","Place Tile","Place Overall Bet"),
                                          selected = "Move Camel"),
                              sliderInput("nSims", "Select Number of Simulations",
-                                         min = 1, max = 100000, value = 500),
+                                         min = 100, max = 100000, value = 500, step = 100),
                              actionButton('Sim',
                                           "Simulate!"),
                              conditionalPanel(condition = "input.simMove == 'Place Leg Bet'",
@@ -147,6 +147,7 @@ generateUI <- function(){
 #' @import data.table
 #' @import parallel
 server <- function(input, output) {
+  set.seed(1)
   nPlayers <- NULL
   nPlayers <- shinyalert::shinyalert(title = "input number of players",
                                      type = "input",
