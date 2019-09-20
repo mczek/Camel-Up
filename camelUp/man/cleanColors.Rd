@@ -9,6 +9,9 @@ cleanColors(subColors)
 \arguments{
 \item{subColors}{a subset of the full set of colors of camels}
 }
+\value{
+colors in correct order for the game
+}
 \description{
 Correctly orders colors for graphing
 }

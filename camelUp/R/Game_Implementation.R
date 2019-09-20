@@ -11,6 +11,7 @@
 #' Implements a classic stack with push, pop and a few other methods
 #'
 #' @import R6
+#' @docType class
 #' @export stack
 #' @exportClass stack
 #'
@@ -31,6 +32,7 @@ stack <- R6Class(classname = 'Stack',
                      self$s = c(item, self$s)
                      self$n = length(self$s)
                    },
+                   #Pop top element off of the stack
                    pop = function(){
                      #pop functionality
                      if(self$n > 1){
@@ -426,7 +428,7 @@ board <- R6Class(classname = 'Board',
                    },
 
                    check.end.leg = function() {
-                     if(length(self$dice.left) == 0)
+                     if(length(self$dice.left) == 0 | self$check.end.game())
                        return(TRUE)
                      else
                        return(FALSE)
@@ -691,6 +693,7 @@ player <- R6Class(classname = 'Player',
 #' System class that manages overall game play
 #'
 #' @import tidyverse
+#' @import parallel
 #'
 #' @export system
 #' @exportClass system
@@ -733,6 +736,7 @@ system <- R6Class(classname = 'System',
                     simGame = function(action, nDiceSeq){
 
                       # print("sim game")
+                      currentPurse <- self$players[[self$current.player]]$purse
                       sim <- self$duplicate()
                       name <- self$players[[self$current.player]]$name
                       #nDiceLeft <- length(self$board$dice.left)
@@ -751,7 +755,7 @@ system <- R6Class(classname = 'System',
                           sim$take.turn("move", TRUE)
                         }
                       }
-                      currentPurse <- 3 #self$players[[self$current.player]]$purse
+
                       result <- sim$initial_record(name, currentPurse)
                       # print(result)
                       result <- data.table::as.data.table(result)
@@ -773,7 +777,7 @@ system <- R6Class(classname = 'System',
                       # for(i in 1:nSims) {
                       #   camelResults <- rbind(camelResults, self$simGame(action, nDiceSeq))
                       # }
-                      numCores <- detectCores() - 1
+                      numCores <- parallel::detectCores() - 1
                       # my_cluster <- makeCluster(num_cores)
                       # force(self)
                       temp <- self$duplicate()
@@ -1499,6 +1503,7 @@ system <- R6Class(classname = 'System',
 #' Correctly orders colors for graphing
 #'
 #' @param subColors a subset of the full set of colors of camels
+#' @return colors in correct order for the game
 cleanColors <- function(subColors){
   #creates camel colors for graphing based on the list of colors provided
   #useful in graphing custom games when not all camels are on the board

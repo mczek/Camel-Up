@@ -2,7 +2,7 @@
 % Please edit documentation in R/app.R
 \name{server}
 \alias{server}
-\title{Define server logic required to draw a histogram}
+\title{Define server logic for CamelUp game}
 \usage{
 server(input, output)
 }
@@ -12,5 +12,5 @@ server(input, output)
 \item{output}{output for shiny web app}
 }
 \description{
-Define server logic required to draw a histogram
+Define server logic for CamelUp game
 }

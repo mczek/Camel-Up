@@ -8,4 +8,4 @@
 0 errors | 0 warnings | 1 note
 
 * This is a new release.
-I have updated the version number as well as the package name to match the name of the board game used throughout the documentation.
+I have added \value to .Rd files and added to function documenations indicating what they do.
