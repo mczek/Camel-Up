@@ -317,7 +317,7 @@ board <- R6Class(classname = 'Board',
 
 
                      camel.m <- self$tot.camels[[index]]
-                     # print(c(camel.m$print(), camel.m$position))
+                     print(c(camel.m$print(), camel.m$position, dis))
                      if(self$spaces[[camel.m$position + dis]]$plus.tile == FALSE &
                         self$spaces[[camel.m$position + dis]]$minus.tile == FALSE){
                        camel.m$move(dis)
@@ -741,8 +741,10 @@ system <- R6Class(classname = 'System',
                       name <- self$players[[self$current.player]]$name
                       #nDiceLeft <- length(self$board$dice.left)
                       if (action == "move"){
-                        for(i in nDiceSeq){
+
+                        while(!sim$board$check.end.leg()){
                           sim$take.turn("move", TRUE)
+
                         }
                       } else if (stringr::str_detect(action, "winner") | stringr::str_detect(action, "loser")){
                         sim$take.turn(action)
@@ -751,8 +753,9 @@ system <- R6Class(classname = 'System',
                         }
                       } else {
                         sim$take.turn(action)
-                        for(i in nDiceSeq){
+                        while(!sim$board$check.end.leg()){
                           sim$take.turn("move", TRUE)
+
                         }
                       }
 
@@ -1155,13 +1158,13 @@ system <- R6Class(classname = 'System',
                         plt <- ggplot2::ggplot(data, ggplot2::aes(x = X, y = Y)) +
                           ggplot2::geom_blank() +
                           ggplot2::coord_cartesian(xlim = c(1, 19),
-                                          ylim = c(0.49, 5.49)) +
+                                                   ylim = c(0.49, 5.49)) +
                           ggplot2::scale_x_continuous(breaks = 1:19) +
                           ggplot2::geom_vline(xintercept = 16.5) +
                           ggplot2::theme_classic() +
                           ggplot2::guides(color = FALSE, size = FALSE) +
                           ggplot2::theme(legend.background = ggplot2::element_rect(colour = 'black', fill = 'white', linetype='solid'),
-                                legend.key = ggplot2::element_rect(color = "black"))
+                                         legend.key = ggplot2::element_rect(color = "black"))
                         return(plt)
                       }
 
@@ -1170,13 +1173,13 @@ system <- R6Class(classname = 'System',
                         ggplot2::geom_tile() +
                         ggplot2::scale_fill_manual(values = camelColors) +
                         ggplot2::coord_cartesian(xlim = c(1, 19),
-                                        ylim = c(0.49, 5.49)) +
+                                                 ylim = c(0.49, 5.49)) +
                         ggplot2::scale_x_continuous(breaks = 1:19, labels = (paste(1:19, tiles[[2]], sep = "\n"))) +
                         ggplot2::geom_vline(xintercept = 16.5) +
                         ggplot2::theme_classic() +
                         ggplot2::guides(color = FALSE, size = FALSE) +
                         ggplot2::theme(legend.background = ggplot2::element_rect(colour = 'black', fill = 'white', linetype='solid'),
-                              legend.key = ggplot2::element_rect(color = "black"))
+                                       legend.key = ggplot2::element_rect(color = "black"))
                       return(plt)
                     },
 
@@ -1226,16 +1229,16 @@ system <- R6Class(classname = 'System',
 
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Y), width = 10) +
                           ggplot2::geom_tile(ggplot2::aes(alpha = Probability), color = "black", fill = ifelse(color == "White",
-                                                                                             "black",
-                                                                                             color)) +
+                                                                                                               "black",
+                                                                                                               color)) +
                           ggplot2::coord_cartesian(xlim = c(1, 19)) +
                           ggplot2::ylim(0.49, 5.49) +
                           ggplot2::scale_x_continuous(breaks = 1:19) +
                           ggplot2::geom_vline(xintercept = vLines) +
                           ggplot2::theme_classic() +
                           ggplot2::labs(x = "Space",
-                               y = "Height",
-                               title = paste("2-Dimensional Plot of Camel Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
+                                        y = "Height",
+                                        title = paste("2-Dimensional Plot of Camel Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                         #print("test")
                         #print(mean(tempData$X))
                       }
@@ -1247,10 +1250,10 @@ system <- R6Class(classname = 'System',
 
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
                           ggplot2::geom_bar(stat = "identity",
-                                   fill = ifelse(color == "White",
-                                                 "black",
-                                                 color),
-                                   width = 0.9) +
+                                            fill = ifelse(color == "White",
+                                                          "black",
+                                                          color),
+                                            width = 0.9) +
                           ggplot2::geom_text(ggplot2::aes(label = round(Probability, 3)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
                           ggplot2::coord_cartesian(xlim = c(1, 19)) +
                           ggplot2::scale_x_continuous(breaks = 1:19) +
@@ -1258,8 +1261,8 @@ system <- R6Class(classname = 'System',
                           ggplot2::geom_vline(xintercept = vLines) +
                           ggplot2::theme_classic() +
                           ggplot2::labs(x = "Space",
-                               y = "Probability",
-                               title = paste("Space vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
+                                        y = "Probability",
+                                        title = paste("Space vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                       }
                       if(type == "purse"){
                         tempData <- dplyr::filter(data, Color == "Player")
@@ -1270,18 +1273,18 @@ system <- R6Class(classname = 'System',
                         print(tempData)
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
                           ggplot2::geom_bar(stat = "identity",
-                                   fill = ifelse(color == "White",
-                                                 "black",
-                                                 color)
-                                   , width = 0.9) +
+                                            fill = ifelse(color == "White",
+                                                          "black",
+                                                          color)
+                                            , width = 0.9) +
                           ggplot2::geom_text(ggplot2::aes(label = round(Probability, 3)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25) +
-                          ggplot2::scale_x_continuous(breaks = -1:5) +
+                          ggplot2::scale_x_continuous(breaks = -1:10) +
                           ggplot2::ylim(0,1)+
                           ggplot2::geom_vline(xintercept = vLines) +
                           ggplot2::theme_classic() +
                           ggplot2::labs(x = "Number of Coins",
-                               y = "Probability",
-                               title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
+                                        y = "Probability",
+                                        title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(mean(tempData$X,2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2)))
                         #coord_cartesian(xlim = c(1, 19)) +
                         #ggplot2::scale_x_continuous(breaks = 1:19) +
                         #ggplot2::geom_vline(xintercept = 17) +

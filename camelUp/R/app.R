@@ -286,7 +286,7 @@ server <- function(input, output) {
                                            game$simNGames(action, input$nSims)
                                          })
                                          # force(game)
-                                         variables$simTime <- paste("Simulation took", floor(time[3]), "seconds. Using",  detectCores() - 1, "cores.")
+                                         variables$simTime <- paste("Simulation took", floor(time[3]), "seconds. Using",  parallel::detectCores() - 1, "cores.")
                                        })
 
                                        output$simTime <- renderText(variables$simTime)
