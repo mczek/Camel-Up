@@ -317,7 +317,7 @@ server <- function(input, output) {
                                          print("print(input$vLinesBool)")
                                          # print(input$vLinesBool) ####################################
                                          game$createSimGraphs(input$simColor, simTurnString(), input$nSims, input$vLinesBool) #####HERE
-                                       })
+                                       }, width = 300)
 
                                        observeEvent(input$clearBoard, {
                                          print("test")
