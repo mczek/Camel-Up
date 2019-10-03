@@ -1304,7 +1304,7 @@ system <- R6Class(classname = 'System',
                         tempData <- dplyr::filter(data, Color == "Player")
 
                         tempData <- dplyr::group_by(tempData, X)
-                        tempData <- dplyr::summarize(tempData, "count" = n())
+                        tempData <- dplyr::summarize(tempData, "count" = dplyr::n())
                         tempData <- dplyr::mutate(tempData, "Probability" = count/nSims)
                         print(tempData)
                         plt <- ggplot2::ggplot(tempData, ggplot2::aes(x = X, y = Probability)) +
@@ -1320,7 +1320,7 @@ system <- R6Class(classname = 'System',
                           ggplot2::theme_classic() +
                           ggplot2::labs(x = "Number of Coins",
                                         y = "Probability",
-                                        title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(mean(tempData$X), 2)), ". ", "Std. Dev. = ", round(sd(tempData$X),2))
+                                        title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(avg, 2), ". ", "Std. Dev. = ", round(stdDevX),2))
                         #coord_cartesian(xlim = c(1, 19)) +
                         #ggplot2::scale_x_continuous(breaks = 1:19) +
                         #ggplot2::geom_vline(xintercept = 17) +
