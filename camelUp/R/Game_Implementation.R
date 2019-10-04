@@ -1320,7 +1320,7 @@ system <- R6Class(classname = 'System',
                           ggplot2::theme_classic() +
                           ggplot2::labs(x = "Number of Coins",
                                         y = "Probability",
-                                        title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(avg, 2), ". ", "Std. Dev. = ", round(stdDevX),2))
+                                        title = paste0("Purse vs. Probability Simulation Results. Mean = ", round(avg, 2), ". ", "Std. Dev. = ", round(stdDevX,2)))
                         #coord_cartesian(xlim = c(1, 19)) +
                         #ggplot2::scale_x_continuous(breaks = 1:19) +
                         #ggplot2::geom_vline(xintercept = 17) +
