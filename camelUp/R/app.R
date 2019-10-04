@@ -416,7 +416,6 @@ server <- function(input, output) {
                                          output$currentTurn <- renderText({
                                            paste0("It is currently ", game$players[[(game$current.player + 1) %% game$n.players]]$name, "'s turn.")
                                          })
-
                                          output$board <- renderPlot({
                                            game$graphGame()
                                          })

@@ -567,6 +567,13 @@ board <- R6Class(classname = 'Board',
                        newBoard$dice.left[[i]] <- self$dice.left[[i]]$duplicate()
                      }
 
+                     #the board is being created with all three bets by default so we need to take off the excess
+                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$o.bets$pop()}
+                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$y.bets$pop()}
+                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$b.bets$pop()}
+                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$w.bets$pop()}
+                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$g.bets$pop()}
+
                      return(newBoard)
                    },
                    getTileSpaces = function(){
@@ -742,6 +749,13 @@ system <- R6Class(classname = 'System',
                       # print("sim game")
                       currentPurse <- self$players[[self$current.player]]$purse
                       sim <- self$duplicate()
+
+
+                      print("in simGame")
+                      print(self$board$o.bets$print())
+                      print(sim$board$o.bets$print())
+                      sim$board$b.bets$print()
+
                       name <- self$players[[self$current.player]]$name
                       #nDiceLeft <- length(self$board$dice.left)
                       lastNumDice <- max(nDiceSeq)
@@ -764,7 +778,7 @@ system <- R6Class(classname = 'System',
                           sim$take.turn("move", TRUE)
                         }
                       } else {
-                        sim$take.turn(action)
+                        sim$take.turn(action, TRUE)
                         for(i in nDiceSeq){
                           if(!sim$gameOver){
                             # lastNumDice <- length(sim$board$dice.left)
@@ -970,8 +984,11 @@ system <- R6Class(classname = 'System',
 
                       for(p in self$players){
                         for(b in p$leg.bets){
-                          if(b$color == winner$color)
+                          if(b$color == winner$color){
+                            print("Eval.leg")
+                            print(paste( b$color, winner$color, b$value))
                             p$purse <- p$purse + b$value
+                          }
                           else if(b$color == r.up$color)
                             p$purse <- p$purse + 1
                           else
