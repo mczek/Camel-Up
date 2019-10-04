@@ -569,10 +569,10 @@ board <- R6Class(classname = 'Board',
 
                      #the board is being created with all three bets by default so we need to take off the excess
                      while(self$o.bets$n < newBoard$o.bets$n) {newBoard$o.bets$pop()}
-                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$y.bets$pop()}
-                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$b.bets$pop()}
-                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$w.bets$pop()}
-                     while(self$o.bets$n < newBoard$o.bets$n) {newBoard$g.bets$pop()}
+                     while(self$o.bets$n < newBoard$y.bets$n) {newBoard$y.bets$pop()}
+                     while(self$o.bets$n < newBoard$b.bets$n) {newBoard$b.bets$pop()}
+                     while(self$o.bets$n < newBoard$w.bets$n) {newBoard$w.bets$pop()}
+                     while(self$o.bets$n < newBoard$g.bets$n) {newBoard$g.bets$pop()}
 
                      return(newBoard)
                    },
