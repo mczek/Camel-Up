@@ -2,10 +2,10 @@ context("testObjects.R")
 
 
 ### TEST STACK OBJECT
-x <- stack$new()
+
 
 test_that("Stack: n = 0", {
-
+  x <- stack$new()
   expect_equal( x$n, 0)
   expect_equal( x$top(), NA)
   expect_error( x$pop())
@@ -13,10 +13,10 @@ test_that("Stack: n = 0", {
 
 })
 
-x <- stack$new()
-x$push(5)
 
 test_that("Stack: n = 1", {
+  x <- stack$new()
+  x$push(5)
 
   expect_equal( x$n, 1)
   expect_equal( x$top(), 5)
@@ -25,11 +25,12 @@ test_that("Stack: n = 1", {
 
 })
 
-x <- stack$new()
-x$push(5)
-x$push(6)
+
 
 test_that("Stack: n = 2", {
+  x <- stack$new()
+  x$push(5)
+  x$push(6)
 
   expect_equal( x$n, 2)
   expect_equal( x$top(), 6)
@@ -38,20 +39,26 @@ test_that("Stack: n = 2", {
 })
 
 
-# TEST CAMEL OBJECT
-x <- camel$new("blue", 1, 1)
+
 
 test_that("Camel: initialize",{
+  # TEST CAMEL OBJECT
+  x <- camel$new("blue", 1, 1)
+
   expect_equal(x$color, "blue")
   expect_equal(x$position, 1)
   expect_equal(x$index, 1)
 })
 
 test_that("Camel: getColor",{
+  x <- camel$new("blue", 1, 1)
+
   expect_equal(x$getColor(), "blue")
 })
 
 test_that("Camel: move",{
+  x <- camel$new("blue", 1, 1)
+
   x$move(1)
   expect_equal(x$position, 2)
   x$move(2)
@@ -64,10 +71,12 @@ test_that("Camel: duplicate",{
   expect_equal(all.equal(x,y), TRUE)
 })
 
-### TEST SPACE OBJECT
-x <- space$new()
+
 
 test_that("Space: initialize",{
+  ### TEST SPACE OBJECT
+  x <- space$new()
+
   expect_equal(class(x$camels), c("Stack", "R6"))
   expect_equal(all.equal(x$camels, stack$new()), TRUE)
   expect_equal(x$plus.tile, FALSE)

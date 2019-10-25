@@ -140,16 +140,16 @@ space <- R6Class(classname = 'Space',
                      newSpace <- space$new()
                      nCamels <- self$camels$n
                      temp <- NULL
-                     # if(nCamels > 0){
-                     #   for(i in 1:nCamels){
-                     #
-                     #     temp <- c(self$pop.camel(), temp)
-                     #   }
-                     #   for(i in 1:nCamels){
-                     #     newSpace$push.camel(temp[[i]]$duplicate())
-                     #     self$push.camel(temp[[i]])
-                     #   }
-                     # }
+                     if(nCamels > 0){
+                       for(i in 1:nCamels){
+
+                         temp <- c(self$pop.camel(), temp)
+                       }
+                       for(i in 1:nCamels){
+                         newSpace$push.camel(temp[[i]]$duplicate())
+                         self$push.camel(temp[[i]])
+                       }
+                     }
                      if(self$plus.tile){
                        newSpace$place.tile("plus")
                        newSpace$tile.placed.by <- self$tile.placed.by
@@ -728,7 +728,7 @@ system <- R6Class(classname = 'System',
                       if(is.null(nPlayers)){
                         self$n.players = as.numeric(readline(prompt = 'Enter number of players: '))
                       }
-                      temp <- !is.null(players)
+                      temp <- !is.null(playerNames)
                       if(temp){
                         for (p in playerNames){
                           self$players <- c(self$players, player$new(p, self$board))
@@ -1569,6 +1569,12 @@ system <- R6Class(classname = 'System',
                       names(recordDT) <- c(paste0(colors, "X"), paste0(colors, "Y"))
                       recordDT <- dplyr::select(recordDT, -c(PlayerX, PlayerY))
                       recordDT$currentPurse <- currentPurseVal
+
+                      recordDT$nOrangeBets <- self$board$o.bets$n
+                      recordDT$nBlueBets <- self$board$b.bets$n
+                      recordDT$nYellowBets <- self$board$y.bets$n
+                      recordDT$nWhiteBets <- self$board$w.bets$n
+                      recordDT$nGreenBets <- self$board$g.bets$n
 
                       return(recordDT)
                     }
