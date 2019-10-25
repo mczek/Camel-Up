@@ -159,7 +159,7 @@ server <- function(input, output) {
                                        players <- paste(rep("Player", nPlayers), 1:nPlayers)
                                        print("players made")
 
-                                       game <- system$new(nPlayers, players = players, isDup = TRUE)
+                                       game <- system$new(nPlayers, playerNames = players, isDup = TRUE)
                                        print("game created")
                                        variables <- reactiveValues(customDiceLeft = game$createDiceTable(),
                                                                    players = paste(rep("Player", nPlayers), 1:nPlayers),

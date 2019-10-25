@@ -613,6 +613,7 @@ player <- R6Class(classname = 'Player',
                     leg.bets = NULL,
                     end.game.bets = NULL, #Doesn't seem to be uesd
                     board = NULL,
+                    decisionData = NULL,
                     initialize = function(name, board){
                       self$board = board
                       self$purse = 3
@@ -620,6 +621,7 @@ player <- R6Class(classname = 'Player',
                       self$plus.tile = 0
                       self$minus.tile = 0
                       self$leg.bets = NULL
+                      self$decisionData = data.table()
                     },
 
                     place.bet = function(color){
@@ -720,7 +722,7 @@ system <- R6Class(classname = 'System',
                     gameOver = FALSE,
 
                     # Initialize system object
-                    initialize = function(nPlayers = NULL, players = NULL, isDup = FALSE){ #NEW
+                    initialize = function(nPlayers = NULL, playerNames = NULL, isDup = FALSE){ #NEW
                       self$board = board$new(self)
                       self$n.players <- nPlayers
                       if(is.null(nPlayers)){
@@ -728,7 +730,7 @@ system <- R6Class(classname = 'System',
                       }
                       temp <- !is.null(players)
                       if(temp){
-                        for (p in players){
+                        for (p in playerNames){
                           self$players <- c(self$players, player$new(p, self$board))
                         }
                       }
@@ -1553,6 +1555,22 @@ system <- R6Class(classname = 'System',
                         boardSpace$minus.tile <- TRUE
                       }
                       boardSpace$tile.placed.by <- name
+                    },
+                    recordGameState = function(){
+                      initRecord <- self$initial_record()
+
+                      colors <- initRecord$Color
+                      xVals <- initRecord$X
+                      yVals <- initRecord$Y
+
+                      currentPurseVal <- tail(xVals, n = 1)
+
+                      recordDT <- as.data.table(matrix(c(xVals, yVals), nrow = 1))
+                      names(recordDT) <- c(paste0(colors, "X"), paste0(colors, "Y"))
+                      recordDT <- dplyr::select(recordDT, -c(PlayerX, PlayerY))
+                      recordDT$currentPurse <- currentPurseVal
+
+                      return(recordDT)
                     }
                   ))
 
