@@ -33,16 +33,22 @@ agent = R6Class("agent",
                     self$fullGameData <- data.table()
                     self$nGames <- 0
                   },
-                  makeDecision = function(currentState){
+                  makeDecision = function(currentState, possibleMoves){
                     if(is.null(self$observedData)){
-                      return("move")
+                      return(sample(possibleMoves, 1))
                     }
-                    relevantDataObs <- self$observedData[,-c("gameID", "isWinner")]
-                    relevantData <- semi_join(relevantDataObs, currentState)
-                    if(nrow(relevantData) == 0){
-                      return("move")
+
+                    if(runif(1) > 0.1 & !is.null(self$observedData)){
+                      relevantDataObs <- self$observedData[,-c("gameID", "isWinner")]
+                      relevantData <- semi_join(relevantDataObs, currentState)
+                      if(nrow(relevantData) == 0){
+                        return(sample(possibleMoves, 1))
+                      }
+                      return(self$decisionFUN(relevantData))
+                    } else {
+                      return(sample(possibleMoves, 1))
                     }
-                    return(self$decisionFUN(relevantData))
+
                   },
                   endLeg = function(currentPurse){
                     if(nrow(self$legData) > 0){ #make sure there is leg data

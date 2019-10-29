@@ -985,7 +985,7 @@ system <- R6Class(classname = 'System',
                       newCurrentPlayer <- self$players[[self$current.player]]
                       if(newCurrentPlayer$decisionAgent$type != "human" & !self$board$check.end.game()){
                         print("Non-Human player taking a turn")
-                        self$take.turn(newCurrentPlayer$decisionAgent$makeDecision(self$recordGameState()))
+                        self$take.turn(newCurrentPlayer$decisionAgent$makeDecision(self$recordGameState(), self$getPossibleMoves()))
                       }
 
                       self$print()
@@ -1633,6 +1633,28 @@ system <- R6Class(classname = 'System',
                       recordDT$currentPurse <- currentPurseVal
 
                       return(recordDT)
+                    },
+                    getPossibleMoves = function(){
+                      moves <- "move"
+
+                      if(self$board$o.bets$n > 0){
+                        moves <- c(moves, "bet Orange")
+                      }
+                      if(self$board$b.bets$n > 0){
+                        moves <- c(moves, "bet Blue")
+                      }
+                      if(self$board$y.bets$n > 0){
+                        moves <- c(moves, "bet Yellow")
+                      }
+                      if(self$board$g.bets$n > 0){
+                        moves <- c(moves, "bet Green")
+                      }
+                      if(self$board$w.bets$n > 0){
+                        moves <- c(moves, "bet White")
+                      }
+
+                      return(moves)
+
                     }
                   ))
 
