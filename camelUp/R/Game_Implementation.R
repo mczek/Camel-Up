@@ -614,7 +614,8 @@ player <- R6Class(classname = 'Player',
                     end.game.bets = NULL, #Doesn't seem to be uesd
                     board = NULL,
                     decisionData = NULL,
-                    initialize = function(name, board){
+                    decisionAgent = NULL,
+                    initialize = function(name, board, decisionAgent = agent$new(type = "human")){
                       self$board = board
                       self$purse = 3
                       self$name = name
@@ -622,6 +623,7 @@ player <- R6Class(classname = 'Player',
                       self$minus.tile = 0
                       self$leg.bets = NULL
                       self$decisionData = data.table()
+                      self$decisionAgent = decisionAgent
                     },
 
                     place.bet = function(color){
@@ -722,16 +724,26 @@ system <- R6Class(classname = 'System',
                     gameOver = FALSE,
 
                     # Initialize system object
-                    initialize = function(nPlayers = NULL, playerNames = NULL, isDup = FALSE){ #NEW
+                    initialize = function(nPlayers = NULL, playerNames = NULL, playerAgents = NULL, isDup = FALSE){ #NEW
                       self$board = board$new(self)
                       self$n.players <- nPlayers
+
                       if(is.null(nPlayers)){
                         self$n.players = as.numeric(readline(prompt = 'Enter number of players: '))
                       }
+
+                      if(is.null(playerAgents)){
+                        for(i in 1:self$n.players){
+                          playerAgents <- c(playerAgents, agent$new(type = "human"))
+                        }
+                      }
+
+
                       temp <- !is.null(playerNames)
                       if(temp){
-                        for (p in playerNames){
-                          self$players <- c(self$players, player$new(p, self$board))
+                        for (i in 1:nPlayers){
+                          name <- playerNames[i]
+                          self$players <- c(self$players, player$new(name, self$board, playerAgents[[i]]))
                         }
                       }
                       if(!isDup & !temp){
@@ -740,6 +752,12 @@ system <- R6Class(classname = 'System',
                           self$players <- c(self$players, player$new(p.name, self$board))
                         }
                       }
+
+                      # if(is.null(playerAgents)){
+                      #   for(p in self$players){
+                      #     p$decisionAgent <- agent$new("human")
+                      #   }
+                      # }
 
 
                       self$current.player = 1
@@ -832,10 +850,18 @@ system <- R6Class(classname = 'System',
 
 
                     take.turn = function(input = NULL, isSim = FALSE){
+                      print("taking turn")
+                      currentPlayerObj <- self$players[[self$current.player]]
 
                       if(is.null(input)){
-                        input <- readline(prompt = paste(c(self$players[[self$current.player]]$name, ", it is your turn. What would you like to do? "), collapse = ''))
+                        input <- readline(prompt = paste(c(currentPlayerObj$name, ", it is your turn. What would you like to do? "), collapse = ''))
                       }
+
+                      currentState <- self$recordGameState()
+                      currentState$Decision <- input
+                      currentState$currentPurse <- currentPlayerObj$purse
+
+
 
                       dispText <- NULL
                       #message(input)
@@ -916,6 +942,9 @@ system <- R6Class(classname = 'System',
                       }
 
 
+                      currentPlayerObj$decisionAgent$appendLegData(currentState)
+
+
                       if(self$board$check.end.game() == TRUE){
 
                         self$eval.leg()
@@ -934,16 +963,30 @@ system <- R6Class(classname = 'System',
                         dispText <- paste(c("Game Over! ", game.winner, " is the winner!"), collapse = '')
                         message(dispText)
 
-                      }
+                        for(p in self$players){
+                          print(self$players[[self$current.player]]$name)
+                          print(p$name)
+                          print(game.winner)
+                          p$decisionAgent$endGame(p$purse, isWinner = (game.winner == p$name))
+                        }
 
-
-                      else{
+                      }else{
                         if(self$board$check.end.leg() == TRUE){
+
+                          for(p in self$players){
+                            p$decisionAgent$endLeg(p$purse)
+                          }
+
                           self$eval.leg()
                           self$reset.leg()
                         }
                       }
 
+                      newCurrentPlayer <- self$players[[self$current.player]]
+                      if(newCurrentPlayer$decisionAgent$type != "human" & !self$board$check.end.game()){
+                        print("Non-Human player taking a turn")
+                        self$take.turn(newCurrentPlayer$decisionAgent$makeDecision(self$recordGameState()))
+                      }
 
                       self$print()
                       return(dispText)
@@ -1568,13 +1611,26 @@ system <- R6Class(classname = 'System',
                       recordDT <- as.data.table(matrix(c(xVals, yVals), nrow = 1))
                       names(recordDT) <- c(paste0(colors, "X"), paste0(colors, "Y"))
                       recordDT <- dplyr::select(recordDT, -c(PlayerX, PlayerY))
-                      recordDT$currentPurse <- currentPurseVal
+
 
                       recordDT$nOrangeBets <- self$board$o.bets$n
                       recordDT$nBlueBets <- self$board$b.bets$n
                       recordDT$nYellowBets <- self$board$y.bets$n
                       recordDT$nWhiteBets <- self$board$w.bets$n
                       recordDT$nGreenBets <- self$board$g.bets$n
+
+                      diceColorsLeft <- NULL
+                      for(d in s$board$dice.left){
+                        diceColorsLeft <- c(diceColorsLeft, d$color)
+                      }
+
+                      recordDT$OrangeDiePres <- "Orange" %in% diceColorsLeft
+                      recordDT$BlueDiePres <- "Blue" %in% diceColorsLeft
+                      recordDT$YellowDiePres <- "Yellow" %in% diceColorsLeft
+                      recordDT$GreenDiePres <- "Green" %in% diceColorsLeft
+                      recordDT$WhiteDiePres <- "White" %in% diceColorsLeft
+
+                      recordDT$currentPurse <- currentPurseVal
 
                       return(recordDT)
                     }
