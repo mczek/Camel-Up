@@ -6,10 +6,11 @@ Description: Implements the board game CamelUp for use in introductory statistic
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
-Imports: data.table,
-  parallel,
-  R6,
-  shiny,
-  shinyalert,
-  tidyverse
+RoxygenNote: 7.0.2
+Imports: 
+    methods,
+    Rcpp
+Suggests:
+    testthat
+LinkingTo: 
+    Rcpp
