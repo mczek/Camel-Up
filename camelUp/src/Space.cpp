@@ -27,10 +27,10 @@ int Space::getPosition() {
   return position;
 }
 
-// void Space::addCamel(Camel c){
-//   camels.push(c);
-//   nCamels += 1;
-// }
+void Space::addCamel(Camel c){
+  camels.push(c);
+  nCamels += 1;
+}
 
 int Space::getNCamels(){
   return nCamels;

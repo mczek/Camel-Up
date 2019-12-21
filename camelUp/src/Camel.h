@@ -1,3 +1,6 @@
+#ifndef CAMEL_H
+#define CAMEL_H
+
 #include <Rcpp.h>
 #include <string>
 
@@ -21,3 +24,5 @@ public:
   Camel duplicate();
 
 };
+
+#endif
