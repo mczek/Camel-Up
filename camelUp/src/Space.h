@@ -11,6 +11,7 @@ private:
   int position;
   std::stack <Camel> camels;
   int nCamels;
+  bool plusTile, minusTile;
 public:
   Space();
 
@@ -20,7 +21,14 @@ public:
 
   void addCamel(Camel c);
 
+  Camel removeCamel();
+
   int getNCamels();
+
+  bool getPlusTile();
+
+  bool getMinusTile();
+
 };
 
 #endif

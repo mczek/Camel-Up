@@ -21,6 +21,8 @@
 Space::Space(int pos){
   position = pos;
   nCamels = 0;
+  plusTile = false;
+  minusTile = false;
 }
 
 int Space::getPosition() {
@@ -30,12 +32,28 @@ int Space::getPosition() {
 void Space::addCamel(Camel c){
   camels.push(c);
   nCamels += 1;
+  c.setHeight(nCamels);
+  c.setSpace(position);
 }
 
 int Space::getNCamels(){
   return nCamels;
 }
 
+Camel Space::removeCamel(){
+  Camel result = camels.top();
+  camels.pop();
+  nCamels -= 1;
+  return result;
+}
+
+bool Space::getPlusTile(){
+  return plusTile;
+}
+
+bool Space::getMinusTile(){
+  return minusTile;
+}
 
 
 // Approach 4: Module docstrings
@@ -48,5 +66,7 @@ RCPP_EXPOSED_CLASS(Space)
       .constructor<int>()
       .method("getPosition", &Space::getPosition)
       .method("getNCamels", &Space::getNCamels)
+      .method("getPlusTile", &Space::getPlusTile)
+      .method("getMinusTile", &Space::getMinusTile)
     ;
   }

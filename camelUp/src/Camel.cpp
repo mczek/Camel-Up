@@ -15,6 +15,9 @@
 //' }
 //' @export
 
+Camel::Camel(){}
+
+
 Camel::Camel(std::string c){
   color = c;
   space = 0;

@@ -11,7 +11,10 @@ private:
   int space;
   int height;
 public:
+  Camel();
+
   Camel(std::string c);
+
   std::string getColor();
 
   int getSpace();

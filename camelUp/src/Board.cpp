@@ -19,6 +19,9 @@ using namespace Rcpp;
 
 Board::Board(int n){
   nSpaces = n;
+  colors = {"Green", "White", "Yellow", "Orange", "Blue"};
+
+
   for(int i=0;i<n;i++){
     spaces.push_back(Space(i));
   }
@@ -32,14 +35,13 @@ int Board::getNDiceRemaining(){
 }
 
 void Board::resetDice(){
-  dice.push_back(Die("Green"));
-  dice.push_back(Die("Yellow"));
-  dice.push_back(Die("Orange"));
-  dice.push_back(Die("Blue"));
-  dice.push_back(Die("White"));
+  int nCamels = colors.size();
+
+  for(int i=0;i<nCamels;i++){
+    dice.push_back(colors[i]);
+  }
 
   std::random_shuffle(dice.begin(), dice.end()); //shuffle dice
-  // TODO: shuffle dice!
 }
 
 void Board::initCamels(){
@@ -49,7 +51,8 @@ void Board::initCamels(){
     std::string currentColor = currentDie.getColor();
     space = currentDie.roll();
     Camel currentCamel = Camel(currentColor);
-    camels.push_back(currentCamel);
+    currentCamel.setSpace(space);
+    camels[currentColor] = currentCamel;
 
     Space currentSpace = spaces[space];
     currentSpace.addCamel(currentCamel);
@@ -62,10 +65,45 @@ int Board::getNCamels(){
 }
 
 
+DataFrame Board::getCamelDF(){
+  std::vector<Camel> tempCamels;
+  std::vector<std::string> colors;
+  std::vector<int> spaceValues, heightValues;
+  std::string currentColor;
+
+  int nCamels = colors.size();
+  for(int i=0;i<nCamels;i++){
+    currentColor = colors[i];
+    Camel currentCamel = camels[currentColor];
+    colors.push_back(currentCamel.getColor());
+    spaceValues.push_back(currentCamel.getSpace());
+    heightValues.push_back(currentCamel.getHeight());
+  }
+
+  DataFrame df = DataFrame::create(Named("x") = colors, Named("y") = spaceValues, Named("z") = heightValues);
+  return df;
+
+}
+
+std::string Board::moveTurn(){
+  if(dice.size() < 1){
+    throw std::range_error("Trying to access dice when leg is over: See Board::moveTurn");
+  }
+
+  std::string camelColor;
+
+  Die currentDie = dice.back();
+  dice.pop_back();
+  camelColor = currentDie.getColor();
+  return camelColor;
+}
+
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
   .constructor<int>()
   .method("getNDiceRemaining", &Board::getNDiceRemaining)
   .method("getNCamels", &Board::getNCamels)
+  .method("getCamelDF", &Board::getCamelDF)
+  .method("moveTurn", &Board::moveTurn)
   ;
 }
