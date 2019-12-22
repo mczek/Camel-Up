@@ -95,6 +95,8 @@ std::string Board::moveTurn(){
   Die currentDie = dice.back();
   dice.pop_back();
   camelColor = currentDie.getColor();
+
+  Camel currentCamel = camels[camelColor];
   return camelColor;
 }
 

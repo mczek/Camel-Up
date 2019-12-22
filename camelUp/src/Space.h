@@ -29,6 +29,8 @@ public:
 
   bool getMinusTile();
 
+  // TODO: create functions for adding camels from the space ahead or behind
+
 };
 
 #endif
