@@ -5,3 +5,11 @@ test_that("test space constructor", {
   expect_true(!s$getPlusTile())
   expect_true(!s$getMinusTile())
 })
+
+#
+# test_that("test space constructor", {
+#   s <- Space$new(5)
+#   c <- Camel$new("Blue")
+#   # s$addCamel(c)
+#   expect_equal(c$getSpace(), 5)
+# })

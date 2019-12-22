@@ -27,5 +27,4 @@ public:
   Camel duplicate();
 
 };
-
 #endif

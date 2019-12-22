@@ -49,13 +49,12 @@ void Board::initCamels(){
   for(int i=0;i<5;i++){
     Die currentDie = dice[i];
     std::string currentColor = currentDie.getColor();
+
     space = currentDie.roll();
     Camel currentCamel = Camel(currentColor);
-    currentCamel.setSpace(space);
-    camels[currentColor] = currentCamel;
-
-    Space currentSpace = spaces[space];
+    Space& currentSpace = spaces[space];
     currentSpace.addCamel(currentCamel);
+    camels[currentColor] = currentCamel;
   }
 
 }
@@ -67,7 +66,7 @@ int Board::getNCamels(){
 
 DataFrame Board::getCamelDF(){
   std::vector<Camel> tempCamels;
-  std::vector<std::string> colors;
+  std::vector<std::string> colorsVec;
   std::vector<int> spaceValues, heightValues;
   std::string currentColor;
 
@@ -75,12 +74,12 @@ DataFrame Board::getCamelDF(){
   for(int i=0;i<nCamels;i++){
     currentColor = colors[i];
     Camel currentCamel = camels[currentColor];
-    colors.push_back(currentCamel.getColor());
+    colorsVec.push_back(currentCamel.getColor());
     spaceValues.push_back(currentCamel.getSpace());
     heightValues.push_back(currentCamel.getHeight());
   }
 
-  DataFrame df = DataFrame::create(Named("x") = colors, Named("y") = spaceValues, Named("z") = heightValues);
+  DataFrame df = DataFrame::create(Named("x") = colorsVec, Named("y") = spaceValues, Named("z") = heightValues);
   return df;
 
 }
@@ -97,6 +96,27 @@ std::string Board::moveTurn(){
   camelColor = currentDie.getColor();
 
   Camel currentCamel = camels[camelColor];
+  int spaceNum = currentCamel.getSpace();
+  Space currentSpace = spaces[spaceNum];
+
+  int nCamelsToMove = currentSpace.getNCamels() - currentCamel.getHeight() + 1; // num camels that have to be moved
+  std::stack<Camel> temp;
+  for(int i=0;i<nCamelsToMove;i++){
+    temp.push(currentSpace.removeCamel());
+  }
+
+  int rollResult = currentDie.roll();
+  Space spaceToMove = spaces[spaceNum + rollResult];
+  if(spaceToMove.getPlusTile()){ // one of these two cases could be true
+    spaceToMove = spaces[spaceNum + rollResult + 1];
+    spaceToMove.addCamelsTop(temp);
+  }
+
+  if(spaceToMove.getMinusTile()){ // one of these two cases could be true
+    spaceToMove = spaces[spaceNum + rollResult - 1];
+    spaceToMove.addCamelsBottom(temp);
+  }
+
   return camelColor;
 }
 

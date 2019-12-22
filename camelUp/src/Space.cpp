@@ -29,11 +29,11 @@ int Space::getPosition() {
   return position;
 }
 
-void Space::addCamel(Camel c){
-  camels.push(c);
+void Space::addCamel(Camel& camelObj){
+  camels.push(camelObj);
   nCamels += 1;
-  c.setHeight(nCamels);
-  c.setSpace(position);
+  camelObj.setHeight(nCamels);
+  camelObj.setSpace(position);
 }
 
 int Space::getNCamels(){
@@ -90,6 +90,13 @@ void Space::addCamelsBottom(std::stack<Camel> moveCamels){
   }
 }
 
+int Space::testAddCamel(){
+  Camel c = Camel("Blue");
+  Camel g = Camel("Green");
+  addCamel(g);
+  addCamel(c);
+  return c.getHeight();
+}
 
 // Approach 4: Module docstrings
 //
@@ -103,5 +110,6 @@ RCPP_EXPOSED_CLASS(Space)
       .method("getNCamels", &Space::getNCamels)
       .method("getPlusTile", &Space::getPlusTile)
       .method("getMinusTile", &Space::getMinusTile)
+      .method("testAddCamel", &Space::testAddCamel)
     ;
   }
