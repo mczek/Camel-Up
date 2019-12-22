@@ -29,7 +29,9 @@ public:
 
   bool getMinusTile();
 
-  // TODO: create functions for adding camels from the space ahead or behind
+  // for both of these functions the camel stacks are assumed to be reversed
+  void addCamelsTop(std::stack<Camel> moveCamels); // used for when camels move to a space from behind
+  void addCamelsBottom(std::stack<Camel> moveCamels); // used for when camels move to a space from behind
 
 };
 
