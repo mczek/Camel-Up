@@ -42,8 +42,8 @@ int Space::getNCamels(){
   return nCamels;
 }
 
-Camel Space::removeCamel(){
-  Camel result = camels.top();
+Camel & Space::removeCamel(){
+  Camel & result = camels.top();
   camels.pop();
   nCamels -= 1;
   return result;
@@ -58,11 +58,9 @@ bool Space::getMinusTile(){
 }
 
 void Space::addCamelsTop(std::stack<Camel> moveCamels){
-  Camel currentCamel;
-
   int nMoveCamels = moveCamels.size();
   for(int i=0;i<nMoveCamels;i++){
-    currentCamel = moveCamels.top();
+    Camel & currentCamel = moveCamels.top();
     moveCamels.pop();
     addCamel(currentCamel);
   }

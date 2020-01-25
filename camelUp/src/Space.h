@@ -23,7 +23,7 @@ public:
 
   void addCamel(Camel & c);
 
-  Camel removeCamel();
+  Camel & removeCamel();
 
   int getNCamels();
 
