@@ -17,7 +17,8 @@ using namespace Rcpp;
 //' }
 //' @export
 
-Board::Board(int n){
+Board::Board(int n, bool d){
+  debug = d;
   nSpaces = n;
   colors = {"Green", "White", "Yellow", "Orange", "Blue"};
 
@@ -34,14 +35,18 @@ int Board::getNDiceRemaining(){
   return dice.size();
 }
 
-void Board::resetDice(){
+void Board::resetDice(){ // can't define default arg twice
   int nCamels = colors.size();
 
   for(int i=0;i<nCamels;i++){
     dice.push_back(colors[i]);
   }
 
-  std::random_shuffle(dice.begin(), dice.end()); //shuffle dice
+  //shuffle dice
+  // this is necessary because R can't set this seed
+  if(!debug){
+    std::random_shuffle(dice.begin(), dice.end()); //shuffle dice
+  }
 }
 
 void Board::initCamels(){
@@ -122,7 +127,7 @@ std::string Board::moveTurn(){
 
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
-  .constructor<int>()
+  .constructor<int, bool>()
   .method("getNDiceRemaining", &Board::getNDiceRemaining)
   .method("getNCamels", &Board::getNCamels)
   .method("getCamelDF", &Board::getCamelDF)

@@ -15,8 +15,9 @@ private:
   // std::vector<Camel> camels;
   std::map<std::string, Camel> camels;
   std::vector<std::string> colors;
+  bool debug;
 public:
-  Board(int n);
+  Board(int n, bool d = false);
 
   int getNDiceRemaining();
 
