@@ -24,7 +24,7 @@ Board::Board(int n, bool d){
 
 
   for(int i=0;i<n;i++){
-    spaces.push_back(Space(i));
+    spaces.push_back(new Space(i));
   }
 
   resetDice();
@@ -56,9 +56,9 @@ void Board::initCamels(){
     std::string currentColor = currentDie.getColor();
 
     space = currentDie.roll();
-    Camel currentCamel = Camel(currentColor);
-    Space & currentSpace = spaces[space];
-    currentSpace.addCamel(currentCamel);
+    Camel * currentCamel = new Camel(currentColor);
+    Space * currentSpace = spaces[space];
+    (*currentSpace).addCamel(currentCamel);
     camels[currentColor] = currentCamel;
   }
 
@@ -78,10 +78,10 @@ DataFrame Board::getCamelDF(){
   int nCamels = colors.size();
   for(int i=0;i<nCamels;i++){
     currentColor = colors[i];
-    Camel currentCamel = camels[currentColor];
-    colorsVec.push_back(currentCamel.getColor());
-    spaceValues.push_back(currentCamel.getSpace());
-    heightValues.push_back(currentCamel.getHeight());
+    Camel* currentCamel = camels[currentColor];
+    colorsVec.push_back((*currentCamel).getColor());
+    spaceValues.push_back((*currentCamel).getSpace());
+    heightValues.push_back((*currentCamel).getHeight());
   }
 
   DataFrame df = DataFrame::create(Named("x") = colorsVec, Named("y") = spaceValues, Named("z") = heightValues);
@@ -91,31 +91,8 @@ DataFrame Board::getCamelDF(){
 
 // TODO: rewrite this function
 std::string Board::moveTurn(){
-  if(dice.size() < 1){
-    throw std::range_error("Trying to access dice when leg is over: See Board::moveTurn");
-  }
 
-  Die & currentDie = dice.back();
-  dice.pop_back();
-  std::string camelColor = currentDie.getColor();
-
-  Camel & movedCamel = camels[camelColor];
-  int startSpaceVal = movedCamel.getSpace();
-  Space & currentSpace = spaces[startSpaceVal];
-  int currentHeight = movedCamel.getHeight();
-  std::stack<Camel> temp;
-  for(int i=0;i<currentHeight;i++){
-    Camel & currentCamel = currentSpace.removeCamel();
-    temp.push(currentCamel);
-  }
-
-  int rollValue = currentDie.roll();
-  int newSpaceVal = startSpaceVal + rollValue;
-  Space & newSpace = spaces[newSpaceVal];
-
-  newSpace.addCamelsTop(temp);
-
-  return camelColor;
+  return "Blue";
 }
 
 RCPP_MODULE(board_cpp){

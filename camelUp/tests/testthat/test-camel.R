@@ -14,15 +14,15 @@ test_that("test camel: set and get space/height",{
   expect_equal(c$getHeight(), 4)
 })
 
-test_that("test camel: duplication",{
-  c <- Camel$new("Blue")
-  s <- sample(1:10, 1)
-  h <- sample(1:10, 1)
-  c$setSpace(s)
-  c$setHeight(h)
-
-  newC <- c$duplicate()
-  expect_equal(newC$getSpace(), s)
-  expect_equal(newC$getHeight(), h)
-  expect_equal(newC$getColor(), "Blue")
-})
+# test_that("test camel: duplication",{
+#   c <- Camel$new("Blue")
+#   s <- sample(1:10, 1)
+#   h <- sample(1:10, 1)
+#   c$setSpace(s)
+#   c$setHeight(h)
+#
+#   newC <- c$duplicate()
+#   expect_equal(newC$getSpace(), s)
+#   expect_equal(newC$getHeight(), h)
+#   expect_equal(newC$getColor(), "Blue")
+# })

@@ -10,10 +10,10 @@
 class Board {
 private:
   int nSpaces;
-  std::vector<Space> spaces;
+  std::vector<Space*> spaces;
   std::vector<Die> dice;
   // std::vector<Camel> camels;
-  std::map<std::string, Camel> camels;
+  std::map<std::string, Camel*> camels;
   std::vector<std::string> colors;
   bool debug;
 public:

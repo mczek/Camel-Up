@@ -10,6 +10,9 @@ private:
   std::string color;
   int space;
   int height;
+
+  Camel(const Camel&);
+  Camel& operator=(const Camel&);
 public:
   Camel();
 

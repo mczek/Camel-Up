@@ -63,6 +63,6 @@ RCPP_EXPOSED_CLASS(Camel)
       .method("getHeight", &Camel::getHeight)
       .method("setSpace", &Camel::setSpace)
       .method("setHeight", &Camel::setHeight)
-      .method("duplicate", &Camel::duplicate)
+      // .method("duplicate", &Camel::duplicate)
     ;
   }

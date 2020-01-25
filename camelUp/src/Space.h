@@ -11,7 +11,7 @@ using namespace Rcpp;
 class Space {
 private:
   int position;
-  std::stack <Camel> camels;
+  std::stack <Camel*> camels;
   int nCamels;
   bool plusTile, minusTile;
 public:
@@ -21,9 +21,9 @@ public:
 
   int getPosition();
 
-  void addCamel(Camel & c);
+  void addCamel(Camel * c);
 
-  Camel & removeCamel();
+  Camel * removeCamel();
 
   int getNCamels();
 
