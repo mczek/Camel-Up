@@ -89,41 +89,9 @@ DataFrame Board::getCamelDF(){
 
 }
 
-// TODO: rewrite this function
+// TODO: write this function
 std::string Board::moveTurn(){
-  if(dice.size() < 1){
-    throw std::range_error("Trying to access dice when leg is over: See Board::moveTurn");
-  }
 
-  std::string camelColor;
-
-  Die currentDie = dice.back();
-  dice.pop_back();
-  camelColor = currentDie.getColor();
-
-  Camel currentCamel = camels[camelColor];
-  int spaceNum = currentCamel.getSpace();
-  Space currentSpace = spaces[spaceNum];
-
-  int nCamelsToMove = currentSpace.getNCamels() - currentCamel.getHeight() + 1; // num camels that have to be moved
-  std::stack<Camel> temp;
-  for(int i=0;i<nCamelsToMove;i++){
-    temp.push(currentSpace.removeCamel());
-  }
-
-  int rollResult = currentDie.roll();
-  Space spaceToMove = spaces[spaceNum + rollResult];
-  if(spaceToMove.getPlusTile()){ // one of these two cases could be true
-    spaceToMove = spaces[spaceNum + rollResult + 1];
-    spaceToMove.addCamelsTop(temp);
-  }
-
-  if(spaceToMove.getMinusTile()){ // one of these two cases could be true
-    spaceToMove = spaces[spaceNum + rollResult - 1];
-    spaceToMove.addCamelsBottom(temp);
-  }
-
-  return camelColor;
 }
 
 RCPP_MODULE(board_cpp){
