@@ -3,6 +3,7 @@
 export(Board)
 export(Camel)
 export(Die)
+export(Player)
 export(Space)
 importFrom(Rcpp,sourceCpp)
 useDynLib(CamelUp)
