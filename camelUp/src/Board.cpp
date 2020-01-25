@@ -84,7 +84,7 @@ DataFrame Board::getCamelDF(){
     heightValues.push_back((*currentCamel).getHeight());
   }
 
-  DataFrame df = DataFrame::create(Named("x") = colorsVec, Named("y") = spaceValues, Named("z") = heightValues);
+  DataFrame df = DataFrame::create(Named("Color") = colorsVec, Named("Space") = spaceValues, Named("Height") = heightValues);
   return df;
 
 }
