@@ -89,6 +89,7 @@ DataFrame Board::getCamelDF(){
 
 }
 
+// TODO: rewrite this function
 std::string Board::moveTurn(){
   if(dice.size() < 1){
     throw std::range_error("Trying to access dice when leg is over: See Board::moveTurn");
