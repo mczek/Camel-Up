@@ -27,3 +27,12 @@ test_that("test board: moveTurn", {
 
   expect_equal(df, true_df)
 })
+
+test_that("test board: moveTurn", {
+  set.seed(1)
+  b <- Board$new(19, TRUE)
+
+  b$getCamelDF()
+  b$moveTurn()
+  b$getCamelDF()
+})

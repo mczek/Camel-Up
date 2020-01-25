@@ -29,5 +29,5 @@ public:
 
   Rcpp::DataFrame getCamelDF();
 
-  std::string moveTurn();
+  int moveTurn();
 };
