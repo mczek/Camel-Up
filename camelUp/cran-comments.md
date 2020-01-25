@@ -6,5 +6,3 @@
 ## R CMD check results
 
 0 errors | 0 warnings | 0 note
-
-I have fixed some bugs in the game play and simulation graphs.

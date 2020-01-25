@@ -52,7 +52,7 @@ void Board::initCamels(){
 
     space = currentDie.roll();
     Camel currentCamel = Camel(currentColor);
-    Space& currentSpace = spaces[space];
+    Space & currentSpace = spaces[space];
     currentSpace.addCamel(currentCamel);
     camels[currentColor] = currentCamel;
   }

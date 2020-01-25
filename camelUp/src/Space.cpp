@@ -2,6 +2,7 @@
 #include <stack>
 #include "Space.h"
 #include "Camel.h"
+using namespace Rcpp;
 
 
 
@@ -17,6 +18,7 @@
 //' }
 //' @export
 
+Space::Space(){}
 
 Space::Space(int pos){
   position = pos;
@@ -29,7 +31,7 @@ int Space::getPosition() {
   return position;
 }
 
-void Space::addCamel(Camel& camelObj){
+void Space::addCamel(Camel & camelObj){
   camels.push(camelObj);
   nCamels += 1;
   camelObj.setHeight(nCamels);
@@ -91,11 +93,13 @@ void Space::addCamelsBottom(std::stack<Camel> moveCamels){
 }
 
 int Space::testAddCamel(){
-  Camel c = Camel("Blue");
+  Camel b = Camel("Blue");
   Camel g = Camel("Green");
+  addCamel(b);
   addCamel(g);
-  addCamel(c);
-  return c.getHeight();
+  // result.push_back(g.getColor());
+
+  return g.getHeight();
 }
 
 // Approach 4: Module docstrings

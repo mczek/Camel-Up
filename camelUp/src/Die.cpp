@@ -30,6 +30,7 @@ int Die::getValue(){
 int Die::roll(){
   Rcpp::NumericVector sample = runif(1);
   double result = sum(sample)*3 + 1;
+  value = (int) result;
   return (int)result;
 }
 

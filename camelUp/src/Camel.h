@@ -22,6 +22,7 @@ public:
   int getHeight();
 
   void setSpace(int n);
+
   void setHeight(int n);
 
   Camel duplicate();

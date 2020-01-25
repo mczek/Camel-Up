@@ -1,11 +1,11 @@
-test_that("test camel constructor", {
+test_that("test camel: constructor", {
   c <- Camel$new("Blue")
   expect_equal(c$getColor(), "Blue")
   expect_equal(c$getSpace(), 0)
   expect_equal(c$getHeight(), 0)
 })
 
-test_that("test camel set and get space/height",{
+test_that("test camel: set and get space/height",{
   c <- Camel$new("Blue")
   c$setSpace(3)
   expect_equal(c$getSpace(), 3)
@@ -14,7 +14,7 @@ test_that("test camel set and get space/height",{
   expect_equal(c$getHeight(), 4)
 })
 
-test_that("test camel duplication",{
+test_that("test camel: duplication",{
   c <- Camel$new("Blue")
   s <- sample(1:10, 1)
   h <- sample(1:10, 1)
@@ -22,6 +22,7 @@ test_that("test camel duplication",{
   c$setHeight(h)
 
   newC <- c$duplicate()
-  expect_equal(c$getSpace(), s)
-  expect_equal(c$getHeight(), h)
+  expect_equal(newC$getSpace(), s)
+  expect_equal(newC$getHeight(), h)
+  expect_equal(newC$getColor(), "Blue")
 })
