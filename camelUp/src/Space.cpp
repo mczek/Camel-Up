@@ -59,37 +59,38 @@ bool Space::getMinusTile(){
 
 // add camels to top of stack for when camels move forward
 void Space::addCamelsTop(std::stack<Camel*> camelsToMove){
-  int nCamels = camelsToMove.size();
-  for(int i=0; i<nCamels; i++){
+  int nCamelsToMove = camelsToMove.size();
+  for(int i=0; i<nCamelsToMove; i++){
     Camel * c = camelsToMove.top();
     camelsToMove.pop();
     addCamel(c);
   }
 }
-//
-// void Space::addCamelsBottom(std::stack<Camel> moveCamels){
-//   Camel currentCamel;
-//   std::stack<Camel> temp;
-//
-//   for(int i=0;i<nCamels;i++){
-//     currentCamel = removeCamel();
-//     temp.push(currentCamel);
-//   }
-//
-//   int nMoveCamels = moveCamels.size();
-//   for(int i=0;i<nMoveCamels;i++){
-//     currentCamel = moveCamels.top();
-//     moveCamels.pop();
-//     addCamel(currentCamel);
-//   }
-//
-//   int n = temp.size();
-//   for(int i=0;i<n;i++){
-//     currentCamel = temp.top();
-//     temp.pop();
-//     addCamel(currentCamel);
-//   }
-// }
+
+// add camels to bottom of stack for when camels move backward
+// this funciton is untested
+void Space::addCamelsBottom(std::stack<Camel*> camelsToMove){
+  int nCamels = getNCamels();
+  std::stack<Camel*> temp;
+  for(int i=0; i<nCamels; i++){
+    Camel * c = removeCamel();
+    temp.push(c);
+  }
+
+
+  int nCamelsToMove = camelsToMove.size();
+  for(int i=0; i<nCamelsToMove; i++){
+    Camel * c = camelsToMove.top();
+    camelsToMove.pop();
+    addCamel(c);
+  }
+
+  for(int i=0; i<nCamels; i++){
+    Camel * c = temp.top();
+    temp.pop();
+    addCamel(c);
+  }
+}
 
 // int Space::testAddCamel(){
 //   Camel b = Camel("Blue");

@@ -33,7 +33,7 @@ public:
 
   // for both of these functions the camel stacks are assumed to be reversed
   void addCamelsTop(std::stack<Camel*> camelsToMove); // used for when camels move to a space from behind
-  void addCamelsBottom(std::stack<Camel> moveCamels); // used for when camels move to a space from behind
+  void addCamelsBottom(std::stack<Camel*> camelsToMove); // used for when camels move to a space from behind
 
   int testAddCamel();
 

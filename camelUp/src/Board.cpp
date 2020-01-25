@@ -115,7 +115,11 @@ int Board::moveTurn(){
 
   Space* newSpace = spaces[currentSpaceNum + dieValue];
 
+
   (*newSpace).addCamelsTop(temp);
+
+
+
   // for(int i=currentHeight; i<=currentNCamels; i++){
   //   Camel * c = temp.top();
   //   temp.pop();
