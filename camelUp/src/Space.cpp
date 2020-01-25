@@ -57,14 +57,15 @@ bool Space::getMinusTile(){
   return minusTile;
 }
 
-// void Space::addCamelsTop(std::stack<Camel> moveCamels){
-//   int nMoveCamels = moveCamels.size();
-//   for(int i=0;i<nMoveCamels;i++){
-//     Camel & currentCamel = moveCamels.top();
-//     moveCamels.pop();
-//     addCamel(currentCamel);
-//   }
-// }
+// add camels to top of stack for when camels move forward
+void Space::addCamelsTop(std::stack<Camel*> camelsToMove){
+  int nCamels = camelsToMove.size();
+  for(int i=0; i<nCamels; i++){
+    Camel * c = camelsToMove.top();
+    camelsToMove.pop();
+    addCamel(c);
+  }
+}
 //
 // void Space::addCamelsBottom(std::stack<Camel> moveCamels){
 //   Camel currentCamel;
