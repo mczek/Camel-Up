@@ -147,6 +147,10 @@ std::vector<std::string> Board::getRanking(){
   return ranking;
 }
 
+Camel* Board::getCamel(std::string color){
+  return camels[color];
+}
+
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
   .constructor<int, bool>()

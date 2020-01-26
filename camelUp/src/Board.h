@@ -40,6 +40,8 @@ public:
   void generateRanking();
 
   std::vector<std::string> getRanking();
+
+  Camel* getCamel(std::string color);
 };
 
 #endif

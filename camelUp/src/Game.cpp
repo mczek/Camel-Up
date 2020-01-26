@@ -21,6 +21,7 @@ using namespace Rcpp;
 
 
 Game::Game(int nSpaces, int nPlayers, bool d){
+  isGameOver = false;
   colors = {"Green", "White", "Yellow", "Orange", "Blue"};
   board = new Board(nSpaces, d);
 
@@ -30,6 +31,7 @@ Game::Game(int nSpaces, int nPlayers, bool d){
 
   currentPlayerIndex = 0;
   resetLegBets();
+  getRanking();
 }
 
 DataFrame Game::getPurseDF(){
@@ -52,7 +54,8 @@ DataFrame Game::getCamelDF(){
 }
 
 std::vector<std::string> Game::getRanking(){
-  return (*board).getRanking();
+  rankings = (*board).getRanking();
+  return rankings;
 }
 
 std::string Game::takeTurnMove(){
@@ -113,6 +116,41 @@ void Game::takeTurnLegBet(std::string camelColor){
   madeLegBets.push_back(betToMake);
 }
 
+int Game::getNMadeLegBets(){
+  return madeLegBets.size();
+}
+
+void Game::evaluateLegBets(){
+  // Player* cp = players[0];
+  // (*cp).addCoins(21);
+  int nBets = madeLegBets.size();
+  for(int i=0; i<nBets; i++){
+    LegBet* currentBet = madeLegBets[i];
+    (*currentBet).evaluate(rankings[0], rankings[1]);
+  }
+}
+
+void Game::endTurn(){
+  if((*board).getNDiceRemaining() == 0){
+    evaluateLegBets(); // evaluate bets
+    resetLegBets(); // put bets back
+    madeLegBets.clear(); // clear list of leg bets made
+    (*board).resetDice(); // put the dice back
+  }
+
+  Camel* firstPlace = (*board).getCamel(rankings[0]);
+  if((*firstPlace).getSpace() > 16){
+    // TODO: evaluate overall bets
+    isGameOver = true;
+  }
+
+  currentPlayerIndex += 1;
+}
+
+bool Game::checkIsGameOver(){
+  return isGameOver;
+}
+
 // Approach 4: Module docstrings
 //
 RCPP_EXPOSED_CLASS(Game)
@@ -127,5 +165,7 @@ RCPP_EXPOSED_CLASS(Game)
       .method("takeTurnMove", &Game::takeTurnMove)
       .method("getLegBetDF", &Game::getLegBetDF)
       .method("takeTurnLegBet", &Game::takeTurnLegBet)
+      .method("getNMadeLegBets", &Game::getNMadeLegBets)
+      .method("evaluateLegBets", &Game::evaluateLegBets)
     ;
   }

@@ -32,6 +32,7 @@ int Player::getCoins(){
 }
 
 
+
 // Approach 4: Module docstrings
 
 RCPP_EXPOSED_CLASS(Player)

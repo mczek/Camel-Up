@@ -19,6 +19,7 @@ private:
   std::vector<std::string> rankings;
   int currentPlayerIndex;
   std::vector<LegBet*> madeLegBets;
+  bool isGameOver;
   // int nSpaces;
 public:
   Game(int nSpaces, int nPlayers, bool d);
@@ -36,6 +37,14 @@ public:
   DataFrame getLegBetDF();
 
   void takeTurnLegBet(std::string camelColor);
+
+  int getNMadeLegBets();
+
+  void evaluateLegBets();
+
+  void endTurn();
+
+  bool checkIsGameOver();
 };
 
 #endif

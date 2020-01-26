@@ -19,5 +19,7 @@ public:
   void makeBet(Player * p);
 
   int getValue();
+
+  int evaluate(std::string first, std::string second);
 };
 #endif
