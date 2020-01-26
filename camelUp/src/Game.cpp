@@ -92,23 +92,23 @@ DataFrame Game::getLegBetDF(){
   int nColors = colors.size();
   for(int i=0;i<nColors;i++){
     std::string currentColor = colors[i];
-    std::stack<LegBet*> s = legBets[currentColor];
+    std::stack<LegBet*>* s = &legBets[currentColor];
 
-    LegBet* nextBet = s.top();
+    LegBet* nextBet = (*s).top();
     nextBetValues.push_back((*nextBet).getValue());
-    nBetsLeft.push_back(s.size());
+    nBetsLeft.push_back((*s).size());
   }
 
-  DataFrame df = DataFrame::create(Named("Color") = colors, Named("Value") = nextBetValues);
+  DataFrame df = DataFrame::create(Named("Color") = colors, Named("Value") = nextBetValues, Named("nBets") = nBetsLeft);
   return df;
 }
 
 void Game::takeTurnLegBet(std::string camelColor){
   Player* currentPlayer = players[currentPlayerIndex];
 
-  std::stack<LegBet*> colorStack = legBets[camelColor];
-  LegBet* betToMake = colorStack.top();
-  colorStack.pop();
+  std::stack<LegBet*>* colorStack = &legBets[camelColor];
+  LegBet* betToMake = (*colorStack).top();
+  (*colorStack).pop();
   (*betToMake).makeBet(currentPlayer);
   madeLegBets.push_back(betToMake);
 }
