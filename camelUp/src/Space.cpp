@@ -92,6 +92,23 @@ void Space::addCamelsBottom(std::stack<Camel*> camelsToMove){
   }
 }
 
+void Space::setPlusTile(Player* p){
+  plusTile = true;
+  setTilePlacedBy(p);
+}
+
+void Space::setMinusTile(Player* p){
+  minusTile = true;
+  setTilePlacedBy(p);
+}
+
+void Space::setTilePlacedBy(Player* p){
+  tilePlacedBy = p;
+}
+
+Player* Space::getTilePlacedBy(){
+  return tilePlacedBy;
+}
 // int Space::testAddCamel(){
 //   Camel b = Camel("Blue");
 //   Camel g = Camel("Green");

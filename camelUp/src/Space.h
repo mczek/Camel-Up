@@ -4,6 +4,7 @@
 #include <Rcpp.h>
 #include <stack>
 #include "Camel.h"
+#include "Player.h"
 
 using namespace Rcpp;
 
@@ -14,6 +15,7 @@ private:
   std::stack <Camel*> camels;
   int nCamels;
   bool plusTile, minusTile;
+  Player* tilePlacedBy;
 public:
   Space();
 
@@ -36,6 +38,14 @@ public:
   void addCamelsBottom(std::stack<Camel*> camelsToMove); // used for when camels move to a space from behind
 
   int testAddCamel();
+
+  void setPlusTile(Player* p);
+
+  void setMinusTile(Player* p);
+
+  Player* getTilePlacedBy();
+
+  void setTilePlacedBy(Player*p);
 
 };
 #endif

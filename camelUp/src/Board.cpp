@@ -114,9 +114,20 @@ std::string Board::moveTurn(){
   }
 
   Space* newSpace = spaces[currentSpaceNum + dieValue];
+  Player* p = (*newSpace).getTilePlacedBy(); // player that placed the relevant tile
+  //  account for tiles
+  if((*newSpace).getPlusTile()){
+    Space* newSpace = spaces[currentSpaceNum + dieValue + 1];
+    (*newSpace).addCamelsTop(temp);
+    (*p).addCoins(1);
+  } else if((*newSpace).getMinusTile()){
+    Space* newSpace = spaces[currentSpaceNum + dieValue - 1];
+    (*newSpace).addCamelsBottom(temp);
+    (*p).addCoins(1);
+  } else {
+    (*newSpace).addCamelsTop(temp);
+  }
 
-  //  needs to be updated for tiles
-  (*newSpace).addCamelsTop(temp);
 
 
   return camelColor;
@@ -149,6 +160,16 @@ std::vector<std::string> Board::getRanking(){
 
 Camel* Board::getCamel(std::string color){
   return camels[color];
+}
+
+void Board::placePlusTile(int n, Player* p){
+  Space* relevantSpace = spaces[n];
+  (*relevantSpace).setPlusTile(p);
+}
+
+void Board::placeMinusTile(int n, Player* p){
+  Space* relevantSpace = spaces[n];
+  (*relevantSpace).setMinusTile(p);
 }
 
 RCPP_MODULE(board_cpp){

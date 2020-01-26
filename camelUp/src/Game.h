@@ -45,6 +45,8 @@ public:
   void endTurn();
 
   bool checkIsGameOver();
+
+  void takeTurnPlaceTile(int n, bool plus);
 };
 
 #endif

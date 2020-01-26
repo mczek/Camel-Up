@@ -132,6 +132,7 @@ void Game::evaluateLegBets(){
 
 void Game::endTurn(){
   if((*board).getNDiceRemaining() == 0){
+    //  TODO: clear tiles
     evaluateLegBets(); // evaluate bets
     resetLegBets(); // put bets back
     madeLegBets.clear(); // clear list of leg bets made
@@ -151,6 +152,15 @@ bool Game::checkIsGameOver(){
   return isGameOver;
 }
 
+void Game::takeTurnPlaceTile(int n, bool plus){
+  Player* currentPlayer = players[currentPlayerIndex];
+  if(plus){
+    (*board).placePlusTile(n, currentPlayer);
+  } else {
+    (*board).placeMinusTile(n, currentPlayer);
+  }
+}
+
 // Approach 4: Module docstrings
 //
 RCPP_EXPOSED_CLASS(Game)
@@ -167,5 +177,6 @@ RCPP_EXPOSED_CLASS(Game)
       .method("takeTurnLegBet", &Game::takeTurnLegBet)
       .method("getNMadeLegBets", &Game::getNMadeLegBets)
       .method("evaluateLegBets", &Game::evaluateLegBets)
+      .method("takeTurnPlaceTile", &Game::takeTurnPlaceTile)
     ;
   }

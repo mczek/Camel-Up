@@ -42,6 +42,10 @@ public:
   std::vector<std::string> getRanking();
 
   Camel* getCamel(std::string color);
+
+  void placePlusTile(int n, Player* p);
+
+  void placeMinusTile(int n, Player* p);
 };
 
 #endif
