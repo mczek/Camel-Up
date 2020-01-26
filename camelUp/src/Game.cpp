@@ -27,6 +27,8 @@ Game::Game(int nSpaces, int nPlayers, bool d){
   for(int i=0;i<nPlayers;i++){
     players.push_back(new Player("Player " + toString(i)));
   }
+
+  currentPlayerIndex = 0;
 }
 
 DataFrame Game::getPurseDF(){
@@ -52,6 +54,16 @@ std::vector<std::string> Game::getRanking(){
   return (*board).getRanking();
 }
 
+std::string Game::takeTurnMove(){
+  Player* currentPlayer = players[currentPlayerIndex];
+  std::string result = (*board).moveTurn();
+
+  (*currentPlayer).addCoins(1);
+
+  // check for end game and end leg - write function for this
+  return result;
+}
+
 
 // Approach 4: Module docstrings
 //
@@ -64,5 +76,6 @@ RCPP_EXPOSED_CLASS(Game)
       .method("getPurseDF", &Game::getPurseDF)
       .method("getCamelDF", &Game::getCamelDF)
       .method("getRanking", &Game::getRanking)
+      .method("takeTurnMove", &Game::takeTurnMove)
     ;
   }

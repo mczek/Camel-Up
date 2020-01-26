@@ -16,3 +16,20 @@ test_that("test game: constructor", {
 
   expect_equal(g$getRanking(), c("Orange", "Yellow", "White", "Blue", "Green"))
 })
+
+test_that("test game: takeTurnMove", {
+  set.seed(1)
+  g <- Game$new(19, 3, TRUE)
+  g$takeTurnMove()
+  df <- g$getPurseDF()
+  true_df <- data.frame(Player = paste(rep("Player", 3), 0:2),
+                        Coins = c(1, 0, 0))
+
+  df <- g$getCamelDF()
+  true_df <- data.frame(Color = c("Green", "White", "Yellow", "Orange", "Blue"),
+                        Space = c(1, 2, 2, 3, 4),
+                        Height = c(1, 1, 2, 1, 1))
+  expect_equal(df, true_df)
+
+
+})

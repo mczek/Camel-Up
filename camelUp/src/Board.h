@@ -35,7 +35,7 @@ public:
 
   Rcpp::DataFrame getCamelDF();
 
-  int moveTurn();
+  std::string moveTurn();
 
   void generateRanking();
 

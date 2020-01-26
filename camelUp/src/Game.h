@@ -17,6 +17,7 @@ private:
   // std::vector<LegBet*> legBets;
   std::vector<std::string> colors;
   std::vector<std::string> rankings;
+  int currentPlayerIndex;
   // int nSpaces;
 public:
   Game(int nSpaces, int nPlayers, bool d);
@@ -26,6 +27,8 @@ public:
   DataFrame getCamelDF();
 
   std::vector<std::string> getRanking();
+
+  std::string takeTurnMove();
 };
 
 #endif
