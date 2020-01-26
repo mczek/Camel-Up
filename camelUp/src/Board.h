@@ -21,6 +21,7 @@ private:
   std::map<std::string, Camel*> camels;
   std::vector<std::string> colors;
   bool debug;
+  std::vector<std::string> ranking;
 public:
   Board(int n, bool d = false);
 
@@ -35,6 +36,10 @@ public:
   Rcpp::DataFrame getCamelDF();
 
   int moveTurn();
+
+  void generateRanking();
+
+  std::vector<std::string> getRanking();
 };
 
 #endif

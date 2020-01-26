@@ -44,7 +44,13 @@ DataFrame Game::getPurseDF(){
   return df;
 }
 
+DataFrame Game::getCamelDF(){
+  return (*board).getCamelDF();
+}
 
+std::vector<std::string> Game::getRanking(){
+  return (*board).getRanking();
+}
 
 
 // Approach 4: Module docstrings
@@ -56,5 +62,7 @@ RCPP_EXPOSED_CLASS(Game)
     class_<Game>("Game")
       .constructor<int, int, bool>()
       .method("getPurseDF", &Game::getPurseDF)
+      .method("getCamelDF", &Game::getCamelDF)
+      .method("getRanking", &Game::getRanking)
     ;
   }

@@ -29,6 +29,7 @@ Board::Board(int n, bool d){
 
   resetDice();
   initCamels();
+  generateRanking();
 }
 
 int Board::getNDiceRemaining(){
@@ -89,7 +90,6 @@ DataFrame Board::getCamelDF(){
 
 }
 
-// TODO: rewrite this function
 int Board::moveTurn(){
   if(dice.size() < 1){
     throw std::range_error("Trying to access dice when leg is over: See Board::moveTurn");
@@ -115,20 +115,36 @@ int Board::moveTurn(){
 
   Space* newSpace = spaces[currentSpaceNum + dieValue];
 
-
+  //  needs to be updated for tiles
   (*newSpace).addCamelsTop(temp);
 
 
-
-  // for(int i=currentHeight; i<=currentNCamels; i++){
-  //   Camel * c = temp.top();
-  //   temp.pop();
-  //   (*newSpace).addCamel(c);
-  //
-  // }
-
-
   return temp.size();
+}
+
+void Board::generateRanking(){
+  for(int i=nSpaces-1;i>=0;i--){
+    Space* currentSpace = spaces[i];
+    int nCamelsHere = (*currentSpace).getNCamels();
+    if(nCamelsHere > 0){
+      std::stack<Camel*> temp;
+      for(int i=0; i<nCamelsHere; i++){
+        Camel* c = (*currentSpace).removeCamel();
+        ranking.push_back((*c).getColor());
+        temp.push(c);
+      }
+
+      for(int i=0; i<nCamelsHere; i++){
+        Camel* c = temp.top();
+        temp.pop();
+        (*currentSpace).addCamel(c);
+      }
+    }
+  }
+}
+
+std::vector<std::string> Board::getRanking(){
+  return ranking;
 }
 
 RCPP_MODULE(board_cpp){
@@ -138,5 +154,7 @@ RCPP_MODULE(board_cpp){
   .method("getNCamels", &Board::getNCamels)
   .method("getCamelDF", &Board::getCamelDF)
   .method("moveTurn", &Board::moveTurn)
+  .method("generateRanking", &Board::generateRanking)
+  .method("getRanking", &Board::getRanking)
   ;
 }
