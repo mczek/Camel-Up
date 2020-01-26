@@ -1,6 +1,11 @@
+#ifndef BOARD_H
+#define BOARD_H
+
 #include <Rcpp.h>
 #include <list>
 #include <vector>
+
+
 #include <algorithm>
 #include <string>
 #include "Space.h"
@@ -31,3 +36,5 @@ public:
 
   int moveTurn();
 };
+
+#endif

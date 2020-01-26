@@ -1,3 +1,6 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include <Rcpp.h>
 #include <string>
 
@@ -18,3 +21,4 @@ public:
   int getCoins();
 };
 
+#endif

@@ -3,6 +3,8 @@
 export(Board)
 export(Camel)
 export(Die)
+export(Game)
+export(LegBet)
 export(Player)
 export(Space)
 importFrom(Rcpp,sourceCpp)

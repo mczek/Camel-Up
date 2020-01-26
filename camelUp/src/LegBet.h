@@ -1,18 +1,21 @@
+#ifndef LEGBET_H
+#define LEGBET_H
+
 #include <Rcpp.h>
-#include <string>
+#include <stack>
 #include "Player.h"
 
-// Define die class
+using namespace Rcpp;
 
 
 class LegBet {
 private:
   int value;
   std::string camelColor;
-  Player* person;
+  Player * person;
 public:
-  Player(std::string color, int value);
+  LegBet(std::string color, int v);
 
-  makeBet(Player* p);
+  void makeBet(Player * p);
 };
-
+#endif

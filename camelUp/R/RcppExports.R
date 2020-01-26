@@ -35,6 +35,28 @@ NULL
 #'
 NULL
 
+#' @name Game
+#' @title Encapsulates a double
+#' @description Type the name of the class to see its methods
+#' @field new Constructor
+#' @field mult Multiply by another Double object \itemize{
+#' \item Paramter: other - The other Double object
+#' \item Returns: product of the values
+#' }
+#' @export
+NULL
+
+#' @name LegBet
+#' @title Encapsulates a double
+#' @description Type the name of the class to see its methods
+#' @field new Constructor
+#' @field mult Multiply by another Double object \itemize{
+#' \item Paramter: other - The other Double object
+#' \item Returns: product of the values
+#' }
+#' @export
+NULL
+
 #' @name Player
 #' @title Encapsulates a double
 #' @description Type the name of the class to see its
