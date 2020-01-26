@@ -28,6 +28,10 @@ void LegBet::makeBet(Player * p) {
   person = p;
 }
 
+int LegBet::getValue(){
+  return value;
+}
+
 
 // Approach 4: Module docstrings
 //

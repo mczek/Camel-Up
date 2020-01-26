@@ -29,6 +29,7 @@ Game::Game(int nSpaces, int nPlayers, bool d){
   }
 
   currentPlayerIndex = 0;
+  resetLegBets();
 }
 
 DataFrame Game::getPurseDF(){
@@ -64,6 +65,53 @@ std::string Game::takeTurnMove(){
   return result;
 }
 
+void Game::resetLegBets(){
+  std::vector<int> betValues = {2, 3, 5};
+  int nLegBets = betValues.size();
+
+  int nColors = colors.size();
+  std::string currentColor;
+  for(int i=0; i<nColors; i++){
+    currentColor = colors[i];
+    // std::stack<LegBet*> tempStack;
+    std::stack<LegBet*> betStack;
+    for(int j=0; j<nLegBets; j++){
+      betStack.push(new LegBet(currentColor, betValues[j]));
+    }
+    // std::stack<LegBet*>* betStack = * tempStack;
+    legBets[currentColor] = betStack; // & gets address of object
+  }
+}
+
+
+DataFrame Game::getLegBetDF(){
+  // std::vector<std::string> camelColors;
+  std::vector<int> nextBetValues;
+  std::vector<int> nBetsLeft;
+
+  int nColors = colors.size();
+  for(int i=0;i<nColors;i++){
+    std::string currentColor = colors[i];
+    std::stack<LegBet*> s = legBets[currentColor];
+
+    LegBet* nextBet = s.top();
+    nextBetValues.push_back((*nextBet).getValue());
+    nBetsLeft.push_back(s.size());
+  }
+
+  DataFrame df = DataFrame::create(Named("Color") = colors, Named("Value") = nextBetValues);
+  return df;
+}
+
+void Game::takeTurnLegBet(std::string camelColor){
+  Player* currentPlayer = players[currentPlayerIndex];
+
+  std::stack<LegBet*> colorStack = legBets[camelColor];
+  LegBet* betToMake = colorStack.top();
+  colorStack.pop();
+  (*betToMake).makeBet(currentPlayer);
+  madeLegBets.push_back(betToMake);
+}
 
 // Approach 4: Module docstrings
 //
@@ -77,5 +125,7 @@ RCPP_EXPOSED_CLASS(Game)
       .method("getCamelDF", &Game::getCamelDF)
       .method("getRanking", &Game::getRanking)
       .method("takeTurnMove", &Game::takeTurnMove)
+      .method("getLegBetDF", &Game::getLegBetDF)
+      .method("takeTurnLegBet", &Game::takeTurnLegBet)
     ;
   }

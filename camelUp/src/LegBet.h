@@ -17,5 +17,7 @@ public:
   LegBet(std::string color, int v);
 
   void makeBet(Player * p);
+
+  int getValue();
 };
 #endif

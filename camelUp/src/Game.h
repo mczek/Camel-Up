@@ -14,10 +14,11 @@ class Game {
 private:
   std::vector<Player*> players;
   Board* board;
-  // std::vector<LegBet*> legBets;
+  std::map<std::string, std::stack<LegBet*>> legBets; // each color has a stack, all contained in a map
   std::vector<std::string> colors;
   std::vector<std::string> rankings;
   int currentPlayerIndex;
+  std::vector<LegBet*> madeLegBets;
   // int nSpaces;
 public:
   Game(int nSpaces, int nPlayers, bool d);
@@ -29,6 +30,12 @@ public:
   std::vector<std::string> getRanking();
 
   std::string takeTurnMove();
+
+  void resetLegBets();
+
+  DataFrame getLegBetDF();
+
+  void takeTurnLegBet(std::string camelColor);
 };
 
 #endif
