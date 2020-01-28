@@ -19,6 +19,11 @@ Player::Player(std::string n){
   coins = 0;
 }
 
+Player::Player(const Player & p){
+  name = p.name;
+  coins = p.coins;
+}
+
 void Player::addCoins(int n){
   coins += n;
 }

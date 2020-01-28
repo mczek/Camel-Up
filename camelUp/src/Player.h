@@ -14,6 +14,8 @@ private:
 public:
   Player(std::string n);
 
+  Player(const Player & p);
+
   void addCoins(int n);
 
   std::string getName();
