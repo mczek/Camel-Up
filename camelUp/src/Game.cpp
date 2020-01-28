@@ -49,13 +49,13 @@ Game::Game(const Game & g){
   currentPlayerIndex = g.currentPlayerIndex;
   isGameOver = g.isGameOver;
   colors = {"Green", "White", "Yellow", "Orange", "Blue"};
-
+  //
   // copy player objects
   int nPlayers = g.players.size();
   for(int i=0;i<nPlayers;i++){
     players.push_back(new Player("Player " + toString(i)));
   }
-
+  //
   board = new Board(g.nSpaces, g.debug);
   Board* oldBoard = g.board;
   for(int i=0; i<nSpaces; i++){
@@ -94,18 +94,18 @@ Game::Game(const Game & g){
       (*newSpace).addCamel(newCamel);
     }
   }
-
-  std::vector<Die> oldDice = (*oldBoard).getDice();
-  int nDice = oldDice.size();
-  std::vector<Die> newDice;
-  // this will reverse the order of the dice
-  for(int i=0; i<nDice; i++){
-    Die d = oldDice[i];
-    newDice.push_back(d);
-  }
-  (*board).setDice(newDice);
-
-  // match leg bets
+  //
+  // std::vector<Die> oldDice = (*oldBoard).getDice();
+  // int nDice = oldDice.size();
+  // std::vector<Die> newDice;
+  // // this will reverse the order of the dice
+  // for(int i=0; i<nDice; i++){
+  //   Die d = oldDice[i];
+  //   newDice.push_back(d);
+  // }
+  // (*board).setDice(newDice);
+  //
+  // // match leg bets
   // resetLegBets();
   // int nColors = colors.size();
   // std::string s;
@@ -154,7 +154,7 @@ std::string Game::takeTurnMove(){
 
   (*currentPlayer).addCoins(1);
 
-  // check for end game and end leg - write function for this
+  endTurn();
   return result;
 }
 
@@ -235,7 +235,7 @@ void Game::endTurn(){
     isGameOver = true;
   }
 
-  currentPlayerIndex = (currentPlayerIndex + 1) % players.size;
+  currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 }
 
 bool Game::checkIsGameOver(){
