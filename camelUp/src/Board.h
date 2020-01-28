@@ -25,6 +25,8 @@ private:
 public:
   Board(int n, bool d = false);
 
+  Board(const Board & b);
+
   int getNDiceRemaining();
 
   void resetDice();

@@ -34,6 +34,27 @@ Game::Game(int nSpaces, int nPlayers, bool d){
   getRanking();
 }
 
+Game::Game(const Game & g){
+  // g.board;
+  // g.colors;
+  //    g.currentPlayerIndex;
+  //    g.isGameOver;
+  // g.legBets;
+  // g.madeLegBets;
+  //    g.players;
+  // g.rankings; can do at the end
+
+  // currentPlayerIndex = g.currentPlayerIndex;
+  // isGameOver = g.isGameOver;
+  //
+  // // copy player objects
+  // int nPlayers = g.players.size();
+  // for(int i=0;i<nPlayers;i++){
+  //   players.push_back(new Player("Player " + toString(i)));
+  // }
+
+}
+
 DataFrame Game::getPurseDF(){
   std::vector<std::string> names;
   std::vector<int> purseValues;

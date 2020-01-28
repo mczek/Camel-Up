@@ -24,6 +24,12 @@ Camel::Camel(std::string c){
   height = 0;
 }
 
+Camel::Camel(const Camel& c){
+  color = c.color;
+  height = c.height;
+  space = c.space;
+}
+
 std::string Camel::getColor() {
   return color;
 }

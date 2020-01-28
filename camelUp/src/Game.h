@@ -24,6 +24,8 @@ private:
 public:
   Game(int nSpaces, int nPlayers, bool d);
 
+  Game(const Game & g);
+
   DataFrame getPurseDF();
 
   DataFrame getCamelDF();

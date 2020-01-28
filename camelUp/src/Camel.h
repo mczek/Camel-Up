@@ -11,12 +11,12 @@ private:
   int space;
   int height;
 
-  Camel(const Camel&);
-  Camel& operator=(const Camel&);
 public:
   Camel();
 
   Camel(std::string c);
+
+  Camel(const Camel&);
 
   std::string getColor();
 
