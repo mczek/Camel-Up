@@ -19,6 +19,11 @@ Die::Die(std::string c){
   value = 0;
 }
 
+Die::Die(const Die & d){
+  color = d.color;
+  value = d.value;
+}
+
 std::string Die::getColor() {
   return color;
 }

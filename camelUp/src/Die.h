@@ -11,6 +11,8 @@ private:
 public:
   Die(std::string c);
 
+  Die(const Die & d);
+
   std::string getColor() ;
 
   int getValue();
