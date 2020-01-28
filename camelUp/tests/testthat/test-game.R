@@ -67,7 +67,7 @@ test_that("test game: evaluateBets", {
   expect_equal(df, true_df)
 })
 
-test_that("something", {
+test_that("test game: copy constructor", {
   set.seed(1)
   g <- Game$new(19, 3, TRUE)
   h <- Game$new(g)
