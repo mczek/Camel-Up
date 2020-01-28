@@ -2,6 +2,8 @@
 #include <stack>
 #include "Space.h"
 #include "Camel.h"
+#include "Player.h"
+
 using namespace Rcpp;
 
 
@@ -25,6 +27,7 @@ Space::Space(int pos){
   nCamels = 0;
   plusTile = false;
   minusTile = false;
+  tilePlacedBy = new Player("");
 }
 
 int Space::getPosition() {

@@ -20,7 +20,8 @@ private:
   int currentPlayerIndex;
   std::vector<LegBet*> madeLegBets;
   bool isGameOver;
-  // int nSpaces;
+  int nSpaces;
+  bool debug;
 public:
   Game(int nSpaces, int nPlayers, bool d);
 
@@ -49,6 +50,7 @@ public:
   bool checkIsGameOver();
 
   void takeTurnPlaceTile(int n, bool plus);
+
 };
 
 #endif

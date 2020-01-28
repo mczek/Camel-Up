@@ -172,6 +172,18 @@ void Board::placeMinusTile(int n, Player* p){
   (*relevantSpace).setMinusTile(p);
 }
 
+Space* Board::getSpaceN(int n){
+  return spaces[n];
+}
+
+std::vector<Die> Board::getDice(){
+  return dice;
+}
+
+void Board::setDice(std::vector<Die> d){
+  dice = d;
+}
+
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
   .constructor<int, bool>()

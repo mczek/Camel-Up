@@ -20,7 +20,9 @@ using namespace Rcpp;
 //' @export
 
 
-Game::Game(int nSpaces, int nPlayers, bool d){
+Game::Game(int n, int nPlayers, bool d){
+  nSpaces = n;
+  debug = d;
   isGameOver = false;
   colors = {"Green", "White", "Yellow", "Orange", "Blue"};
   board = new Board(nSpaces, d);
@@ -35,24 +37,91 @@ Game::Game(int nSpaces, int nPlayers, bool d){
 }
 
 Game::Game(const Game & g){
-  // g.board;
-  // g.colors;
+  //    g.board;
+  //    g.colors;
   //    g.currentPlayerIndex;
   //    g.isGameOver;
   // g.legBets;
   // g.madeLegBets;
   //    g.players;
-  // g.rankings; can do at the end
+  //    g.rankings; can do at the end
 
-  // currentPlayerIndex = g.currentPlayerIndex;
-  // isGameOver = g.isGameOver;
+  currentPlayerIndex = g.currentPlayerIndex;
+  isGameOver = g.isGameOver;
+  colors = {"Green", "White", "Yellow", "Orange", "Blue"};
+
+  // copy player objects
+  int nPlayers = g.players.size();
+  for(int i=0;i<nPlayers;i++){
+    players.push_back(new Player("Player " + toString(i)));
+  }
+
+  board = new Board(g.nSpaces, g.debug);
+  Board* oldBoard = g.board;
+  for(int i=0; i<nSpaces; i++){
+    Space* oldSpace = (*oldBoard).getSpaceN(i);
+    Space* newSpace = (*board).getSpaceN(i);
   //
-  // // copy player objects
-  // int nPlayers = g.players.size();
-  // for(int i=0;i<nPlayers;i++){
-  //   players.push_back(new Player("Player " + toString(i)));
+    // tiles
+    Player* currentP;
+    if((*oldSpace).getPlusTile() || (*oldSpace).getMinusTile()){
+      Player* p = (*oldSpace).getTilePlacedBy();
+      std::string name = (*p).getName();
+
+      int iter = 0;
+      currentP = players[iter];
+      while((*currentP).getName() != name){
+
+        Player* currentP = players[iter];
+        iter ++;
+      }
+    }
+    if((*oldSpace).getPlusTile()){
+      (*newSpace).setPlusTile(currentP);
+    }
+    if((*oldSpace).getMinusTile()){
+      (*newSpace).setMinusTile(currentP);
+    }
+
+    //  camel stack
+    int nCamelsHere = (*oldSpace).getNCamels();
+    std::stack<std::string> temp;
+    std::string currentColor;
+    for(int j=0; j<nCamelsHere; j++){
+      Camel * c = (*oldSpace).removeCamel();
+      currentColor = (*c).getColor();
+      Camel * newCamel = (*board).getCamel(currentColor);
+      (*newSpace).addCamel(newCamel);
+    }
+  }
+
+  std::vector<Die> oldDice = (*oldBoard).getDice();
+  int nDice = oldDice.size();
+  std::vector<Die> newDice;
+  // this will reverse the order of the dice
+  for(int i=0; i<nDice; i++){
+    Die d = oldDice[i];
+    newDice.push_back(d);
+  }
+  (*board).setDice(newDice);
+
+  // match leg bets
+  // resetLegBets();
+  // int nColors = colors.size();
+  // std::string s;
+  // std::stack<LegBet*> oldBetStack;
+  // for(int i=0; i<nColors; i++){
+  //   s = colors[i];
+  //   oldBetStack = g.legBets[s];
+  //   int nOldBets = oldBetStack.size();
+  //   newBetStack = legBets[s];
+  //   int diff = 3-nOldBets;
+  //   for(int j=0; j<diff; j++){
+  //     newBetStack.pop();
+  //   }
   // }
 
+  getRanking();
 }
 
 DataFrame Game::getPurseDF(){
@@ -182,6 +251,7 @@ void Game::takeTurnPlaceTile(int n, bool plus){
   }
 }
 
+
 // Approach 4: Module docstrings
 //
 RCPP_EXPOSED_CLASS(Game)
@@ -190,6 +260,7 @@ RCPP_EXPOSED_CLASS(Game)
 
     class_<Game>("Game")
       .constructor<int, int, bool>()
+      .constructor<const Game &>()
       .method("getPurseDF", &Game::getPurseDF)
       .method("getCamelDF", &Game::getCamelDF)
       .method("getRanking", &Game::getRanking)

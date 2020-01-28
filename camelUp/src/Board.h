@@ -48,6 +48,12 @@ public:
   void placePlusTile(int n, Player* p);
 
   void placeMinusTile(int n, Player* p);
+
+  Space* getSpaceN(int n);
+
+  std::vector<Die> getDice();
+
+  void setDice(std::vector<Die>);
 };
 
 #endif
