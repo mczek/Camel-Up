@@ -46,21 +46,21 @@ Game::Game(const Game & g){
   //    g.players;
   //    g.rankings; can do at the end
 
-  currentPlayerIndex = g.currentPlayerIndex;
-  isGameOver = g.isGameOver;
-  colors = {"Green", "White", "Yellow", "Orange", "Blue"};
+  // currentPlayerIndex = g.currentPlayerIndex;
+  // isGameOver = g.isGameOver;
+  // colors = {"Green", "White", "Yellow", "Orange", "Blue"};
   //
   // copy player objects
-  int nPlayers = g.players.size();
-  for(int i=0;i<nPlayers;i++){
-    players.push_back(new Player("Player " + toString(i)));
-  }
-  //
-  board = new Board(g.nSpaces, g.debug);
-  Board* oldBoard = g.board;
-  for(int i=0; i<nSpaces; i++){
-    Space* oldSpace = (*oldBoard).getSpaceN(i);
-    Space* newSpace = (*board).getSpaceN(i);
+  // int nPlayers = g.players.size();
+  // for(int i=0;i<nPlayers;i++){
+  //   players.push_back(new Player("Player " + toString(i)));
+  // }
+  // //
+  // board = new Board(g.nSpaces, g.debug);
+  // Board* oldBoard = g.board;
+  // for(int i=0; i<nSpaces; i++){
+  //   Space* oldSpace = (*oldBoard).getSpaceN(i);
+  //   Space* newSpace = (*board).getSpaceN(i);
   //
     // tiles
     // Player* currentP;
@@ -93,7 +93,7 @@ Game::Game(const Game & g){
     //   Camel * newCamel = (*board).getCamel(currentColor);
     //   (*newSpace).addCamel(newCamel);
     // }
-  }
+  // }
   //
   // std::vector<Die> oldDice = (*oldBoard).getDice();
   // int nDice = oldDice.size();
@@ -121,7 +121,7 @@ Game::Game(const Game & g){
   //   }
   // }
 
-  getRanking();
+  // getRanking();
 }
 
 DataFrame Game::getPurseDF(){

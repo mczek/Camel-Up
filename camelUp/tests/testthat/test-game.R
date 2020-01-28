@@ -73,11 +73,11 @@ test_that("test game: copy constructor", {
   h <- Game$new(g)
   # h$takeTurnMove()
 
-  df <- g$getCamelDF()
-  # true_df <- data.frame(Color = c("Green", "White", "Yellow", "Orange", "Blue"),
-  #                       Space = c(1, 2, 2, 3, 1),
-  #                       Height = c(1, 1, 2, 1, 2))
-  expect_equal(df, df)
+  # df <- g$getCamelDF()
+  true_df <- data.frame(Color = c("Green", "White", "Yellow", "Orange", "Blue"),
+                        Space = c(1, 2, 2, 3, 1),
+                        Height = c(1, 1, 2, 1, 2))
+  expect_equal(true_df, true_df)
 })
 
 test_that("can play more than one leg", {
