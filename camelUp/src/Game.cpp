@@ -270,5 +270,6 @@ RCPP_EXPOSED_CLASS(Game)
       .method("getNMadeLegBets", &Game::getNMadeLegBets)
       .method("evaluateLegBets", &Game::evaluateLegBets)
       .method("takeTurnPlaceTile", &Game::takeTurnPlaceTile)
+      .method("checkIsGameOver", &Game::checkIsGameOver)
     ;
   }
