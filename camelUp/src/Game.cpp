@@ -63,36 +63,36 @@ Game::Game(const Game & g){
     Space* newSpace = (*board).getSpaceN(i);
   //
     // tiles
-    Player* currentP;
-    if((*oldSpace).getPlusTile() || (*oldSpace).getMinusTile()){
-      Player* p = (*oldSpace).getTilePlacedBy();
-      std::string name = (*p).getName();
-
-      int iter = 0;
-      currentP = players[iter];
-      while((*currentP).getName() != name){
-
-        Player* currentP = players[iter];
-        iter ++;
-      }
-    }
-    if((*oldSpace).getPlusTile()){
-      (*newSpace).setPlusTile(currentP);
-    }
-    if((*oldSpace).getMinusTile()){
-      (*newSpace).setMinusTile(currentP);
-    }
+    // Player* currentP;
+    // if((*oldSpace).getPlusTile() || (*oldSpace).getMinusTile()){
+    //   Player* p = (*oldSpace).getTilePlacedBy();
+    //   std::string name = (*p).getName();
+    //
+    //   int iter = 0;
+    //   currentP = players[iter];
+    //   while((*currentP).getName() != name){
+    //
+    //     Player* currentP = players[iter];
+    //     iter ++;
+    //   }
+    // }
+    // if((*oldSpace).getPlusTile()){
+    //   (*newSpace).setPlusTile(currentP);
+    // }
+    // if((*oldSpace).getMinusTile()){
+    //   (*newSpace).setMinusTile(currentP);
+    // }
 
     //  camel stack
-    int nCamelsHere = (*oldSpace).getNCamels();
-    std::stack<std::string> temp;
-    std::string currentColor;
-    for(int j=0; j<nCamelsHere; j++){
-      Camel * c = (*oldSpace).removeCamel();
-      currentColor = (*c).getColor();
-      Camel * newCamel = (*board).getCamel(currentColor);
-      (*newSpace).addCamel(newCamel);
-    }
+    // int nCamelsHere = (*oldSpace).getNCamels();
+    // std::stack<std::string> temp;
+    // std::string currentColor;
+    // for(int j=0; j<nCamelsHere; j++){
+    //   Camel * c = (*oldSpace).removeCamel();
+    //   currentColor = (*c).getColor();
+    //   Camel * newCamel = (*board).getCamel(currentColor);
+    //   (*newSpace).addCamel(newCamel);
+    // }
   }
   //
   // std::vector<Die> oldDice = (*oldBoard).getDice();
