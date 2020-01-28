@@ -235,7 +235,7 @@ void Game::endTurn(){
     isGameOver = true;
   }
 
-  currentPlayerIndex += 1;
+  currentPlayerIndex = (currentPlayerIndex + 1) % players.size;
 }
 
 bool Game::checkIsGameOver(){
