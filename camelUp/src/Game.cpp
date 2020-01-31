@@ -37,6 +37,10 @@ Game::Game(int n, int nPlayers, bool d){
 }
 
 Game::Game(const Game & g){
+  // only need to make it so dataframes extracted are correct
+  // don't need to duplicate bets or anything other than the board
+
+
   //    g.board;
   //    g.colors;
   //    g.currentPlayerIndex;
@@ -46,9 +50,16 @@ Game::Game(const Game & g){
   //    g.players;
   //    g.rankings; can do at the end
 
-  // currentPlayerIndex = g.currentPlayerIndex;
-  // isGameOver = g.isGameOver;
-  // colors = {"Green", "White", "Yellow", "Orange", "Blue"};
+  currentPlayerIndex = g.currentPlayerIndex;
+  isGameOver = g.isGameOver;
+  colors = {"Green", "White", "Yellow", "Orange", "Blue"};
+
+  // create identical players
+  int nPlayers = g.players.size();
+  for(int i=0;i<nPlayers;i++){
+    players.push_back(new Player("Player " + toString(i)));
+  }
+
   //
   // copy player objects
   // int nPlayers = g.players.size();
@@ -56,72 +67,19 @@ Game::Game(const Game & g){
   //   players.push_back(new Player("Player " + toString(i)));
   // }
   // //
-  // board = new Board(g.nSpaces, g.debug);
-  // Board* oldBoard = g.board;
-  // for(int i=0; i<nSpaces; i++){
-  //   Space* oldSpace = (*oldBoard).getSpaceN(i);
-  //   Space* newSpace = (*board).getSpaceN(i);
-  //
-    // tiles
-    // Player* currentP;
-    // if((*oldSpace).getPlusTile() || (*oldSpace).getMinusTile()){
-    //   Player* p = (*oldSpace).getTilePlacedBy();
-    //   std::string name = (*p).getName();
-    //
-    //   int iter = 0;
-    //   currentP = players[iter];
-    //   while((*currentP).getName() != name){
-    //
-    //     Player* currentP = players[iter];
-    //     iter ++;
-    //   }
-    // }
-    // if((*oldSpace).getPlusTile()){
-    //   (*newSpace).setPlusTile(currentP);
-    // }
-    // if((*oldSpace).getMinusTile()){
-    //   (*newSpace).setMinusTile(currentP);
-    // }
+  board = new Board(g.nSpaces, g.debug);
+  Board* oldBoard = g.board;
+  Space* oldSpace;
+  // Space* newSpace;
+  for(int i=0; i<nSpaces; i++){
+    Space* oldSpace = (*oldBoard).getSpaceN(i);
 
-    //  camel stack
-    // int nCamelsHere = (*oldSpace).getNCamels();
-    // std::stack<std::string> temp;
-    // std::string currentColor;
-    // for(int j=0; j<nCamelsHere; j++){
-    //   Camel * c = (*oldSpace).removeCamel();
-    //   currentColor = (*c).getColor();
-    //   Camel * newCamel = (*board).getCamel(currentColor);
-    //   (*newSpace).addCamel(newCamel);
-    // }
-  // }
-  //
-  // std::vector<Die> oldDice = (*oldBoard).getDice();
-  // int nDice = oldDice.size();
-  // std::vector<Die> newDice;
-  // // this will reverse the order of the dice
-  // for(int i=0; i<nDice; i++){
-  //   Die d = oldDice[i];
-  //   newDice.push_back(d);
-  // }
-  // (*board).setDice(newDice);
-  //
-  // // match leg bets
-  // resetLegBets();
-  // int nColors = colors.size();
-  // std::string s;
-  // std::stack<LegBet*> oldBetStack;
-  // for(int i=0; i<nColors; i++){
-  //   s = colors[i];
-  //   oldBetStack = g.legBets[s];
-  //   int nOldBets = oldBetStack.size();
-  //   newBetStack = legBets[s];
-  //   int diff = 3-nOldBets;
-  //   for(int j=0; j<diff; j++){
-  //     newBetStack.pop();
-  //   }
-  // }
+    // make matching camels
+    std::stack<Camel *> tempCamelStack;
+    int nCamels = (*oldSpace).getNCamels();
 
-  // getRanking();
+
+  }
 }
 
 DataFrame Game::getPurseDF(){

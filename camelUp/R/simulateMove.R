@@ -12,3 +12,5 @@ simulateMoveOnce <- function(g){
   }
   return(g$getCamelDF())
 }
+
+
