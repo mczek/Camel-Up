@@ -21,6 +21,8 @@ public:
 
   Space(int pos);
 
+  Space(const Space & s);
+
   int getPosition();
 
   void addCamel(Camel * c);

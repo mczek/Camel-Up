@@ -71,22 +71,38 @@ Game::Game(const Game & g){
   // }
   // //
 
-  // // // Board newBoard = *g.board;
-  // // // board = & newBoard;
+  Board newBoard = *g.board;
+  board = & newBoard;
 
-  board = new Board(g.nSpaces, g.debug);
-  Board* oldBoard = g.board;
-  Space* oldSpace;
-  Space* newSpace;
-  for(int i=0; i<nSpaces; i++){
-    oldSpace = (*oldBoard).getSpaceN(i);
-    newSpace = (*board).getSpaceN(i);
-    // make matching camels
-    // std::stack<Camel *> tempCamelStack;
-  //   int nCamels = (*oldSpace).getNCamels();
+  // Board* oldBoard = g.board;
+
+  // Space* oldSpace;
+  // Space* newSpace;
+  // std::stack<Camel *> tempCamelStack;
+  // int nCamelsHere;
+  // Camel* currentCamel;
+  // for(int i=0; i<nSpaces; i++){
+  //   oldSpace = (*oldBoard).getSpaceN(i);
+  //   newSpace = (*board).getSpaceN(i);
+  //
+  //   // make matching camels
+  //   nCamelsHere = (*oldSpace).getNCamels();
+  //   for(int i=0; i<nCamelsHere; i++){
+  //     currentCamel = (*oldSpace).removeCamel();
+  //     tempCamelStack.push(currentCamel);
+  //   }
+  //
+  //   for(int i=0; i<nCamelsHere; i++){
+  //     currentCamel = tempCamelStack.top();
+  //     tempCamelStack.pop();
+  //     (*oldSpace).addCamel(currentCamel);
+  //   }
   //
   //
-  }
+  //   tempCamelStack.empty();
+  // //
+  // //
+  // }
 }
 
 DataFrame Game::getPurseDF(){

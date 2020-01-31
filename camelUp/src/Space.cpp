@@ -30,6 +30,18 @@ Space::Space(int pos){
   tilePlacedBy = new Player("");
 }
 
+Space::Space(const Space & s){
+  position = s.position;
+  nCamels = 0;
+
+  int nCamelsHere = s.nCamels;
+  std::stack<Camel *> tempCamelStack;
+  // Camel * currentCamel;
+  // for(int i=0; i<nCamelsHere; i++){
+  //   currentCamel =
+  // }
+}
+
 int Space::getPosition() {
   return position;
 }

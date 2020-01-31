@@ -33,9 +33,12 @@ Board::Board(int n, bool d){
 }
 
 Board::Board(const Board & b){
+  colors = b.colors;
   nSpaces = b.nSpaces;
+  Space * currentSpace;
   for(int i=0;i<nSpaces;i++){
-    spaces.push_back(new Space(i));
+    currentSpace = b.spaces[i];
+    spaces.push_back(currentSpace);
   }
 
   int nDiceToCopy = b.dice.size();
@@ -43,10 +46,11 @@ Board::Board(const Board & b){
     Die currentDie = b.dice[i];
     dice.push_back(Die(currentDie.getColor()));
   }
+
+  getRanking();
   // need to shuffle dice
 
   // std::vector<Die> dice;
-  // // std::vector<Camel> camels;
   // std::map<std::string, Camel*> camels;
   // std::vector<std::string> colors;
   // bool debug;
