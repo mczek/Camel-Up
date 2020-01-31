@@ -51,6 +51,8 @@ public:
 
   void takeTurnPlaceTile(int n, bool plus);
 
+  int getFirstPlaceSpace();
+
 };
 
 #endif

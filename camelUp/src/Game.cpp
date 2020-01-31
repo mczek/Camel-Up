@@ -229,6 +229,7 @@ void Game::endTurn(){
     (*board).resetDice(); // put the dice back
   }
 
+  getRanking();
   Camel* firstPlace = (*board).getCamel(rankings[0]);
   if((*firstPlace).getSpace() > 16){
     // TODO: evaluate overall bets
@@ -251,6 +252,11 @@ void Game::takeTurnPlaceTile(int n, bool plus){
   }
 }
 
+int Game::getFirstPlaceSpace(){
+  getRanking();
+  Camel* firstPlace = (*board).getCamel(rankings[0]);
+  return (*firstPlace).getSpace();
+}
 
 // Approach 4: Module docstrings
 //
@@ -271,5 +277,6 @@ RCPP_EXPOSED_CLASS(Game)
       .method("evaluateLegBets", &Game::evaluateLegBets)
       .method("takeTurnPlaceTile", &Game::takeTurnPlaceTile)
       .method("checkIsGameOver", &Game::checkIsGameOver)
+      .method("getFirstPlaceSpace", &Game::getFirstPlaceSpace)
     ;
   }

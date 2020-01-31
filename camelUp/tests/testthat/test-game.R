@@ -90,3 +90,19 @@ test_that("can play more than one leg", {
   g$takeTurnMove()
   expect_equal(TRUE, TRUE)
 })
+
+test_that("test game: blah", {
+  set.seed(1)
+  g <- Game$new(19, 3, TRUE)
+
+  # g$takeTurnMove()
+  # g$getCamelDF()
+  # g$getFirstPlaceSpace()
+  # g$checkIsGameOver()
+
+  while(!g$checkIsGameOver()){
+    g$takeTurnMove()
+  }
+
+  expect_equal(TRUE, TRUE)
+})

@@ -134,6 +134,7 @@ std::string Board::moveTurn(){
 }
 
 void Board::generateRanking(){
+  ranking.clear();
   for(int i=nSpaces-1;i>=0;i--){
     Space* currentSpace = spaces[i];
     int nCamelsHere = (*currentSpace).getNCamels();
@@ -155,6 +156,7 @@ void Board::generateRanking(){
 }
 
 std::vector<std::string> Board::getRanking(){
+  generateRanking();
   return ranking;
 }
 
