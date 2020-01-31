@@ -1,3 +1,6 @@
+#ifndef DIE_H
+#define DIE_H
+
 #include <Rcpp.h>
 #include <string>
 
@@ -19,4 +22,6 @@ public:
 
   int roll();
 };
+
+#endif
 

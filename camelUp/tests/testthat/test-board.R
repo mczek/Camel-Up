@@ -39,3 +39,10 @@ test_that("test board: moveTurn2", {
 
   expect_equal(df, true_df)
 })
+
+# test_that("test board: copy constructor runs", {
+#   set.seed(1)
+#   b <- Board$new(19, TRUE)
+#   c <- Board$new(b)
+#   expect_that(TRUE, TRUE)
+# })

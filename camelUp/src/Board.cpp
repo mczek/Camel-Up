@@ -32,6 +32,29 @@ Board::Board(int n, bool d){
   generateRanking();
 }
 
+Board::Board(const Board & b){
+  nSpaces = b.nSpaces;
+  for(int i=0;i<nSpaces;i++){
+    spaces.push_back(new Space(i));
+  }
+
+  int nDiceToCopy = b.dice.size();
+  for(int i=0; i>nDiceToCopy; i++){
+    Die currentDie = b.dice[i];
+    dice.push_back(Die(currentDie.getColor()));
+  }
+  // need to shuffle dice
+
+  // std::vector<Die> dice;
+  // // std::vector<Camel> camels;
+  // std::map<std::string, Camel*> camels;
+  // std::vector<std::string> colors;
+  // bool debug;
+  // std::vector<std::string> ranking;
+
+
+}
+
 int Board::getNDiceRemaining(){
   return dice.size();
 }
@@ -189,6 +212,7 @@ void Board::setDice(std::vector<Die> d){
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
   .constructor<int, bool>()
+  // .constructor<const Board &>()
   .method("getNDiceRemaining", &Board::getNDiceRemaining)
   .method("getNCamels", &Board::getNCamels)
   .method("getCamelDF", &Board::getCamelDF)

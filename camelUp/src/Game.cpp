@@ -4,6 +4,9 @@
 #include "Board.h"
 #include "LegBet.h"
 #include "Game.h"
+#include "Camel.h"
+#include "Die.h"
+#include "Space.h"
 
 using namespace Rcpp;
 
@@ -67,18 +70,22 @@ Game::Game(const Game & g){
   //   players.push_back(new Player("Player " + toString(i)));
   // }
   // //
+
+  // // // Board newBoard = *g.board;
+  // // // board = & newBoard;
+
   board = new Board(g.nSpaces, g.debug);
   Board* oldBoard = g.board;
   Space* oldSpace;
-  // Space* newSpace;
+  Space* newSpace;
   for(int i=0; i<nSpaces; i++){
-    Space* oldSpace = (*oldBoard).getSpaceN(i);
-
+    oldSpace = (*oldBoard).getSpaceN(i);
+    newSpace = (*board).getSpaceN(i);
     // make matching camels
-    std::stack<Camel *> tempCamelStack;
-    int nCamels = (*oldSpace).getNCamels();
-
-
+    // std::stack<Camel *> tempCamelStack;
+  //   int nCamels = (*oldSpace).getNCamels();
+  //
+  //
   }
 }
 
