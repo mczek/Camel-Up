@@ -42,13 +42,19 @@ Board::Board(const Board & b){
   }
 
   int nDiceToCopy = b.dice.size();
-  for(int i=0; i>nDiceToCopy; i++){
+  for(int i=0; i<nDiceToCopy; i++){
     Die currentDie = b.dice[i];
     dice.push_back(Die(currentDie.getColor()));
   }
+  // need to shuffle dice
 
   getRanking();
-  // need to shuffle dice
+
+  // next up we need to make the camel dictionary
+  // with the pointers to the camels on the spaces
+
+
+
 
   // std::vector<Die> dice;
   // std::map<std::string, Camel*> camels;
