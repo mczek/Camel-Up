@@ -21,7 +21,7 @@ public:
 
   Space(int pos);
 
-  Space(const Space & s);
+  Space(Space & s);
 
   int getPosition();
 
@@ -48,6 +48,10 @@ public:
   Player* getTilePlacedBy();
 
   void setTilePlacedBy(Player*p);
+
+  std::vector<Camel *>  getCamelPointers(); // TODO: needs to be tested
+
+  std::vector<std::string>  getCamelStrings(); // TODO: needs to be tested
 
 };
 #endif

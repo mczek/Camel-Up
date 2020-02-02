@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 rsconnect
-.DS_Store
+*.DS_Store
 
 *tar.gz
 *.Rcheck

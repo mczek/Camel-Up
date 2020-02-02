@@ -67,14 +67,8 @@ test_that("test game: evaluateBets", {
   expect_equal(df, true_df)
 })
 
-test_that("test game: copy constructor runs", {
-  set.seed(1)
-  g <- Game$new(19, 3, TRUE)
-  h <- Game$new(g)
-  expect_equal(TRUE, TRUE)
-})
 
-test_that("can play more than one leg", {
+test_that("test game: can play more than one leg", {
   g <- Game$new(19, 3, TRUE)
   g$takeTurnMove()
   g$takeTurnMove()
@@ -98,5 +92,20 @@ test_that("test game: game ends", {
     g$takeTurnMove()
   }
 
+  expect_equal(TRUE, TRUE)
+})
+
+test_that("test game: copy constructor runs", {
+  set.seed(1)
+  g <- Game$new(19, 3, TRUE)
+  h <- Game$new(g)
+  expect_equal(TRUE, TRUE)
+})
+#
+test_that("test game: copied game getCamelDF", {
+  set.seed(1)
+  g <- Game$new(19, 3, TRUE)
+  h <- Game$new(g)
+  print(h$getCamelDF())
   expect_equal(TRUE, TRUE)
 })

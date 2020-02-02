@@ -30,16 +30,15 @@ Space::Space(int pos){
   tilePlacedBy = new Player("");
 }
 
-Space::Space(const Space & s){
+Space::Space(Space & s){
   position = s.position;
   nCamels = 0;
 
   int nCamelsHere = s.nCamels;
-  std::stack<Camel *> tempCamelStack;
-  // Camel * currentCamel;
-  // for(int i=0; i<nCamelsHere; i++){
-  //   currentCamel =
-  // }
+  std::vector<std::string> camelsToCopy = s.getCamelStrings();
+  for(int i=nCamelsHere;i>0;i--){
+    addCamel(new Camel(camelsToCopy[i]));
+  }
 }
 
 int Space::getPosition() {
@@ -123,6 +122,44 @@ void Space::setTilePlacedBy(Player* p){
 
 Player* Space::getTilePlacedBy(){
   return tilePlacedBy;
+}
+
+std::vector<Camel *>  Space::getCamelPointers(){
+  std::stack<Camel *> tempCamelStack;
+  Camel* currentCamel;
+  std::vector<Camel *> result;
+  for(int i=0;i<nCamels;i++){
+    currentCamel = camels.top();
+    tempCamelStack.push(currentCamel);
+    camels.pop();
+  }
+
+  for(int i=0;i<nCamels;i++){
+    currentCamel = tempCamelStack.top();
+    tempCamelStack.pop();
+    addCamel(currentCamel);
+    result.push_back(currentCamel);
+  }
+  return result;
+}
+
+std::vector<std::string>  Space::getCamelStrings(){
+  std::stack<Camel *> tempCamelStack;
+  Camel* currentCamel;
+  std::vector<std::string> result;
+  for(int i=0;i<nCamels;i++){
+    currentCamel = camels.top();
+    tempCamelStack.push(currentCamel);
+    camels.pop();
+  }
+
+  for(int i=0;i<nCamels;i++){
+    currentCamel = tempCamelStack.top();
+    tempCamelStack.pop();
+    addCamel(currentCamel);
+    result.push_back((*currentCamel).getColor());
+  }
+  return result;
 }
 // int Space::testAddCamel(){
 //   Camel b = Camel("Blue");

@@ -35,10 +35,11 @@ Board::Board(int n, bool d){
 Board::Board(const Board & b){
   colors = b.colors;
   nSpaces = b.nSpaces;
-  Space * currentSpace;
+  Space * currentNewSpace;
+  Space * currentOldSpace;
   for(int i=0;i<nSpaces;i++){
-    currentSpace = b.spaces[i];
-    spaces.push_back(currentSpace);
+    currentNewSpace = b.spaces[i];
+    spaces.push_back(currentNewSpace);
   }
 
   int nDiceToCopy = b.dice.size();
@@ -53,7 +54,33 @@ Board::Board(const Board & b){
   // next up we need to make the camel dictionary
   // with the pointers to the camels on the spaces
 
+  std::vector<Camel *> camelPointersHere;
+  int nCamelsHere;
+  std::string camelColor;
+  for(int i=0;i<nSpaces;i++){
+    currentNewSpace = spaces[i];
+    currentOldSpace = b.spaces[i];
+    nCamelsHere = (*currentNewSpace).getNCamels();
 
+    std::stack<Camel *> tempCamelStack;
+    Camel* currentCamel;
+    for(int i=0;i<nCamelsHere;i++){
+      currentCamel = (*currentNewSpace).removeCamel();
+      tempCamelStack.push(currentCamel);
+    }
+
+    for(int i=0;i<nCamelsHere;i++){
+      currentCamel = tempCamelStack.top();
+      camelColor = (*currentCamel).getColor();
+      camels[camelColor] = currentCamel;
+
+      tempCamelStack.pop();
+      (*currentNewSpace).addCamel(currentCamel);
+      // result.push_back(currentCamel);
+    }
+
+    // camelPointersHere = (*currentOldSpace).getCamelPointers();
+  }
 
 
   // std::vector<Die> dice;

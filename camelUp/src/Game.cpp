@@ -71,8 +71,7 @@ Game::Game(const Game & g){
   // }
   // //
 
-  Board newBoard = *g.board;
-  board = & newBoard;
+  board = new Board(*g.board);
 
   // Board* oldBoard = g.board;
 
