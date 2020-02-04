@@ -34,11 +34,11 @@ Space::Space(Space & s){
   position = s.position;
   nCamels = 0;
 
-  int nCamelsHere = s.nCamels;
-  std::vector<std::string> camelsToCopy = s.getCamelStrings();
-  for(int i=nCamelsHere;i>0;i--){
-    addCamel(new Camel(camelsToCopy[i]));
-  }
+  // int nCamelsHere = s.nCamels;
+  // std::vector<std::string> camelsToCopy = s.getCamelStrings();
+  // for(int i=nCamelsHere;i>0;i--){
+  //   addCamel(new Camel(camelsToCopy[i]));
+  // }
 }
 
 int Space::getPosition() {

@@ -109,3 +109,12 @@ test_that("test game: copied game getCamelDF", {
   print(h$getCamelDF())
   expect_equal(TRUE, TRUE)
 })
+
+test_that("test game: copied game getCamelDF", {
+  set.seed(1)
+  g <- Game$new(19, 3, TRUE)
+  h <- Game$new(g)
+  h$takeTurnMove()
+  print(g$getCamelDF())
+  expect_equal(TRUE, TRUE)
+})

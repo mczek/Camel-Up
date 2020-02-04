@@ -37,8 +37,28 @@ Board::Board(const Board & b){
   nSpaces = b.nSpaces;
   Space * currentNewSpace;
   Space * currentOldSpace;
+  Camel * currentCamel;
+  std::stack<std::string> tempCamelStrStack;
+  std::string currentColor;
+  int nCamelsHere;
   for(int i=0;i<nSpaces;i++){
-    currentNewSpace = b.spaces[i];
+    currentOldSpace = b.spaces[i];
+    // std::vector<std::string> camelsToCopy = (*currentOldSpace).getCamelStrings();
+    nCamelsHere = (*currentOldSpace).getNCamels();
+    currentNewSpace = currentOldSpace; // shouldn't need additional constructor?
+    for(int j=0;j<nCamelsHere;j++){
+      currentCamel = (*currentNewSpace).removeCamel();
+      tempCamelStrStack.push((*currentCamel).getColor());
+    }
+    for(int j=0;j<nCamelsHere;j++){
+      currentColor = tempCamelStrStack.top();
+      tempCamelStrStack.pop();
+      currentCamel = new Camel(currentColor);
+      (*currentNewSpace).addCamel(currentCamel);
+      camels[currentColor] = currentCamel;
+    }
+
+
     spaces.push_back(currentNewSpace);
   }
 
@@ -54,34 +74,34 @@ Board::Board(const Board & b){
   // next up we need to make the camel dictionary
   // with the pointers to the camels on the spaces
 
-  std::vector<Camel *> camelPointersHere;
-  int nCamelsHere;
-  std::string camelColor;
-  for(int i=0;i<nSpaces;i++){
-    currentNewSpace = spaces[i];
-    currentOldSpace = b.spaces[i];
-    nCamelsHere = (*currentNewSpace).getNCamels();
-
-    std::stack<Camel *> tempCamelStack;
-    Camel* currentCamel;
-    for(int i=0;i<nCamelsHere;i++){
-      currentCamel = (*currentNewSpace).removeCamel();
-      tempCamelStack.push(currentCamel);
-    }
-
-    for(int i=0;i<nCamelsHere;i++){
-      currentCamel = tempCamelStack.top();
-      camelColor = (*currentCamel).getColor();
-      camels[camelColor] = currentCamel;
-
-      tempCamelStack.pop();
-      (*currentNewSpace).addCamel(currentCamel);
-      // result.push_back(currentCamel);
-    }
+  // std::vector<Camel *> camelPointersHere;
+  // int nCamelsHere;
+  // std::string camelColor;
+  // for(int i=0;i<nSpaces;i++){
+  //   currentNewSpace = spaces[i];
+  //   currentOldSpace = b.spaces[i];
+  //   nCamelsHere = (*currentNewSpace).getNCamels();
+  //
+  //   std::stack<Camel *> tempCamelStack;
+  //   Camel* currentCamel;
+  //   for(int i=0;i<nCamelsHere;i++){
+  //     currentCamel = (*currentNewSpace).removeCamel();
+  //     tempCamelStack.push(currentCamel);
+  //   }
+  //
+  //   for(int i=0;i<nCamelsHere;i++){
+  //     currentCamel = tempCamelStack.top();
+  //     camelColor = (*currentCamel).getColor();
+  //     camels[camelColor] = currentCamel;
+  //
+  //     tempCamelStack.pop();
+  //     (*currentNewSpace).addCamel(currentCamel);
+  //     // result.push_back(currentCamel);
+  //   }
 
     // camelPointersHere = (*currentOldSpace).getCamelPointers();
-  }
-
+  // }
+//
 
   // std::vector<Die> dice;
   // std::map<std::string, Camel*> camels;

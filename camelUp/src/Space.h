@@ -16,6 +16,7 @@ private:
   int nCamels;
   bool plusTile, minusTile;
   Player* tilePlacedBy;
+  std::vector<std::string> camelStrings; // used to make copies
 public:
   Space();
 
@@ -51,7 +52,7 @@ public:
 
   std::vector<Camel *>  getCamelPointers(); // TODO: needs to be tested
 
-  std::vector<std::string>  getCamelStrings(); // TODO: needs to be tested
+  std::vector<std::string> getCamelStrings(); // TODO: needs to be tested
 
 };
 #endif
