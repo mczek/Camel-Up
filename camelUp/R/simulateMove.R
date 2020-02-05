@@ -11,9 +11,22 @@ simulateMoveOnce <- function(g){
   while(!newGame$checkIsGameOver()){
     newGame$takeTurnMove()
   }
-  return(g$getCamelDF())
+  return(newGame$getCamelDF())
 }
 
-#
-# g <- Game$new(19, 3, TRUE)
-# simulateMoveOnce(g)
+#' Simulate moving N times
+#'
+#' @param g
+#' @param N
+#'
+#' @return
+#' @export
+#'
+#' @examples
+simulateMoveNTimes <- function(g, N){
+  # works:
+  for(i in 1:N){
+    simulateMoveOnce(g)
+  }
+
+}
