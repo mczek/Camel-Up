@@ -53,6 +53,8 @@ public:
 
   int getFirstPlaceSpace();
 
+  Game simulateMoveOnce();
+
 };
 
 

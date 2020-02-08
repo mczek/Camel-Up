@@ -238,6 +238,16 @@ int Game::getFirstPlaceSpace(){
   return (*firstPlace).getSpace();
 }
 
+Game Game::simulateMoveOnce(){
+  Game newGame = Game(*this);
+
+  while(!newGame.checkIsGameOver()){
+    newGame.takeTurnMove();
+  }
+
+  return newGame;
+}
+
 // Approach 4: Module docstrings
 //
 RCPP_EXPOSED_CLASS(Game)
@@ -258,5 +268,6 @@ RCPP_EXPOSED_CLASS(Game)
       .method("takeTurnPlaceTile", &Game::takeTurnPlaceTile)
       .method("checkIsGameOver", &Game::checkIsGameOver)
       .method("getFirstPlaceSpace", &Game::getFirstPlaceSpace)
+      .method("simulateMoveOnce", &Game::simulateMoveOnce)
     ;
   }

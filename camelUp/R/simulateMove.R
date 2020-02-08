@@ -7,7 +7,7 @@
 #'
 #' @examples
 simulateMoveOnce <- function(g){
-  newGame <- Game$new(g)
+  newGame <- g #TODO: come back here to fix
   while(!newGame$checkIsGameOver()){
     newGame$takeTurnMove()
   }
@@ -26,7 +26,8 @@ simulateMoveOnce <- function(g){
 simulateMoveNTimes <- function(g, N){
   # works:
   for(i in 1:N){
-    simulateMoveOnce(g)
+    newGame <- Game$new(g)
+    simulateMoveOnce(newGame)
   }
 
 }
