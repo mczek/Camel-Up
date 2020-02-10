@@ -22,8 +22,9 @@ Board::Board(int n, bool d){
   nSpaces = n;
   colors = {"Green", "White", "Yellow", "Orange", "Blue"};
 
-
-  for(int i=0;i<n;i++){
+  int LengthNeeded = n + 1; // make sure there are enough spaces after th finish line
+  // and index is equal to space number
+  for(int i=0;i<LengthNeeded;i++){
     spaces.push_back(new Space(i));
   }
 
@@ -41,7 +42,9 @@ Board::Board(const Board & b){
   std::stack<std::string> tempCamelStrStack;
   std::string currentColor;
   int nCamelsHere;
-  for(int i=0;i<nSpaces;i++){
+
+  int LengthNeeded = nSpaces + 1;
+  for(int i=0;i<LengthNeeded;i++){
     currentOldSpace = b.spaces[i];
     // std::vector<std::string> camelsToCopy = (*currentOldSpace).getCamelStrings();
     nCamelsHere = (*currentOldSpace).getNCamels();
@@ -179,34 +182,61 @@ std::string Board::moveTurn(){
   dice.pop_back();
   std::string camelColor = currentDie.getColor();
   int dieValue = currentDie.roll();
+  // // Rcout << "Die rolled \n";
 
   Camel * camelToMove = camels[camelColor];
   int currentSpaceNum = (*camelToMove).getSpace();
   int currentHeight = (*camelToMove).getHeight();
+  // // Rcout << "got currentHeight \n";
 
   Space * currentSpace = spaces[currentSpaceNum];
   int currentNCamels = (*currentSpace).getNCamels();
+  // // Rcout << "got currentNCamels \n";
+
 
   std::stack<Camel *> temp;
 
   for(int i=currentHeight; i<=currentNCamels; i++){
     temp.push((*currentSpace).removeCamel());
   }
+  // // Rcout << "create temp stack \n";
 
-  Space* newSpace = spaces[currentSpaceNum + dieValue];
+  for(int i=0; i<nSpaces; i++){
+    Space* newSpace = spaces[i];
+    // // Rcout << (*newSpace).getPosition();
+    // // Rcout << "\n";
+  }
+
+  int newSpaceNum = currentSpaceNum + dieValue;
+
+  Space* newSpace = spaces[newSpaceNum];
+  // // Rcout << "newSpace position correct: \n";
+  // // Rcout << newSpaceNum;
+  // // Rcout << "\n newSpace position actual: \n";
+  // // Rcout << (*newSpace).getPosition();
+  // // Rcout << "\n tempsize: \n";
+  // // Rcout << temp.size();
   Player* p = (*newSpace).getTilePlacedBy(); // player that placed the relevant tile
   //  account for tiles
   if((*newSpace).getPlusTile()){
+    // // Rcout << "(*newSpace).getPlusTile() \n";
     Space* newSpace = spaces[currentSpaceNum + dieValue + 1];
+    // // Rcout << (*newSpace).getPosition();
     (*newSpace).addCamelsTop(temp);
     (*p).addCoins(1);
   } else if((*newSpace).getMinusTile()){
+    // // Rcout << "if((*newSpace).getMinusTile()) \n";
     Space* newSpace = spaces[currentSpaceNum + dieValue - 1];
+    // // Rcout << (*newSpace).getPosition();
     (*newSpace).addCamelsBottom(temp);
     (*p).addCoins(1);
   } else {
+    // // Rcout << "else \n";
+    // // Rcout << (*newSpace).getPosition();
     (*newSpace).addCamelsTop(temp);
   }
+  // // Rcout << "camels added to new space \n";
+
 
 
 
@@ -215,7 +245,7 @@ std::string Board::moveTurn(){
 
 void Board::generateRanking(){
   ranking.clear();
-  for(int i=nSpaces-1;i>=0;i--){
+  for(int i=nSpaces;i>=0;i--){
     Space* currentSpace = spaces[i];
     int nCamelsHere = (*currentSpace).getNCamels();
     if(nCamelsHere > 0){

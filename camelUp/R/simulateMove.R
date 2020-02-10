@@ -9,9 +9,11 @@
 simulateMoveOnce <- function(g){
   newGame <- g #TODO: come back here to fix
   while(!newGame$checkIsGameOver()){
+    # print(newGame$getCamelDF())
     newGame$takeTurnMove()
   }
-  return(newGame$getCamelDF())
+  print("endSimOnce")
+  return(newGame)
 }
 
 #' Simulate moving N times
@@ -25,9 +27,10 @@ simulateMoveOnce <- function(g){
 #' @examples
 simulateMoveNTimes <- function(g, N){
   # works:
+  gameVec <- NULL
   for(i in 1:N){
     newGame <- Game$new(g)
-    simulateMoveOnce(newGame)
+    gameVec[i] <- simulateMoveOnce(newGame)
   }
 
 }

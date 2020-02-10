@@ -129,12 +129,16 @@ std::vector<std::string> Game::getRanking(){
 }
 
 std::string Game::takeTurnMove(){
+  // Rcout << "takeTurnMove called \n";
   Player* currentPlayer = players[currentPlayerIndex];
-  std::string result = (*board).moveTurn();
+  // Rcout << "currentPlayer found \n";
+  std::string result = (*board).moveTurn(); // error is in here
+  // Rcout << "Board moved \n";
 
   (*currentPlayer).addCoins(1);
-
+  // Rcout << "Player purse incremented \n";
   endTurn();
+  // Rcout << "Turn ended \n";
   return result;
 }
 
@@ -201,6 +205,7 @@ void Game::evaluateLegBets(){
 }
 
 void Game::endTurn(){
+  // Rcout << "endTurn called \n";
   if((*board).getNDiceRemaining() == 0){
     //  TODO: clear tiles
     evaluateLegBets(); // evaluate bets
@@ -208,14 +213,20 @@ void Game::endTurn(){
     madeLegBets.clear(); // clear list of leg bets made
     (*board).resetDice(); // put the dice back
   }
-
+  // Rcout << "leg reset if needed \n";
   getRanking();
+  // Rcout << "ranking updated \n";
+  // // Rcout << "rankings:";
+  // // Rcout << rankings;
+  // Rcout << "camel in first: \n";
+  // Rcout << rankings[0];
   Camel* firstPlace = (*board).getCamel(rankings[0]);
+  // Rcout << "first place camel acquired";
   if((*firstPlace).getSpace() > 16){
     // TODO: evaluate overall bets
     isGameOver = true;
   }
-
+  // Rcout << "game over checked \n";
   currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 }
 
@@ -238,14 +249,12 @@ int Game::getFirstPlaceSpace(){
   return (*firstPlace).getSpace();
 }
 
-Game Game::simulateMoveOnce(){
-  Game newGame = Game(*this);
+void Game::simulateMoveOnce(){
+  // Game newGame = Game(*this);
 
-  while(!newGame.checkIsGameOver()){
-    newGame.takeTurnMove();
+  while(!checkIsGameOver()){
+    takeTurnMove();
   }
-
-  return newGame;
 }
 
 // Approach 4: Module docstrings

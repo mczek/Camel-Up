@@ -80,18 +80,30 @@ test_that("test game: can play more than one leg", {
 })
 
 test_that("test game: game ends", {
-  set.seed(1)
-  g <- Game$new(19, 3, TRUE)
+  # set.seed(1)
+  x <- system.time({
+    for(i in 1:500){
+      print(i)
+      g <- Game$new(19, 3, FALSE)
 
-  # g$takeTurnMove()
-  # g$getCamelDF()
-  # g$getFirstPlaceSpace()
-  # g$checkIsGameOver()
-
-  while(!g$checkIsGameOver()){
-    g$takeTurnMove()
-  }
-
+      while(!g$checkIsGameOver()){
+        g$takeTurnMove()
+        g$getCamelDF()
+        # print(g$getFirstPlaceSpace())
+        # print(g$checkIsGameOver())
+      }
+    }
+  })
+  print(x)
   expect_equal(TRUE, TRUE)
 })
+
+# test_that("blah", {
+#   g <- Game$new(19, 3, FALSE)
+#
+#
+#   g$takeTurnMove()
+#   g$checkIsGameOver()
+#   g$getCamelDF()
+# })
 

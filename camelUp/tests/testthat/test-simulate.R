@@ -7,18 +7,24 @@ test_that("simulateMoveOnce", {
 })
 
 # test_that("simulateMoveNTimes",{
-#   set.seed(1)
-#   g <- Game$new(19, 3, TRUE)
-#   # for(i in 1:3){
+#
+#
+#   for(i in 1:100){
+#     print(i)
+#     g <- Game$new(19, 3, FALSE)
+#     g$simulateMoveOnce()
 #   #   newGame <- Game$new(g)
-#   # }
-#   simulateMoveNTimes(g, 3)
+#   }
+#   # simulateMoveNTimes(g, 3)
 #   expect_equal(TRUE, TRUE)
 # })
-
-test_that("simulateMoveOnce c++ version", {
-  set.seed(1)
-  g <- Game$new(19, 3, TRUE)
-  h <- g$simulateMoveOnce()
-  expect_equal(TRUE, TRUE)
-})
+#
+# test_that("simulateMoveOnce c++ version", {
+#   # set.seed(1)
+#   g <- Game$new(19, 3, FALSE)
+#   for(i in 1:100){
+#     print(i)
+#     simulateMoveOnce(g)
+#   }
+#   expect_equal(TRUE, TRUE)
+# })
