@@ -205,7 +205,7 @@ void Game::evaluateLegBets(){
 }
 
 void Game::endTurn(){
-  // Rcout << "endTurn called \n";
+  // // Rcout << "endTurn called \n";
   if((*board).getNDiceRemaining() == 0){
     //  TODO: clear tiles
     evaluateLegBets(); // evaluate bets
@@ -213,20 +213,24 @@ void Game::endTurn(){
     madeLegBets.clear(); // clear list of leg bets made
     (*board).resetDice(); // put the dice back
   }
-  // Rcout << "leg reset if needed \n";
+  // // Rcout << "leg reset if needed \n";
   getRanking();
-  // Rcout << "ranking updated \n";
-  // // Rcout << "rankings:";
-  // // Rcout << rankings;
-  // Rcout << "camel in first: \n";
-  // Rcout << rankings[0];
-  Camel* firstPlace = (*board).getCamel(rankings[0]);
-  // Rcout << "first place camel acquired";
-  if((*firstPlace).getSpace() > 16){
-    // TODO: evaluate overall bets
+  // // Rcout << "ranking updated \n";
+  // // // Rcout << "rankings:";
+  // // // Rcout << rankings;
+  // // Rcout << "camel in first: \n";
+  // // Rcout << rankings[0];
+  // Camel* firstPlace = (*board).getCamel(rankings[0]);
+  // // // Rcout << "first place camel acquired";
+  // if((*firstPlace).getSpace() > 16){
+  //   // TODO: evaluate overall bets
+  //   isGameOver = true;
+  // }
+
+  if(getFirstPlaceSpace()>16){
     isGameOver = true;
   }
-  // Rcout << "game over checked \n";
+  // // Rcout << "game over checked \n";
   currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 }
 
@@ -252,8 +256,14 @@ int Game::getFirstPlaceSpace(){
 void Game::simulateMoveOnce(){
   // Game newGame = Game(*this);
 
-  while(!checkIsGameOver()){
+  while(getFirstPlaceSpace()<17){
+    // Rcout << "first place space:";
+    // Rcout << getFirstPlaceSpace();
+    // Rcout << "\n";
     takeTurnMove();
+    // Rcout << "is game over? \n";
+    // Rcout << checkIsGameOver();
+    // Rcout << "\n";
   }
 }
 

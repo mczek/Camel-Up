@@ -82,7 +82,7 @@ test_that("test game: can play more than one leg", {
 test_that("test game: game ends", {
   # set.seed(1)
   x <- system.time({
-    for(i in 1:500){
+    for(i in 1:10){
       print(i)
       g <- Game$new(19, 3, FALSE)
 
@@ -98,12 +98,4 @@ test_that("test game: game ends", {
   expect_equal(TRUE, TRUE)
 })
 
-# test_that("blah", {
-#   g <- Game$new(19, 3, FALSE)
-#
-#
-#   g$takeTurnMove()
-#   g$checkIsGameOver()
-#   g$getCamelDF()
-# })
 
