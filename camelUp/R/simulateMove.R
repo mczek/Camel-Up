@@ -21,6 +21,8 @@ simulateMoveOnce <- function(g){
 #' @param g
 #' @param N
 #'
+#' @import foreach
+#'
 #' @return
 #' @export
 #'
@@ -38,12 +40,30 @@ simulateMoveNTimes <- function(g, N){
   #   positionDFList <- append(positionDFList, list(currentDT))
   #
   # }
-  positionDFList <- parallel::mclapply(1:N, FUN = function(x){
+  positionDFList <- lapply(1:N, FUN = function(x){
     newGame <- Game$new(g)
     newGame$simulateMoveOnce()
     return(data.table::as.data.table(newGame$getCamelDF()))
-  },
-  mc.cores = getOption("mc.cores", parallel::detectCores()))
+  })
+#
+#   # no_cores <- parallel::detectCores()
+#   # cl <- parallel::makeCluster(no_cores)
+#   # doParallel::registerDoParallel()
+#   # positionDFList<-foreach::foreach(i=1:N, .combine = rbind) %dopar% {
+#   #     newGame <- Game$new(g)
+#   #     newGame$simulateMoveOnce()
+#   #     newGame$getCamelDF()
+#   #   }
+#   #
+#   # doParallel::stopImplicitCluster()
+
+  # cl <- parallel::makeCluster(getOption("cl.cores", 2))
+  # l <- list(1:N)
+  # positionDFList<- parallel::parLapply(cl, l, function(x) {
+  #     newGame <- Game$new(g)
+  #     newGame$simulateMoveOnce()
+  #     return(data.table::as.data.table(newGame$getCamelDF()))
+  # })
   return(data.table::rbindlist(positionDFList))
 
 }

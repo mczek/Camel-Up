@@ -17,7 +17,7 @@ test_that("simulateMoveOnce c++ version", {
 test_that("mclapply?", {
   g <- Game$new(19, 3, FALSE)
   for(i in 1:100){
-    print(i)
+    #print(i)
     h <- Game$new(g)
     h$simulateMoveOnce()
   }
@@ -28,7 +28,7 @@ test_that("simulateMoveNTimes",{
   g <- Game$new(19, 3, FALSE)
   print("timing simulateMoveNTimes:")
   t <- system.time({
-    simulateMoveNTimes(g, 500)
+    simulateMoveNTimes(g, 900)
   })
   print(t)
   # simulateMoveNTimes(g, 3)
