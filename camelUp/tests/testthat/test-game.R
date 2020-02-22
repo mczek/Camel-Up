@@ -98,4 +98,29 @@ test_that("test game: game ends", {
   expect_equal(TRUE, TRUE)
 })
 
+test_that("test game: place overall winner", {
+  g <- Game$new(19, 3, TRUE)
+  g$takeTurnPlaceOverallWinner("Blue")
+  expect_equal(g$getNOverallWinnersPlaced(), 1)
+})
+
+test_that("test game: place overall loser", {
+  g <- Game$new(19, 3, TRUE)
+  g$takeTurnPlaceOverallLoser("Blue")
+  expect_equal(g$getNOverallLosersPlaced(), 1)
+})
+
+test_that("test game: evaluate overall bets", {
+  set.seed(1)
+  g <- Game$new(19, 3, TRUE)
+  g$takeTurnPlaceOverallWinner("Orange")
+  g$takeTurnPlaceOverallWinner("Blue")
+  g$takeTurnPlaceOverallLoser("Green")
+
+  g$getRanking()
+  g$evaluateOverallBets()
+  true_df <- data.frame(Player = paste(rep("Player", 3), 0:2),
+                                            Coins = c(8, -1, 8))
+  expect_equal(g$getPurseDF(), true_df)
+})
 

@@ -272,6 +272,67 @@ void Game::takeTurnPlaceOverallWinner(std::string color){
   Player* currentPlayer = players[currentPlayerIndex];
   (*currentPlayer).setOverallFirst(color);
   overallWinnerStack.push(currentPlayer);
+
+  endTurn();
+}
+
+int Game::getNOverallWinnersPlaced(){
+  return overallWinnerStack.size();
+}
+
+void Game::takeTurnPlaceOverallLoser(std::string color){
+  Player* currentPlayer = players[currentPlayerIndex];
+  (*currentPlayer).setOverallLast(color);
+  overallLoserStack.push(currentPlayer);
+
+  endTurn();
+}
+
+int Game::getNOverallLosersPlaced(){
+  return overallLoserStack.size();
+}
+
+void Game::evaluateOverallBets(){
+  int payout[5] = {8, 5, 3, 2, 1};
+  std::string first, last;
+
+  // assume 5 camels
+  first = rankings[0];
+  last = rankings[4];
+
+  int nWinnerBets = getNOverallWinnersPlaced();
+  Player * currentPlayer;
+  std::string camelColor;
+  int nCorrect = 0;
+  for(int i=0;i<nWinnerBets;i++){
+    currentPlayer = overallWinnerStack.top();
+    overallWinnerStack.pop();
+    camelColor = (*currentPlayer).getOverallFirst();
+    if(camelColor == first){
+      if(nCorrect < 5){
+        (*currentPlayer).addCoins(payout[nCorrect]);
+      }
+    } else {
+      (*currentPlayer).addCoins(-1);
+    }
+  }
+
+
+  int nLoserBets = getNOverallLosersPlaced();
+  nCorrect = 0;
+  for(int i=0;i<nLoserBets;i++){
+    currentPlayer = overallLoserStack.top();
+    overallLoserStack.pop();
+    camelColor = (*currentPlayer).getOverallLast();
+    if(camelColor == last){
+      if(nCorrect < 5){
+        (*currentPlayer).addCoins(payout[nCorrect]);
+      }
+    } else {
+      (*currentPlayer).addCoins(-1);
+    }
+  }
+
 }
 
 // Approach 4: Module docstrings
@@ -295,6 +356,10 @@ RCPP_EXPOSED_CLASS(Game)
       .method("checkIsGameOver", &Game::checkIsGameOver)
       .method("getFirstPlaceSpace", &Game::getFirstPlaceSpace)
       .method("simulateMoveOnce", &Game::simulateMoveOnce)
-      // .method("takeTurnPlaceOverallWinner", &Game::takeTurnPlaceOverallWinner)
+      .method("takeTurnPlaceOverallWinner", &Game::takeTurnPlaceOverallWinner)
+      .method("getNOverallWinnersPlaced", &Game::getNOverallWinnersPlaced)
+      .method("takeTurnPlaceOverallLoser", &Game::takeTurnPlaceOverallLoser)
+      .method("getNOverallLosersPlaced", &Game::getNOverallLosersPlaced)
+      .method("evaluateOverallBets", &Game::evaluateOverallBets)
     ;
   }
