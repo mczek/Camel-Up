@@ -23,7 +23,7 @@ private:
   int nSpaces;
   bool debug;
 
-  // std::stack<Player *> overallWinnerStack;
+  std::stack<Player *> overallWinnerStack;
 public:
   Game(int nSpaces, int nPlayers, bool d);
 
@@ -57,7 +57,7 @@ public:
 
   void simulateMoveOnce();
 
-  // void takeTurnPlaceOverallWinner(std::string color);
+  void takeTurnPlaceOverallWinner(std::string color);
 
 };
 

@@ -268,11 +268,11 @@ void Game::simulateMoveOnce(){
 }
 
 
-// void Game::takeTurnPlaceOverallWinner(std::string color){
-//   Player* currentPlayer = players[currentPlayerIndex];
-//   (*currentPlayer).setOverallFirst(color);
-//   overallWinnerStack.push(currentPlayer);
-// }
+void Game::takeTurnPlaceOverallWinner(std::string color){
+  Player* currentPlayer = players[currentPlayerIndex];
+  (*currentPlayer).setOverallFirst(color);
+  overallWinnerStack.push(currentPlayer);
+}
 
 // Approach 4: Module docstrings
 //

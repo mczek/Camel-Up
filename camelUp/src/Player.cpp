@@ -37,6 +37,22 @@ int Player::getCoins(){
 }
 
 
+void Player::setOverallFirst(std::string color){
+  overallFirstPlaceColor = color;
+}
+
+void Player::setOverallLast(std::string color){
+  overallLastPlaceColor = color;
+}
+
+std::string Player::getOverallFirst(){
+  return overallFirstPlaceColor;
+}
+
+std::string Player::getOverallLast(){
+  return overallLastPlaceColor;
+}
+
 
 // Approach 4: Module docstrings
 
@@ -48,5 +64,9 @@ RCPP_EXPOSED_CLASS(Player)
     .method("addCoins", &Player::addCoins)
     .method("getName", &Player::getName)
     .method("getCoins", &Player::getCoins)
+    .method("setOverallFirst", &Player::setOverallFirst)
+    .method("setOverallLast", &Player::setOverallLast)
+    .method("getOverallFirst", &Player::getOverallFirst)
+    .method("getOverallLast", &Player::getOverallLast)
     ;
   }
