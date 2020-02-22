@@ -22,6 +22,8 @@ private:
   bool isGameOver;
   int nSpaces;
   bool debug;
+
+  // std::stack<Player *> overallWinnerStack;
 public:
   Game(int nSpaces, int nPlayers, bool d);
 
@@ -54,6 +56,8 @@ public:
   int getFirstPlaceSpace();
 
   void simulateMoveOnce();
+
+  // void takeTurnPlaceOverallWinner(std::string color);
 
 };
 

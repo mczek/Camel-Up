@@ -11,6 +11,9 @@ class Player {
 private:
   std::string name;
   int coins;
+
+  std::string overallFirstPlaceColor;
+  std::string overallLastPlaceColor;
 public:
   Player(std::string n);
 
@@ -21,6 +24,14 @@ public:
   std::string getName();
 
   int getCoins();
+
+  void setOverallFirst(std::string color);
+
+  void setOverallLast(std::string color);
+
+  std::string getOverallFirst();
+
+  std::string getOverallLast();
 };
 
 #endif

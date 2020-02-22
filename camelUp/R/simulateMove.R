@@ -12,7 +12,7 @@ simulateMoveOnce <- function(g){
     # print(newGame$getCamelDF())
     newGame$takeTurnMove()
   }
-  print("endSimOnce")
+  # print("endSimOnce")
   return(newGame)
 }
 

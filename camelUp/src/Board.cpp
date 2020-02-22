@@ -200,13 +200,13 @@ std::string Board::moveTurn(){
     temp.push((*currentSpace).removeCamel());
   }
   // Rcout << "create temp stack \n";
-
+  /*
   for(int i=0; i<nSpaces; i++){
     Space* newSpace = spaces[i];
     // Rcout << (*newSpace).getPosition();
     // Rcout << "\n";
   }
-
+  */
   int newSpaceNum = currentSpaceNum + dieValue;
   // Rcout << "values: \n";
   // Rcout << currentSpaceNum;
