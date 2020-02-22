@@ -24,6 +24,7 @@ Simulator::Simulator(Game g){
 
 DataFrame Simulator::simulateMove(){
   int nCamels = 5;
+
 }
 
 

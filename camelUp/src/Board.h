@@ -35,6 +35,8 @@ public:
 
   int getNCamels();
 
+  void fillCamelPosArrays(Rcpp::CharacterVector camelColors, Rcpp::IntegerVector spaceArray, Rcpp::IntegerVector heightArray, int start);
+
   Rcpp::DataFrame getCamelDF();
 
   std::string moveTurn();

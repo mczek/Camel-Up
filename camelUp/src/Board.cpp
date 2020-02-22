@@ -152,23 +152,32 @@ int Board::getNCamels(){
   return camels.size();
 }
 
+void Board::fillCamelPosArrays(Rcpp::CharacterVector camelColors, Rcpp::IntegerVector spaceArray, Rcpp::IntegerVector heightArray, int start){
+  int nCamels = colors.size();
+  int index;
+  std::string currentColor;
+  Camel * currentCamel;
+  for(int i=0;i<nCamels;i++){
+    index = start + i;
+    currentColor = colors[i];
+    currentCamel = camels[currentColor];
+    camelColors[index] = (*currentCamel).getColor();
+    spaceArray[index] = (*currentCamel).getSpace();
+    heightArray[index] = (*currentCamel).getHeight();
+  }
+}
 
 DataFrame Board::getCamelDF(){
-  std::vector<Camel> tempCamels;
-  std::vector<std::string> colorsVec;
-  std::vector<int> spaceValues, heightValues;
-  std::string currentColor;
+  // DataFrame df;
 
-  int nCamels = colors.size();
-  for(int i=0;i<nCamels;i++){
-    currentColor = colors[i];
-    Camel* currentCamel = camels[currentColor];
-    colorsVec.push_back((*currentCamel).getColor());
-    spaceValues.push_back((*currentCamel).getSpace());
-    heightValues.push_back((*currentCamel).getHeight());
-  }
+  Rcpp::CharacterVector camelColors = CharacterVector(5);
+  Rcpp::IntegerVector spaceVec = IntegerVector(5);
+  Rcpp::IntegerVector heightVec = IntegerVector(5);
 
-  DataFrame df = DataFrame::create(Named("Color") = colorsVec, Named("Space") = spaceValues, Named("Height") = heightValues);
+  fillCamelPosArrays(camelColors, spaceVec, heightVec, 0);
+
+  DataFrame df = DataFrame::create(Named("Color") = camelColors, Named("Space") = spaceVec, Named("Height") = heightVec);
+
   return df;
 
 }
