@@ -32,8 +32,8 @@ simulateMoveNTimes <- function(g, N){
   positionDFList <- list()
   # for(i in 1:N){
   #   newGame <- Game$new(g)
-  #   newGame$simulateMoveOnce()
-  #   # simulateMoveOnce(newGame)
+  #   newGame$progressToEndGame()
+  #   # progressToEndGame(newGame)
   #
   #   currentDT <- data.table::as.data.table(newGame$getCamelDF())
   #   currentDT$id <- i
@@ -42,7 +42,7 @@ simulateMoveNTimes <- function(g, N){
   # }
   positionDFList <- lapply(1:N, FUN = function(x){
     newGame <- Game$new(g)
-    newGame$simulateMoveOnce()
+    newGame$progressToEndGame()
     return(data.table::as.data.table(newGame$getCamelDF()))
   })
 #
@@ -51,7 +51,7 @@ simulateMoveNTimes <- function(g, N){
 #   # doParallel::registerDoParallel()
 #   # positionDFList<-foreach::foreach(i=1:N, .combine = rbind) %dopar% {
 #   #     newGame <- Game$new(g)
-#   #     newGame$simulateMoveOnce()
+#   #     newGame$progressToEndGame()
 #   #     newGame$getCamelDF()
 #   #   }
 #   #
@@ -61,7 +61,7 @@ simulateMoveNTimes <- function(g, N){
   # l <- list(1:N)
   # positionDFList<- parallel::parLapply(cl, l, function(x) {
   #     newGame <- Game$new(g)
-  #     newGame$simulateMoveOnce()
+  #     newGame$progressToEndGame()
   #     return(data.table::as.data.table(newGame$getCamelDF()))
   # })
   return(data.table::rbindlist(positionDFList))

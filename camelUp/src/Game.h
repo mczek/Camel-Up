@@ -26,6 +26,8 @@ private:
   std::stack<Player *> overallWinnerStack;
   std::stack<Player *> overallLoserStack;
 public:
+  Game();
+
   Game(int nSpaces, int nPlayers, bool d);
 
   Game(const Game & g);
@@ -56,7 +58,7 @@ public:
 
   int getFirstPlaceSpace();
 
-  void simulateMoveOnce();
+  void progressToEndGame();
 
   void takeTurnPlaceOverallWinner(std::string color);
 
@@ -68,9 +70,15 @@ public:
 
   void evaluateOverallBets();
 
+  void progressToEndLeg();
+
 };
+
+
+RCPP_EXPOSED_CLASS(Game)
 
 
 
 #endif
+
 

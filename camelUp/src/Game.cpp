@@ -22,6 +22,7 @@ using namespace Rcpp;
 //' }
 //' @export
 
+Game::Game(){}
 
 Game::Game(int n, int nPlayers, bool d){
   nSpaces = n;
@@ -253,7 +254,7 @@ int Game::getFirstPlaceSpace(){
   return (*firstPlace).getSpace();
 }
 
-void Game::simulateMoveOnce(){
+void Game::progressToEndGame(){
   // Game newGame = Game(*this);
 
   while(getFirstPlaceSpace()<17){
@@ -335,31 +336,45 @@ void Game::evaluateOverallBets(){
 
 }
 
+
+void Game::progressToEndLeg(){
+  // Game newGame = Game(*this);
+  int nMoves= (*board).getNDiceRemaining();
+  for(int i=0; i<nMoves; i++){
+    // Rcout << "first place space:";
+    // Rcout << getFirstPlaceSpace();
+    // Rcout << "\n";
+    takeTurnMove();
+    // Rcout << "is game over? \n";
+    // Rcout << checkIsGameOver();
+    // Rcout << "\n";
+  }
+}
 // Approach 4: Module docstrings
 //
-RCPP_EXPOSED_CLASS(Game)
-  RCPP_MODULE(game_cpp) {
-    using namespace Rcpp;
+RCPP_MODULE(game_cpp) {
+  using namespace Rcpp;
 
-    class_<Game>("Game")
-      .constructor<int, int, bool>()
-      .constructor<const Game &>()
-      .method("getPurseDF", &Game::getPurseDF)
-      .method("getCamelDF", &Game::getCamelDF)
-      .method("getRanking", &Game::getRanking)
-      .method("takeTurnMove", &Game::takeTurnMove)
-      .method("getLegBetDF", &Game::getLegBetDF)
-      .method("takeTurnLegBet", &Game::takeTurnLegBet)
-      .method("getNMadeLegBets", &Game::getNMadeLegBets)
-      .method("evaluateLegBets", &Game::evaluateLegBets)
-      .method("takeTurnPlaceTile", &Game::takeTurnPlaceTile)
-      .method("checkIsGameOver", &Game::checkIsGameOver)
-      .method("getFirstPlaceSpace", &Game::getFirstPlaceSpace)
-      .method("simulateMoveOnce", &Game::simulateMoveOnce)
-      .method("takeTurnPlaceOverallWinner", &Game::takeTurnPlaceOverallWinner)
-      .method("getNOverallWinnersPlaced", &Game::getNOverallWinnersPlaced)
-      .method("takeTurnPlaceOverallLoser", &Game::takeTurnPlaceOverallLoser)
-      .method("getNOverallLosersPlaced", &Game::getNOverallLosersPlaced)
-      .method("evaluateOverallBets", &Game::evaluateOverallBets)
-    ;
-  }
+  class_<Game>("Game")
+    .constructor<int, int, bool>()
+    .constructor<const Game &>()
+    .method("getPurseDF", &Game::getPurseDF)
+    .method("getCamelDF", &Game::getCamelDF)
+    .method("getRanking", &Game::getRanking)
+    .method("takeTurnMove", &Game::takeTurnMove)
+    .method("getLegBetDF", &Game::getLegBetDF)
+    .method("takeTurnLegBet", &Game::takeTurnLegBet)
+    .method("getNMadeLegBets", &Game::getNMadeLegBets)
+    .method("evaluateLegBets", &Game::evaluateLegBets)
+    .method("takeTurnPlaceTile", &Game::takeTurnPlaceTile)
+    .method("checkIsGameOver", &Game::checkIsGameOver)
+    .method("getFirstPlaceSpace", &Game::getFirstPlaceSpace)
+    .method("progressToEndGame", &Game::progressToEndGame)
+    .method("takeTurnPlaceOverallWinner", &Game::takeTurnPlaceOverallWinner)
+    .method("getNOverallWinnersPlaced", &Game::getNOverallWinnersPlaced)
+    .method("takeTurnPlaceOverallLoser", &Game::takeTurnPlaceOverallLoser)
+    .method("getNOverallLosersPlaced", &Game::getNOverallLosersPlaced)
+    .method("evaluateOverallBets", &Game::evaluateOverallBets)
+    .method("progressToEndLeg", &Game::progressToEndLeg)
+  ;
+}

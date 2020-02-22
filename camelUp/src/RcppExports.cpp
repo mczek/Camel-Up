@@ -12,6 +12,7 @@ RcppExport SEXP _rcpp_module_boot_die_cpp();
 RcppExport SEXP _rcpp_module_boot_game_cpp();
 RcppExport SEXP _rcpp_module_boot_legbet_cpp();
 RcppExport SEXP _rcpp_module_boot_player_cpp();
+RcppExport SEXP _rcpp_module_boot_simulator_cpp();
 RcppExport SEXP _rcpp_module_boot_space_cpp();
 
 static const R_CallMethodDef CallEntries[] = {
@@ -21,6 +22,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_game_cpp", (DL_FUNC) &_rcpp_module_boot_game_cpp, 0},
     {"_rcpp_module_boot_legbet_cpp", (DL_FUNC) &_rcpp_module_boot_legbet_cpp, 0},
     {"_rcpp_module_boot_player_cpp", (DL_FUNC) &_rcpp_module_boot_player_cpp, 0},
+    {"_rcpp_module_boot_simulator_cpp", (DL_FUNC) &_rcpp_module_boot_simulator_cpp, 0},
     {"_rcpp_module_boot_space_cpp", (DL_FUNC) &_rcpp_module_boot_space_cpp, 0},
     {NULL, NULL, 0}
 };

@@ -9,7 +9,7 @@ test_that("simulateMoveOnce", {
 test_that("simulateMoveOnce c++ version", {
   g <- Game$new(19, 3, FALSE)
   h <- Game$new(g)
-  h$simulateMoveOnce()
+  h$progressToEndGame()
 
   expect_equal(TRUE, TRUE)
 })
@@ -19,7 +19,7 @@ test_that("mclapply?", {
   for(i in 1:100){
     #sprint(i)
     h <- Game$new(g)
-    h$simulateMoveOnce()
+    h$progressToEndGame()
   }
   expect_equal(TRUE, TRUE)
 })
