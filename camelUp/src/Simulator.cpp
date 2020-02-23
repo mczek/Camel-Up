@@ -18,13 +18,37 @@ using namespace Rcpp;
 //' @export
 
 
-Simulator::Simulator(Game g){
-  Game gameObject = g;
+Simulator::Simulator(const Game & g){
+  gameObject = Game(g);
 }
 
-DataFrame Simulator::simulateMove(){
+List Simulator::simulateMoveEndGame(int nSims){
+  Rcout << "function called";
   int nCamels = 5;
+  int vecLength = nSims*nCamels;
+  Game * gamePtr = &gameObject;
 
+  Rcpp::CharacterVector *camelColors = new CharacterVector(vecLength);
+  Rcpp::IntegerVector *spaceVec = new IntegerVector(vecLength);
+  Rcpp::IntegerVector *heightVec = new IntegerVector(vecLength);
+
+  Game duplicateGames[nSims];
+  for(int i=0; i<nSims;i++){
+    duplicateGames[i] = Game(*gamePtr);
+  }
+
+  for(int i=0; i<nSims; i++){
+    Game tempGame = duplicateGames[i];
+    tempGame.progressToEndGame();
+    // Rcout << "test";
+    Board * tempBoard = tempGame.getBoard();
+    // Rcout << "test done";
+    (*tempBoard).fillCamelPosArrays(camelColors, spaceVec, heightVec, i*nCamels);
+  }
+
+
+  DataFrame df = DataFrame::create(Named("Color") = *camelColors, Named("Space") = *spaceVec, Named("Height") = *heightVec);
+  return List::create(Named("position") = df);
 }
 
 
@@ -35,5 +59,6 @@ RCPP_EXPOSED_CLASS(Simulator)
 
     class_<Simulator>("Simulator")
       .constructor<Game>()
+      .method("simulateMoveEndGame", &Simulator::simulateMoveEndGame)
     ;
   }

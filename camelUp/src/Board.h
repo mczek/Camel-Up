@@ -35,7 +35,7 @@ public:
 
   int getNCamels();
 
-  void fillCamelPosArrays(Rcpp::CharacterVector camelColors, Rcpp::IntegerVector spaceArray, Rcpp::IntegerVector heightArray, int start);
+  void fillCamelPosArrays(Rcpp::CharacterVector *camelColors, Rcpp::IntegerVector *spaceArray, Rcpp::IntegerVector *heightArray, int start);
 
   Rcpp::DataFrame getCamelDF();
 
@@ -56,6 +56,10 @@ public:
   std::vector<Die> getDice();
 
   void setDice(std::vector<Die>);
+
+  int getFirstPlaceSpace();
+
+  void progressToEndGame();
 };
 
 #endif

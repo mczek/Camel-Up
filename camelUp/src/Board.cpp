@@ -34,85 +34,61 @@ Board::Board(int n, bool d){
 }
 
 Board::Board(const Board & b){
+  // Rcout << "copy board";
   colors = b.colors;
   nSpaces = b.nSpaces;
   Space * currentNewSpace;
   Space * currentOldSpace;
   Camel * currentCamel;
-  std::stack<std::string> tempCamelStrStack;
+  std::stack<Camel*> tempCamelStack;
   std::string currentColor;
   int nCamelsHere;
 
+  // std::vector<Space*> spaces;
+
   int LengthNeeded = nSpaces + 1;
+  // Rcout << "Length Needed : \n";
+  // Rcout << LengthNeeded;
   for(int i=0;i<LengthNeeded;i++){
+    // Rcout << "Space: \n";
+    // Rcout << i;
     currentOldSpace = b.spaces[i];
     // std::vector<std::string> camelsToCopy = (*currentOldSpace).getCamelStrings();
     nCamelsHere = (*currentOldSpace).getNCamels();
-    currentNewSpace = currentOldSpace; // shouldn't need additional constructor?
+    currentNewSpace = new Space(i); // shouldn't need additional constructor?
     for(int j=0;j<nCamelsHere;j++){
-      currentCamel = (*currentNewSpace).removeCamel();
-      tempCamelStrStack.push((*currentCamel).getColor());
+      currentCamel = (*currentOldSpace).removeCamel();
+      tempCamelStack.push(currentCamel);
     }
+    // Rcout << "\n second for loop \n";
     for(int j=0;j<nCamelsHere;j++){
-      currentColor = tempCamelStrStack.top();
-      tempCamelStrStack.pop();
+      currentCamel = tempCamelStack.top();
+      tempCamelStack.pop();
+      (*currentOldSpace).addCamel(currentCamel);
+      currentColor = (*currentCamel).getColor();
       currentCamel = new Camel(currentColor);
+
       (*currentNewSpace).addCamel(currentCamel);
       camels[currentColor] = currentCamel;
     }
+    // Rcout << "second for loop complete";
 
 
     spaces.push_back(currentNewSpace);
   }
 
+  // Rcout << "\n copying dice \n";
   int nDiceToCopy = b.dice.size();
   for(int i=0; i<nDiceToCopy; i++){
     Die currentDie = b.dice[i];
     dice.push_back(Die(currentDie.getColor()));
   }
-  // need to shuffle dice
-
+  std::random_shuffle(dice.begin(), dice.end());// need to shuffle dice
+  // Rcout << "\n copying dice  complete \n";
   getRanking();
+  // Rcout << "ranking complete";
 
-  // next up we need to make the camel dictionary
-  // with the pointers to the camels on the spaces
-
-  // std::vector<Camel *> camelPointersHere;
-  // int nCamelsHere;
-  // std::string camelColor;
-  // for(int i=0;i<nSpaces;i++){
-  //   currentNewSpace = spaces[i];
-  //   currentOldSpace = b.spaces[i];
-  //   nCamelsHere = (*currentNewSpace).getNCamels();
-  //
-  //   std::stack<Camel *> tempCamelStack;
-  //   Camel* currentCamel;
-  //   for(int i=0;i<nCamelsHere;i++){
-  //     currentCamel = (*currentNewSpace).removeCamel();
-  //     tempCamelStack.push(currentCamel);
-  //   }
-  //
-  //   for(int i=0;i<nCamelsHere;i++){
-  //     currentCamel = tempCamelStack.top();
-  //     camelColor = (*currentCamel).getColor();
-  //     camels[camelColor] = currentCamel;
-  //
-  //     tempCamelStack.pop();
-  //     (*currentNewSpace).addCamel(currentCamel);
-  //     // result.push_back(currentCamel);
-  //   }
-
-    // camelPointersHere = (*currentOldSpace).getCamelPointers();
-  // }
-//
-
-  // std::vector<Die> dice;
-  // std::map<std::string, Camel*> camels;
-  // std::vector<std::string> colors;
-  // bool debug;
-  // std::vector<std::string> ranking;
-
-
+  // Rcout << "\n done copying board \n";
 }
 
 int Board::getNDiceRemaining(){
@@ -152,31 +128,40 @@ int Board::getNCamels(){
   return camels.size();
 }
 
-void Board::fillCamelPosArrays(Rcpp::CharacterVector camelColors, Rcpp::IntegerVector spaceArray, Rcpp::IntegerVector heightArray, int start){
+void Board::fillCamelPosArrays(Rcpp::CharacterVector *camelColors, Rcpp::IntegerVector *spaceArray, Rcpp::IntegerVector * heightArray, int start){
+  // Rcout << "\n filling arrays \n";
   int nCamels = colors.size();
   int index;
   std::string currentColor;
   Camel * currentCamel;
+  // Rcout << "entering for loop \n";
   for(int i=0;i<nCamels;i++){
+    Rcout << i;
     index = start + i;
     currentColor = colors[i];
+    // Rcout << "camel to be fetched \n";
     currentCamel = camels[currentColor];
-    camelColors[index] = (*currentCamel).getColor();
-    spaceArray[index] = (*currentCamel).getSpace();
-    heightArray[index] = (*currentCamel).getHeight();
+    // Rcout << "camel fetched";
+    // Rcout << currentCamel;
+    // Rcout << (*currentCamel).getColor();
+    // Rcout << (*currentCamel).getSpace();
+    // Rcout << (*currentCamel).getHeight();
+    (*camelColors)[index] = (*currentCamel).getColor();
+    (*spaceArray)[index] = (*currentCamel).getSpace();
+    (*heightArray)[index] = (*currentCamel).getHeight();
   }
 }
 
 DataFrame Board::getCamelDF(){
   // DataFrame df;
 
-  Rcpp::CharacterVector camelColors = CharacterVector(5);
-  Rcpp::IntegerVector spaceVec = IntegerVector(5);
-  Rcpp::IntegerVector heightVec = IntegerVector(5);
+  Rcpp::CharacterVector * camelColors = new CharacterVector(5);
+  Rcpp::IntegerVector * spaceVec = new IntegerVector(5);
+  Rcpp::IntegerVector * heightVec = new IntegerVector(5);
 
   fillCamelPosArrays(camelColors, spaceVec, heightVec, 0);
 
-  DataFrame df = DataFrame::create(Named("Color") = camelColors, Named("Space") = spaceVec, Named("Height") = heightVec);
+  DataFrame df = DataFrame::create(Named("Color") = *camelColors, Named("Space") = *spaceVec, Named("Height") = *heightVec);
 
   return df;
 
@@ -311,10 +296,34 @@ void Board::setDice(std::vector<Die> d){
   dice = d;
 }
 
+int Board::getFirstPlaceSpace(){
+  std::vector<std::string> ranking = getRanking();
+  Camel* firstPlace = camels[ranking[0]];
+  return (*firstPlace).getSpace();
+}
+
+void Board::progressToEndGame(){
+  // Game newGame = Game(*this);
+
+  while(getFirstPlaceSpace()<17){
+    // Rcout << "first place space:";
+    // Rcout << getFirstPlaceSpace();
+    // Rcout << "\n";
+    if(getNDiceRemaining() == 0){
+      resetDice();
+    }
+    moveTurn();
+    // Rcout << "is game over? \n";
+    // Rcout << checkIsGameOver();
+    // Rcout << "\n";
+  }
+}
+
+RCPP_EXPOSED_CLASS(Board)
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
   .constructor<int, bool>()
-  // .constructor<const Board &>()
+  .constructor<const Board &>()
   .method("getNDiceRemaining", &Board::getNDiceRemaining)
   .method("getNCamels", &Board::getNCamels)
   .method("getCamelDF", &Board::getCamelDF)

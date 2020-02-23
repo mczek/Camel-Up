@@ -10,11 +10,11 @@ using namespace Rcpp;
 
 class Simulator {
 private:
-  // Game gameObject;
+  Game gameObject;
 public:
-  Simulator(Game g);
+  Simulator(const Game & g);
 
-  DataFrame simulateMove();
+  List simulateMoveEndGame(int nSims);
 };
 
 

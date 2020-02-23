@@ -72,6 +72,10 @@ public:
 
   void progressToEndLeg();
 
+  Board * getBoard();
+
+  Game newGameObj(Game g);
+
 };
 
 

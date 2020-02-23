@@ -41,6 +41,7 @@ Game::Game(int n, int nPlayers, bool d){
 }
 
 Game::Game(const Game & g){
+  // Rcout << "game being duplicated";
   // only need to make it so dataframes extracted are correct
   // don't need to duplicate bets or anything other than the board
 
@@ -121,6 +122,7 @@ DataFrame Game::getPurseDF(){
 }
 
 DataFrame Game::getCamelDF(){
+  Rcout << "calling board getCamelDF";
   return (*board).getCamelDF();
 }
 
@@ -133,7 +135,7 @@ std::string Game::takeTurnMove(){
   // Rcout << "takeTurnMove called \n";
   Player* currentPlayer = players[currentPlayerIndex];
   // Rcout << "currentPlayer found \n";
-  std::string result = (*board).moveTurn(); // error is in here
+  std::string result = (*board).moveTurn();
   // Rcout << "Board moved \n";
 
   (*currentPlayer).addCoins(1);
@@ -350,6 +352,14 @@ void Game::progressToEndLeg(){
     // Rcout << "\n";
   }
 }
+
+Board * Game::getBoard(){
+  return board;
+}
+
+Game Game::newGameObj(Game g){
+  return Game(g);
+}
 // Approach 4: Module docstrings
 //
 RCPP_MODULE(game_cpp) {
@@ -376,5 +386,7 @@ RCPP_MODULE(game_cpp) {
     .method("getNOverallLosersPlaced", &Game::getNOverallLosersPlaced)
     .method("evaluateOverallBets", &Game::evaluateOverallBets)
     .method("progressToEndLeg", &Game::progressToEndLeg)
+    .method("getBoard", &Game::getBoard)
+    .method("newGameObj", &Game::newGameObj)
   ;
 }
