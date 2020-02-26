@@ -122,7 +122,7 @@ DataFrame Game::getPurseDF(){
 }
 
 DataFrame Game::getCamelDF(){
-  Rcout << "calling board getCamelDF";
+  // Rcout << "calling board getCamelDF";
   return (*board).getCamelDF();
 }
 

@@ -7,10 +7,7 @@
 simulateMoveOnce(g)
 }
 \arguments{
-\item{g}{}
-}
-\value{
-
+\item{g}{game object}
 }
 \description{
 Simulate moving

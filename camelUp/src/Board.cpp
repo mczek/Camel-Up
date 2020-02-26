@@ -4,7 +4,9 @@
 #include "Space.h"
 #include "Board.h"
 #include "Camel.h"
+#include <random>     // for random shuffle
 using namespace Rcpp;
+using namespace std;
 // Define board class
 
 //' @name Board
@@ -83,7 +85,9 @@ Board::Board(const Board & b){
     Die currentDie = b.dice[i];
     dice.push_back(Die(currentDie.getColor()));
   }
-  std::random_shuffle(dice.begin(), dice.end());// need to shuffle dice
+
+  unsigned seed = 0;
+  shuffle(dice.begin(), dice.end(), std::default_random_engine(seed));// need to shuffle dice
   // Rcout << "\n copying dice  complete \n";
   getRanking();
   // Rcout << "ranking complete";
@@ -105,7 +109,8 @@ void Board::resetDice(){ // can't define default arg twice
   //shuffle dice
   // this is necessary because R can't set this seed
   if(!debug){
-    std::random_shuffle(dice.begin(), dice.end()); //shuffle dice
+    unsigned seed = 0;
+    shuffle(dice.begin(), dice.end(), std::default_random_engine(seed)); //shuffle dice
   }
 }
 
@@ -136,7 +141,7 @@ void Board::fillCamelPosArrays(Rcpp::CharacterVector *camelColors, Rcpp::Integer
   Camel * currentCamel;
   // Rcout << "entering for loop \n";
   for(int i=0;i<nCamels;i++){
-    Rcout << i;
+    // Rcout << i;
     index = start + i;
     currentColor = colors[i];
     // Rcout << "camel to be fetched \n";

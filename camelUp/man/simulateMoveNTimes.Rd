@@ -7,10 +7,9 @@
 simulateMoveNTimes(g, N)
 }
 \arguments{
-\item{N}{}
-}
-\value{
+\item{g}{game object}
 
+\item{N}{number of sims}
 }
 \description{
 Simulate moving N times

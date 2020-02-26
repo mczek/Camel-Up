@@ -32,9 +32,9 @@ List Simulator::simulateMoveEndGame(int nSims){
   Rcpp::IntegerVector *spaceVec = new IntegerVector(vecLength);
   Rcpp::IntegerVector *heightVec = new IntegerVector(vecLength);
 
-  Game duplicateGames[nSims];
+  std::vector<Game> duplicateGames;
   for(int i=0; i<nSims;i++){
-    duplicateGames[i] = Game(*gamePtr);
+    duplicateGames.push_back(Game(*gamePtr));
   }
 
   for(int i=0; i<nSims; i++){

@@ -4,13 +4,15 @@
 #include <Rcpp.h>
 #include <list>
 #include <vector>
-
+#include <random>     // for random shuffle
 
 #include <algorithm>
 #include <string>
 #include "Space.h"
 #include "Die.h"
 #include "Camel.h"
+
+using namespace std;
 
 class Board {
 private:

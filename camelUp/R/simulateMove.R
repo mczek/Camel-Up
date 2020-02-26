@@ -1,8 +1,7 @@
 #' Simulate moving
 #'
-#' @param g
+#' @param g game object
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -18,15 +17,12 @@ simulateMoveOnce <- function(g){
 
 #' Simulate moving N times
 #'
-#' @param g
-#' @param N
+#' @param g game object
+#' @param N number of sims
 #'
-#' @import foreach
 #'
-#' @return
 #' @export
-#'
-#' @examples
+
 simulateMoveNTimes <- function(g, N){
   # works:
   positionDFList <- list()
