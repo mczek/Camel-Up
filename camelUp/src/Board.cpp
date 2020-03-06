@@ -19,6 +19,8 @@ using namespace std;
 //' }
 //' @export
 
+Board::Board(){}
+
 Board::Board(int n, bool d){
   debug = d;
   nSpaces = n;
@@ -324,7 +326,7 @@ void Board::progressToEndGame(){
   }
 }
 
-RCPP_EXPOSED_CLASS(Board)
+
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
   .constructor<int, bool>()

@@ -25,6 +25,8 @@ private:
   bool debug;
   std::vector<std::string> ranking;
 public:
+  Board();
+
   Board(int n, bool d = false);
 
   Board(const Board & b);
@@ -64,4 +66,5 @@ public:
   void progressToEndGame();
 };
 
+RCPP_EXPOSED_CLASS(Board)
 #endif

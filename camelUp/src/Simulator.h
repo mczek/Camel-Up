@@ -2,7 +2,7 @@
 #define SIMULATOR_H
 
 #include <Rcpp.h>
-#include "Game.h"
+#include "Board.h"
 
 
 using namespace Rcpp;
@@ -10,9 +10,10 @@ using namespace Rcpp;
 
 class Simulator {
 private:
-  Game gameObject;
+  Board boardObject;
 public:
-  Simulator(const Game & g);
+
+  Simulator(const Board & g);
 
   List simulateMoveEndGame(int nSims);
 };

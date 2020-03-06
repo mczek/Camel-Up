@@ -1,15 +1,17 @@
 test_that("test simulator: constructor", {
   set.seed(1)
   g <- Game$new(19, 3, TRUE)
-  s <- Simulator$new(g)
+  b <- g$getBoard()
+  s <- Simulator$new(b)
   s$simulateMoveEndGame(1)
   expect_equal(TRUE, TRUE)
 })
 
-test_that("test simulator: time simulation 1000 sims - 0.015s", {
+test_that("test simulator: time simulation 1000 sims - 0.15s", {
   set.seed(1)
   g <- Game$new(19, 3, FALSE)
-  s <- Simulator$new(g)
+  b <- g$getBoard()
+  s <- Simulator$new(b)
   t <- system.time({
    a <- s$simulateMoveEndGame(1000)
   })

@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 #include "Simulator.h"
-#include "Game.h"
+#include "Board.h"
 
 
 using namespace Rcpp;
@@ -18,32 +18,32 @@ using namespace Rcpp;
 //' @export
 
 
-Simulator::Simulator(const Game & g){
-  gameObject = Game(g);
+Simulator::Simulator(const Board & b){
+  boardObject = Board(b);
 }
 
 List Simulator::simulateMoveEndGame(int nSims){
   Rcout << "function called";
   int nCamels = 5;
   int vecLength = nSims*nCamels;
-  Game * gamePtr = &gameObject;
+  Board * boardPtr = &boardObject;
 
   Rcpp::CharacterVector *camelColors = new CharacterVector(vecLength);
   Rcpp::IntegerVector *spaceVec = new IntegerVector(vecLength);
   Rcpp::IntegerVector *heightVec = new IntegerVector(vecLength);
 
-  std::vector<Game> duplicateGames;
+
+  std::vector<Board> duplicateGames;
   for(int i=0; i<nSims;i++){
-    duplicateGames.push_back(Game(*gamePtr));
+    duplicateGames.push_back(Board(*boardPtr));
   }
 
   for(int i=0; i<nSims; i++){
-    Game tempGame = duplicateGames[i];
-    tempGame.progressToEndGame();
+    Board tempBoard = duplicateGames[i];
+    tempBoard.progressToEndGame();
     // Rcout << "test";
-    Board * tempBoard = tempGame.getBoard();
     // Rcout << "test done";
-    (*tempBoard).fillCamelPosArrays(camelColors, spaceVec, heightVec, i*nCamels);
+    tempBoard.fillCamelPosArrays(camelColors, spaceVec, heightVec, i*nCamels);
   }
 
 
@@ -58,7 +58,7 @@ RCPP_EXPOSED_CLASS(Simulator)
     using namespace Rcpp;
 
     class_<Simulator>("Simulator")
-      .constructor<Game>()
+      .constructor<Board>()
       .method("simulateMoveEndGame", &Simulator::simulateMoveEndGame)
     ;
   }
