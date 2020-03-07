@@ -22,7 +22,22 @@ Simulator::Simulator(const Board & b){
   boardObject = Board(b);
 }
 
-List Simulator::simulateMoveEndGame(int nSims){
+void Simulator::SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *colors, Rcpp::IntegerVector *spaces, Rcpp::IntegerVector * heights, Rcpp::CharacterVector *first, Rcpp::CharacterVector *second, Rcpp::CharacterVector *last){
+  if(toEndLeg){
+    (*b).progressToEndLeg();
+  } else {
+    (*b).progressToEndGame();
+  }
+
+  (*b).fillCamelPosArrays(colors, spaces, heights, 5*id); // five entries per sim
+
+  std::vector<std::string> ranking = (*b).getRanking();
+  (*first)[id] = ranking[0];
+  (*second)[id] = ranking[1];
+  (*last)[id] = ranking[2];
+}
+
+List Simulator::simulateDecision(bool toEndLeg, int nSims){
   Rcout << "function called";
   int nCamels = 5;
   int vecLength = nSims*nCamels;
@@ -32,23 +47,28 @@ List Simulator::simulateMoveEndGame(int nSims){
   Rcpp::IntegerVector *spaceVec = new IntegerVector(vecLength);
   Rcpp::IntegerVector *heightVec = new IntegerVector(vecLength);
 
+  Rcpp::CharacterVector *firstPlace = new CharacterVector(nSims);
+  Rcpp::CharacterVector *secondPlace = new CharacterVector(nSims);
+  Rcpp::CharacterVector *lastPlace = new CharacterVector(nSims);
+
 
   std::vector<Board> duplicateGames;
   for(int i=0; i<nSims;i++){
     duplicateGames.push_back(Board(*boardPtr));
   }
 
+
   for(int i=0; i<nSims; i++){
     Board tempBoard = duplicateGames[i];
-    tempBoard.progressToEndGame();
-    // Rcout << "test";
-    // Rcout << "test done";
-    tempBoard.fillCamelPosArrays(camelColors, spaceVec, heightVec, i*nCamels);
+    SimTask(&tempBoard, i, toEndLeg, camelColors, spaceVec, heightVec, firstPlace, secondPlace, lastPlace);
+
   }
 
 
-  DataFrame df = DataFrame::create(Named("Color") = *camelColors, Named("Space") = *spaceVec, Named("Height") = *heightVec);
-  return List::create(Named("position") = df);
+
+  DataFrame positionDF = DataFrame::create(Named("Color") = *camelColors, Named("Space") = *spaceVec, Named("Height") = *heightVec);
+  DataFrame rankingDF = DataFrame::create(Named("First") = *firstPlace, Named("Second") = *secondPlace, Named("Last") = *lastPlace);
+  return List::create(Named("position") = positionDF, Named("ranking") = rankingDF);
 }
 
 
@@ -59,6 +79,6 @@ RCPP_EXPOSED_CLASS(Simulator)
 
     class_<Simulator>("Simulator")
       .constructor<Board>()
-      .method("simulateMoveEndGame", &Simulator::simulateMoveEndGame)
+      .method("simulateDecision", &Simulator::simulateDecision)
     ;
   }

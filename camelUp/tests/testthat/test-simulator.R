@@ -3,7 +3,7 @@ test_that("test simulator: constructor", {
   g <- Game$new(19, 3, TRUE)
   b <- g$getBoard()
   s <- Simulator$new(b)
-  s$simulateMoveEndGame(1)
+  s$simulateDecision(FALSE, 1)
   expect_equal(TRUE, TRUE)
 })
 
@@ -13,7 +13,7 @@ test_that("test simulator: time simulation 1000 sims - 0.15s", {
   b <- g$getBoard()
   s <- Simulator$new(b)
   t <- system.time({
-   a <- s$simulateMoveEndGame(1000)
+   a <- s$simulateDecision(FALSE, 1000)
   })
   print(t)
   expect_equal(TRUE, TRUE)

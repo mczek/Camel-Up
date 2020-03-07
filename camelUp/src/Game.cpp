@@ -339,19 +339,19 @@ void Game::evaluateOverallBets(){
 }
 
 
-void Game::progressToEndLeg(){
-  // Game newGame = Game(*this);
-  int nMoves= (*board).getNDiceRemaining();
-  for(int i=0; i<nMoves; i++){
-    // Rcout << "first place space:";
-    // Rcout << getFirstPlaceSpace();
-    // Rcout << "\n";
-    takeTurnMove();
-    // Rcout << "is game over? \n";
-    // Rcout << checkIsGameOver();
-    // Rcout << "\n";
-  }
-}
+// void Game::progressToEndLeg(){
+//   // Game newGame = Game(*this);
+//   int nMoves= (*board).getNDiceRemaining();
+//   for(int i=0; i<nMoves; i++){
+//     // Rcout << "first place space:";
+//     // Rcout << getFirstPlaceSpace();
+//     // Rcout << "\n";
+//     takeTurnMove();
+//     // Rcout << "is game over? \n";
+//     // Rcout << checkIsGameOver();
+//     // Rcout << "\n";
+//   }
+// }
 
 Board * Game::getBoard(){
   return board;
@@ -385,7 +385,7 @@ RCPP_MODULE(game_cpp) {
     .method("takeTurnPlaceOverallLoser", &Game::takeTurnPlaceOverallLoser)
     .method("getNOverallLosersPlaced", &Game::getNOverallLosersPlaced)
     .method("evaluateOverallBets", &Game::evaluateOverallBets)
-    .method("progressToEndLeg", &Game::progressToEndLeg)
+    // .method("progressToEndLeg", &Game::progressToEndLeg)
     .method("getBoard", &Game::getBoard)
     .method("newGameObj", &Game::newGameObj)
   ;

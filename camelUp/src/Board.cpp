@@ -309,6 +309,13 @@ int Board::getFirstPlaceSpace(){
   return (*firstPlace).getSpace();
 }
 
+void Board::progressToEndLeg(){
+  int nDice = getNDiceRemaining();
+  for(int i=0; i<nDice; i++){
+    moveTurn();
+  }
+}
+
 void Board::progressToEndGame(){
   // Game newGame = Game(*this);
 
@@ -325,6 +332,9 @@ void Board::progressToEndGame(){
     // Rcout << "\n";
   }
 }
+
+
+void Board::customizeBoard(DataFrame inputDF){}
 
 
 RCPP_MODULE(board_cpp){

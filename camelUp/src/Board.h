@@ -63,7 +63,11 @@ public:
 
   int getFirstPlaceSpace();
 
+  void progressToEndLeg();
+
   void progressToEndGame();
+
+  void customizeBoard(DataFrame inputDF);
 };
 
 RCPP_EXPOSED_CLASS(Board)

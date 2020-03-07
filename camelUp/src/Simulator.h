@@ -15,7 +15,10 @@ public:
 
   Simulator(const Board & g);
 
-  List simulateMoveEndGame(int nSims);
+  void SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *colors, Rcpp::IntegerVector *spaces, Rcpp::IntegerVector * heights, Rcpp::CharacterVector *first, Rcpp::CharacterVector *second, Rcpp::CharacterVector *last);
+
+  List simulateDecision(bool toEndLeg, int nSims); //if false sim to end game
+
 };
 
 

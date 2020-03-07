@@ -70,7 +70,7 @@ public:
 
   void evaluateOverallBets();
 
-  void progressToEndLeg();
+  // void progressToEndLeg();
 
   Board * getBoard();
 
