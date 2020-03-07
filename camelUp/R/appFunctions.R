@@ -9,7 +9,7 @@ camelScale <- function(){
 makeBoardGraph <- function(camelDF){
   plt <- camelDF %>%
     ggplot(aes(x = Space, y = Height, fill = Color)) +
-    geom_tile(color = "black", size = 1) +
+    geom_tile(color = "black", size = 1, width = 0.9) +
     ggplot2::coord_cartesian(xlim = c(1, 19), ylim = c(0.5,5.49)) +
     ggplot2::scale_x_continuous(breaks = 1:19) +
     ggplot2::scale_y_continuous(labels = c("0.00", "1.00", "2.00", "3.00", "4.00", "5.00"),
@@ -27,8 +27,7 @@ makeStackDistGraph <- function(positionDF, color){
     group_by(Color, Space, Height) %>%
     summarize(Probability = n()/nSims) %>%
     ggplot(aes(x = Space, y = Height, fill = Color, alpha = Probability)) +
-    geom_tile()+
-    geom_tile(color = "black", size = 1) +
+    geom_tile(color = "black", size = 1, width = 0.9) +
     ggplot2::coord_cartesian(xlim = c(1, 19), ylim = c(0.5,5.49)) +
     ggplot2::scale_x_continuous(breaks = 1:19) +
     ggplot2::scale_y_continuous(labels = c("0.00", "1.00", "2.00", "3.00", "4.00", "5.00"),
