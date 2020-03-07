@@ -88,8 +88,8 @@ Board::Board(const Board & b){
     dice.push_back(Die(currentDie.getColor()));
   }
 
-  unsigned seed = 0;
-  shuffle(dice.begin(), dice.end(), std::default_random_engine(seed));// need to shuffle dice
+  //unsigned seed = 0;
+  std::random_shuffle(dice.begin(), dice.end());// need to shuffle dice
   // Rcout << "\n copying dice  complete \n";
   getRanking();
   // Rcout << "ranking complete";
