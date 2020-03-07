@@ -24,17 +24,49 @@ makeBoardGraph <- function(gameObj){
 generateUI <- function(){
   ui <- fluidPage(
     titlePanel("Camel Up"),
-    mainPanel(
-      tabsetPanel(type = "tabs",
-                  tabPanel("View Game",
-                           plotOutput("gameBoard"),
-                           fluidRow(
-                             column(width = 4, tableOutput("positionDF")),
-                             column(width = 4, tableOutput("legBetDF"))
-                           )
+
+    sidebarLayout(
+      sidebarPanel(
+        radioButtons("decisionButtons", "Move Type",
+                     c("Move Camel","Place Leg Bet","Place Tile","Place Overall Bet"),
+                     selected = "Move Camel"),
+        conditionalPanel(condition = "input.decisionButtons == 'Place Leg Bet'",
+                         selectInput('legbetcolor',
+                                     "Camel Color:",
+                                     c("","Yellow","Orange","Blue","Green","White"))
+        ),
+        conditionalPanel(condition = "input.decisionButtons == 'Place Tile'",
+                         selectInput('tiletype',
+                                     "Tile Type",
+                                     c("","Plus","Minus")),
+                         selectInput('tilespace',
+                                     "Space Number:",
+                                     c("", 1:16))
+        ),
+        conditionalPanel(condition = "input.decisionButtons == 'Place Overall Bet'",
+                         selectInput('overallbettype',
+                                     "Bet Type",
+                                     c("","Winner", "Loser")),
+                         selectInput('overallbetcolor',
+                                     "Camel Color:",
+                                     c("","Yellow","Orange","Blue","Green","White"))
+        ),
+
+        actionButton('submit',
+                     "Go!"),
+      ),
 
 
-                  ))
+      mainPanel(
+        tabsetPanel(type = "tabs",
+                    tabPanel("View Game",
+                             plotOutput("gameBoard"),
+                             fluidRow(
+                               column(width = 4, tableOutput("positionDF")),
+                               column(width = 4, tableOutput("legBetDF"))
+                             )
+                    ))
+      )
     )
   )
 
@@ -47,6 +79,31 @@ server <- function(input, output){
   output$gameBoard <- renderPlot(makeBoardGraph(gamePlay))
   output$positionDF <- renderTable(gamePlay$getCamelDF() %>% arrange(-Space, -Height))
   output$legBetDF <- renderTable(gamePlay$getLegBetDF())
+
+  observeEvent(input$submit,{
+    if(input$decisionButtons == "Move Camel"){
+      gamePlay$takeTurnMove()
+    }
+    if(input$decisionButtons == "Place Leg Bet"){
+      gamePlay$takeTurnLegBet(input$legbetcolor)
+    }
+    if(input$decisionButtons == "Place Tile"){
+      gamePlay$takeTurnPlaceTile(as.numeric(input$tilespace), input$tiletype == "Plus")
+    }
+    if(input$decisionButtons == "Place Overall Bet"){
+      if(input$overallbettype == "Winner"){
+        gamePlay$takeTurnPlaceOverallWinner(input$overallbetcolor)
+      }
+      if(input$overallbettype == "Loser"){
+        gamePlay$takeTurnPlaceOverallLoser(input$overallbetcolor)
+      }
+    }
+
+    output$gameBoard <- renderPlot(makeBoardGraph(gamePlay))
+    output$positionDF <- renderTable(gamePlay$getCamelDF() %>% arrange(-Space, -Height))
+    output$legBetDF <- renderTable(gamePlay$getLegBetDF())
+
+  })
 }
 
 shinyApp(ui = generateUI(), server = server)
