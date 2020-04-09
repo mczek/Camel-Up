@@ -1,5 +1,5 @@
 library(shiny)
-library(tidyverse)
+# library(tidyverse)
 
 # Run the application using package
 library(CamelUp)
