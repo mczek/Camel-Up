@@ -43,6 +43,26 @@ makeStackDistGraph <- function(positionDF, color){
   return(plt)
 }
 
+placeGraph <- function(rankingDF, color){
+  print(names(rankingDF))
+  nSims <- nrow(rankingDF)/5
+  rankingDF$place <- rep(1:5, nSims)
+  plt <- rankingDF %>%
+    filter(Color == color) %>%
+    group_by(place) %>%
+    summarize(prob = n()/nSims) %>%
+    mutate(Color = color) %>%
+    ggplot(aes(x = place, y = prob, fill = Color)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    camelScale() +
+    labs(x = "End Ranking",
+         y = "Probability",
+         title = "Ranking Distribution")
+  return(plt)
+
+}
+
 # Run the application
 
 #' Play the game CamelUp
@@ -151,7 +171,7 @@ generateUI <- function(){
                              plotOutput("boardToSim"),
                              plotOutput("stackDist"),
                              plotOutput("spaceDist"),
-                             plotOutput("payoutDist")
+                             plotOutput("placeDist")
                     )
         )
       )
@@ -163,9 +183,7 @@ generateUI <- function(){
 }
 
 
-payoutGraph_LegBet <- function(rankingDF, val){
-  print(rankingDF)
-}
+
 
 # Run the application
 
@@ -179,20 +197,22 @@ payoutGraph_LegBet <- function(rankingDF, val){
 #' @export
 server <- function(input, output){
   gamePlay <- Game$new(19, 3, FALSE)
-  simBoard <- gamePlay$getBoard()
+
+
   simData <- data.frame() #initialize this
   rankingData <- data.frame()
 
+  customGame <- Game$new(19, 3, FALSE)
   customBoard <- Board$new(19, FALSE)
-  customBoard$clearBoard()
+
 
   # init
   output$gameBoard <- renderPlot(makeBoardGraph(gamePlay$getCamelDF()))
   output$positionDF <- renderTable(gamePlay$getCamelDF() %>% arrange(-Space, -Height))
   output$legBetDF <- renderTable(gamePlay$getLegBetDF())
-  output$boardToSim <- renderPlot(makeBoardGraph(simBoard$getCamelDF()))
+  output$boardToSim <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
   output$customBoardGraph <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
-  output$payoutDist <- NULL
+
 
 
   # main panel
@@ -229,13 +249,24 @@ server <- function(input, output){
   })
 
   observeEvent(input$simulateGame, {
-    simObj <- Simulator$new(simBoard)
+    thisBoard <- Board$new(customBoard)
+    if(input$simDecision == "Place Tile"){
+      p <- Player$new("Temp") # need player to place tile
+      if(input$simtiletype == "Plus"){
+        thisBoard$placePlusTile(as.integer(input$simtilespace), p)
+      } else {
+        thisBoard$placeMinusTile(as.integer(input$simtilespace), p)
+      }
+    }
+
+    simObj <- Simulator$new(thisBoard)
+
     simData <- simObj$simulateDecision(input$simDecision %in% c("Move Camel", "Place Leg Bet", "Place Tile"), input$nSims) # bool toEndLeg and nSims
     positionDF <- simData$position
-    rankingDF <- simData$ranking
+    rankingDF <<- simData$ranking
     output$stackDist <- renderPlot(makeStackDistGraph(positionDF, input$simColor))
 
-    payoutGraph_LegBet(rankingDF)
+    output$placeDist <- renderPlot(placeGraph(rankingDF, input$simColor))
 
   })
 

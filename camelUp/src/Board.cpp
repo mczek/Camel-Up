@@ -48,6 +48,8 @@ Board::Board(const Board & b){
   std::string currentColor;
   int nCamelsHere;
 
+  Player* temp = new Player("Temp");
+
   // std::vector<Space*> spaces;
 
   int LengthNeeded = nSpaces + 1;
@@ -60,6 +62,15 @@ Board::Board(const Board & b){
     // std::vector<std::string> camelsToCopy = (*currentOldSpace).getCamelStrings();
     nCamelsHere = (*currentOldSpace).getNCamels();
     currentNewSpace = new Space(i); // shouldn't need additional constructor?
+
+    if((*currentOldSpace).getPlusTile()){
+      (*currentNewSpace).setPlusTile(temp);
+    }
+    if((*currentOldSpace).getMinusTile()){
+      (*currentNewSpace).setMinusTile(temp);
+    }
+
+
     for(int j=0;j<nCamelsHere;j++){
       currentCamel = (*currentOldSpace).removeCamel();
       tempCamelStack.push(currentCamel);
@@ -363,5 +374,7 @@ RCPP_MODULE(board_cpp){
   .method("generateRanking", &Board::generateRanking)
   .method("getRanking", &Board::getRanking)
   .method("clearBoard", &Board::clearBoard)
+  .method("placePlusTile", &Board::placePlusTile)
+  .method("placeMinusTile", &Board::placeMinusTile)
   ;
 }

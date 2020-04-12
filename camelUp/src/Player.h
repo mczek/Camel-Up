@@ -33,5 +33,5 @@ public:
 
   std::string getOverallLast();
 };
-
+RCPP_EXPOSED_CLASS(Player)
 #endif

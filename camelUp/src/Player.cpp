@@ -56,7 +56,7 @@ std::string Player::getOverallLast(){
 
 // Approach 4: Module docstrings
 
-RCPP_EXPOSED_CLASS(Player)
+
   RCPP_MODULE(player_cpp) {
 
     class_<Player>("Player")
