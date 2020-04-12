@@ -70,6 +70,8 @@ public:
   void clearBoard();
 
   void createAddCamel(std::string color, int space);
+
+  void addCustomCamel(std::string color, int space, bool diePresent, int nBetsLeft);
 };
 
 RCPP_EXPOSED_CLASS(Board)

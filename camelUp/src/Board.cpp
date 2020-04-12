@@ -155,15 +155,17 @@ void Board::fillCamelPosArrays(Rcpp::CharacterVector *camelColors, Rcpp::Integer
     index = start + i;
     currentColor = colors[i];
     // Rcout << "camel to be fetched \n";
-    currentCamel = camels[currentColor];
-    // Rcout << "camel fetched";
-    // Rcout << currentCamel;
-    // Rcout << (*currentCamel).getColor();
-    // Rcout << (*currentCamel).getSpace();
-    // Rcout << (*currentCamel).getHeight();
-    (*camelColors)[index] = (*currentCamel).getColor();
-    (*spaceArray)[index] = (*currentCamel).getSpace();
-    (*heightArray)[index] = (*currentCamel).getHeight();
+    if(camels.find(currentColor) != camels.end()){ // if camel is in camels
+      currentCamel = camels[currentColor];
+      // Rcout << "camel fetched";
+      // Rcout << currentCamel;
+      // Rcout << (*currentCamel).getColor();
+      // Rcout << (*currentCamel).getSpace();
+      // Rcout << (*currentCamel).getHeight();
+      (*camelColors)[index] = (*currentCamel).getColor();
+      (*spaceArray)[index] = (*currentCamel).getSpace();
+      (*heightArray)[index] = (*currentCamel).getHeight();
+    }
   }
 }
 
@@ -345,21 +347,40 @@ void Board::progressToEndGame(){
 }
 
 void Board::clearBoard(){
-  Space* currentSpace;
-  for(int i=0; i<nSpaces; i++){
-    currentSpace = getSpaceN(i);
-    (*currentSpace).clearSpace();
+  // Space* currentSpace;
+  int LengthNeeded = nSpaces + 1;
+  spaces.clear();
+  for(int i=0;i<LengthNeeded;i++){
+    spaces.push_back(new Space(i));
   }
 
   camels.clear();
+  dice.clear();
 }
 
 
 void Board::createAddCamel(std::string color, int space){
+  Rcout << color;
+  Rcout << "\n";
+  Rcout << space;
+  Rcout << "\n";
   Camel * currentCamel = new Camel(color);
   Space * currentSpace = spaces[space];
+  Rcout << (*currentSpace).getNCamels();
+  Rcout << "\n";
   (*currentSpace).addCamel(currentCamel);
   camels[color] = currentCamel;
+}
+
+void Board::addCustomCamel(std::string color, int space, bool diePresent, int nBetsLeft){
+  createAddCamel(color, space);
+  if(diePresent){
+    dice.push_back(Die(color));
+  }
+
+  unsigned seed = 0;
+  shuffle(dice.begin(), dice.end(), std::default_random_engine(seed)); //shuffle dice
+
 }
 
 
@@ -376,5 +397,6 @@ RCPP_MODULE(board_cpp){
   .method("clearBoard", &Board::clearBoard)
   .method("placePlusTile", &Board::placePlusTile)
   .method("placeMinusTile", &Board::placeMinusTile)
+  .method("addCustomCamel", &Board::addCustomCamel)
   ;
 }

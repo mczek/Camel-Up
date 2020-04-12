@@ -8,6 +8,7 @@ camelScale <- function(){
 
 makeBoardGraph <- function(camelDF){
   plt <-  camelDF %>%
+    filter(Space > 0) %>%
     ggplot(aes(x = Space, y = Height, fill = Color))
 
   if(sum(camelDF$Space) == 0){
@@ -124,7 +125,8 @@ generateUI <- function(){
                              fluidRow(
                                column(width = 4, selectInput("customCamelColor", "New Camel Color:", choices = c("Yellow","Orange","Blue","Green","White"))),
                                column(width = 4, numericInput("customCamelSpace", "Space:", min = 1, max = 16, step = 1, value = 1)),
-                               column(width = 4, checkboxInput("customCamelDie", "Die Present:"))
+                               column(width = 4, checkboxInput("customCamelDie", "Die Present:")),
+                               column(width = 4, selectInput("customBetsLeft", "Number of Leg Bets Remaining:", choices = 0:3))
                              ),
                              actionButton("customAddCamel", "Add Camel"),
                              plotOutput("customBoardGraph")
@@ -277,6 +279,11 @@ server <- function(input, output){
     output$customBoardGraph <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
   })
 
+  observeEvent(input$customAddCamel, {
+    customBoard$addCustomCamel(input$customCamelColor, as.integer(input$customCamelSpace), input$customCamelDie, as.integer(input$customBetsLeft))
+    print(customBoard$getCamelDF())
+    output$customBoardGraph <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
+  })
 }
 
 # Run the application
