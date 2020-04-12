@@ -22,7 +22,8 @@ Simulator::Simulator(const Board & b){
   boardObject = Board(b);
 }
 
-void Simulator::SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *colors, Rcpp::IntegerVector *spaces, Rcpp::IntegerVector * heights, Rcpp::CharacterVector *first, Rcpp::CharacterVector *second, Rcpp::CharacterVector *last){
+void Simulator::SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *colors, Rcpp::IntegerVector *spaces, Rcpp::IntegerVector * heights,
+                        Rcpp::CharacterVector *first, Rcpp::CharacterVector *second, Rcpp::CharacterVector *last){
   if(toEndLeg){
     (*b).progressToEndLeg();
   } else {
@@ -49,6 +50,8 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
 
   Rcpp::CharacterVector *firstPlace = new CharacterVector(nSims);
   Rcpp::CharacterVector *secondPlace = new CharacterVector(nSims);
+  Rcpp::CharacterVector *thirdPlace = new CharacterVector(nSims);
+  Rcpp::CharacterVector *fourthPlace = new CharacterVector(nSims);
   Rcpp::CharacterVector *lastPlace = new CharacterVector(nSims);
 
 

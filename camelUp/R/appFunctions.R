@@ -7,9 +7,15 @@ camelScale <- function(){
 }
 
 makeBoardGraph <- function(camelDF){
-  plt <- camelDF %>%
-    ggplot(aes(x = Space, y = Height, fill = Color)) +
-    geom_tile(color = "black", size = 1, width = 0.9) +
+  plt <-  camelDF %>%
+    ggplot(aes(x = Space, y = Height, fill = Color))
+
+  if(sum(camelDF$Space) == 0){
+    plt <- plt + geom_blank()
+  } else {
+    plt <- plt + geom_tile(color = "black", size = 1, width = 0.9)
+  }
+  plt <- plt  +
     ggplot2::coord_cartesian(xlim = c(1, 19), ylim = c(0.5,5.49)) +
     ggplot2::scale_x_continuous(breaks = 1:19) +
     ggplot2::scale_y_continuous(labels = c("0.00", "1.00", "2.00", "3.00", "4.00", "5.00"),
@@ -92,6 +98,17 @@ generateUI <- function(){
                                column(width = 4, tableOutput("legBetDF"))
                              )
                     ),
+
+                    tabPanel("Custom Setup",
+                             actionButton("clearCustomBoard", "Clear Board"),
+                             fluidRow(
+                               column(width = 4, selectInput("customCamelColor", "New Camel Color:", choices = c("Yellow","Orange","Blue","Green","White"))),
+                               column(width = 4, numericInput("customCamelSpace", "Space:", min = 1, max = 16, step = 1, value = 1)),
+                               column(width = 4, checkboxInput("customCamelDie", "Die Present:"))
+                             ),
+                             actionButton("customAddCamel", "Add Camel"),
+                             plotOutput("customBoardGraph")
+                    ),
                     tabPanel("Simulate",
                              fluidRow(
                                column(width = 4, actionButton('copyPlayBoard',
@@ -133,7 +150,8 @@ generateUI <- function(){
 
                              plotOutput("boardToSim"),
                              plotOutput("stackDist"),
-                             plotOutput("spaceDist")
+                             plotOutput("spaceDist"),
+                             plotOutput("payoutDist")
                     )
         )
       )
@@ -142,6 +160,11 @@ generateUI <- function(){
 
   return(ui)
 
+}
+
+
+payoutGraph_LegBet <- function(rankingDF, val){
+  print(rankingDF)
 }
 
 # Run the application
@@ -158,12 +181,19 @@ server <- function(input, output){
   gamePlay <- Game$new(19, 3, FALSE)
   simBoard <- gamePlay$getBoard()
   simData <- data.frame() #initialize this
+  rankingData <- data.frame()
+
+  customBoard <- Board$new(19, FALSE)
+  customBoard$clearBoard()
 
   # init
   output$gameBoard <- renderPlot(makeBoardGraph(gamePlay$getCamelDF()))
   output$positionDF <- renderTable(gamePlay$getCamelDF() %>% arrange(-Space, -Height))
   output$legBetDF <- renderTable(gamePlay$getLegBetDF())
   output$boardToSim <- renderPlot(makeBoardGraph(simBoard$getCamelDF()))
+  output$customBoardGraph <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
+  output$payoutDist <- NULL
+
 
   # main panel
   observeEvent(input$submit,{
@@ -200,10 +230,20 @@ server <- function(input, output){
 
   observeEvent(input$simulateGame, {
     simObj <- Simulator$new(simBoard)
-    simData <- simObj$simulateDecision(input$simDecision %in% c("Move Camel", "Place Leg Bet", "Place Tile"), input$nSims)
+    simData <- simObj$simulateDecision(input$simDecision %in% c("Move Camel", "Place Leg Bet", "Place Tile"), input$nSims) # bool toEndLeg and nSims
     positionDF <- simData$position
     rankingDF <- simData$ranking
     output$stackDist <- renderPlot(makeStackDistGraph(positionDF, input$simColor))
+
+    payoutGraph_LegBet(rankingDF)
+
+  })
+
+  #custom panel
+  observeEvent(input$clearCustomBoard, {
+    customBoard$clearBoard()
+    print(customBoard$getCamelDF())
+    output$customBoardGraph <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
   })
 
 }

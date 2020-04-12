@@ -123,10 +123,7 @@ void Board::initCamels(){
     std::string currentColor = currentDie.getColor();
 
     space = currentDie.roll();
-    Camel * currentCamel = new Camel(currentColor);
-    Space * currentSpace = spaces[space];
-    (*currentSpace).addCamel(currentCamel);
-    camels[currentColor] = currentCamel;
+    createAddCamel(currentColor, space);
   }
 
 }
@@ -166,7 +163,10 @@ DataFrame Board::getCamelDF(){
   Rcpp::IntegerVector * spaceVec = new IntegerVector(5);
   Rcpp::IntegerVector * heightVec = new IntegerVector(5);
 
-  fillCamelPosArrays(camelColors, spaceVec, heightVec, 0);
+  if(!camels.empty()){
+    fillCamelPosArrays(camelColors, spaceVec, heightVec, 0);
+  }
+
 
   DataFrame df = DataFrame::create(Named("Color") = *camelColors, Named("Space") = *spaceVec, Named("Height") = *heightVec);
 
@@ -333,8 +333,23 @@ void Board::progressToEndGame(){
   }
 }
 
+void Board::clearBoard(){
+  Space* currentSpace;
+  for(int i=0; i<nSpaces; i++){
+    currentSpace = getSpaceN(i);
+    (*currentSpace).clearSpace();
+  }
 
-void Board::customizeBoard(DataFrame inputDF){}
+  camels.clear();
+}
+
+
+void Board::createAddCamel(std::string color, int space){
+  Camel * currentCamel = new Camel(color);
+  Space * currentSpace = spaces[space];
+  (*currentSpace).addCamel(currentCamel);
+  camels[color] = currentCamel;
+}
 
 
 RCPP_MODULE(board_cpp){
@@ -347,5 +362,6 @@ RCPP_MODULE(board_cpp){
   .method("moveTurn", &Board::moveTurn)
   .method("generateRanking", &Board::generateRanking)
   .method("getRanking", &Board::getRanking)
+  .method("clearBoard", &Board::clearBoard)
   ;
 }

@@ -67,7 +67,9 @@ public:
 
   void progressToEndGame();
 
-  void customizeBoard(DataFrame inputDF);
+  void clearBoard();
+
+  void createAddCamel(std::string color, int space);
 };
 
 RCPP_EXPOSED_CLASS(Board)

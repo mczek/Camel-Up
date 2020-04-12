@@ -54,5 +54,6 @@ public:
 
   std::vector<std::string> getCamelStrings(); // TODO: needs to be tested
 
+  void clearSpace();
 };
 #endif

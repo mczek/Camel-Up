@@ -161,6 +161,12 @@ std::vector<std::string>  Space::getCamelStrings(){
   }
   return result;
 }
+
+void Space::clearSpace(){
+  for(int i=0;i<nCamels;i++){
+    removeCamel();
+  }
+}
 // int Space::testAddCamel(){
 //   Camel b = Camel("Blue");
 //   Camel g = Camel("Green");
