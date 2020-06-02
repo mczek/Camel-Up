@@ -83,7 +83,7 @@ test_that("test game: game ends", {
   # set.seed(1)
   x <- system.time({
     for(i in 1:10){
-      print(i)
+      # print(i)
       g <- Game$new(19, 3, FALSE)
 
       while(!g$checkIsGameOver()){

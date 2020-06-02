@@ -17,30 +17,54 @@ makeBoardGraph <- function(camelDF){
     plt <- plt + geom_tile(color = "black", size = 1, width = 0.9)
   }
   plt <- plt  +
+    geom_vline(xintercept = 16.5) + #finish line
     ggplot2::coord_cartesian(xlim = c(1, 19), ylim = c(0.5,5.49)) +
     ggplot2::scale_x_continuous(breaks = 1:19) +
     ggplot2::scale_y_continuous(labels = c("0.00", "1.00", "2.00", "3.00", "4.00", "5.00"),
                                 breaks = 0:5) +
-    theme_classic() +
-    camelScale()
+    theme_classic(base_size = 16) +
+    camelScale() +
+    labs(title = "Game Board",
+         x = "Space",
+         y = "Height")
 
   return(plt)
 }
 
 makeStackDistGraph <- function(positionDF, color){
   nSims <- nrow(positionDF)/5
-  plt <- positionDF %>%
+
+  prob_data <-  positionDF %>%
     filter(Color == color) %>%
     group_by(Color, Space, Height) %>%
-    summarize(Probability = n()/nSims) %>%
+    summarize(Probability = n()/nSims)
+
+  text_data <- prob_data %>%
+    group_by(Color, Space) %>%
+    mutate(total_prob = sum(Probability)) %>%
+    arrange(-Height) %>%
+    slice(1)
+
+
+
+  print(prob_data)
+  print(text_data)
+  plt <- prob_data %>%
     ggplot(aes(x = Space, y = Height, fill = Color, alpha = Probability)) +
     geom_tile(color = "black", size = 1, width = 0.9) +
+    scale_alpha(range = c(0, 1)) +
+    geom_text(data = text_data, mapping = aes(label = round(total_prob, 3), x = Space, y = Height + 0.7), alpha = 1, size = 7) +
+    geom_vline(xintercept = 16.5) + #finish line
     ggplot2::coord_cartesian(xlim = c(1, 19), ylim = c(0.5,5.49)) +
     ggplot2::scale_x_continuous(breaks = 1:19) +
     ggplot2::scale_y_continuous(labels = c("0.00", "1.00", "2.00", "3.00", "4.00", "5.00"),
                                 breaks = 0:5) +
-    theme_classic() +
-    camelScale()
+    theme_classic(base_size = 16) +
+    guides(alpha = FALSE) +
+    camelScale() +
+    labs(title = "Distribution of Camel Position",
+         x = "Space",
+         y = "Height")
   return(plt)
 }
 
@@ -55,11 +79,14 @@ placeGraph <- function(rankingDF, color){
     mutate(Color = color) %>%
     ggplot(aes(x = place, y = prob, fill = Color)) +
     geom_bar(stat = "identity") +
-    theme_classic() +
+    ggplot2::geom_text(ggplot2::aes(label = round(prob, 3)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25, size = 7) +
+    theme_classic(base_size = 16) +
+    labs(fill = "Camel") +
     camelScale() +
     labs(x = "End Ranking",
          y = "Probability",
-         title = "Ranking Distribution")
+         title = "Ranking Distribution") +
+    ylim(c(0,1))
   return(plt)
 
 }
@@ -172,7 +199,7 @@ generateUI <- function(){
 
                              plotOutput("boardToSim"),
                              plotOutput("stackDist"),
-                             plotOutput("spaceDist"),
+                             # plotOutput("spaceDist"),
                              plotOutput("placeDist")
                     )
         )

@@ -360,14 +360,14 @@ void Board::clearBoard(){
 
 
 void Board::createAddCamel(std::string color, int space){
-  Rcout << color;
-  Rcout << "\n";
-  Rcout << space;
-  Rcout << "\n";
+  // Rcout << color;
+  // Rcout << "\n";
+  // Rcout << space;
+  // Rcout << "\n";
   Camel * currentCamel = new Camel(color);
   Space * currentSpace = spaces[space];
-  Rcout << (*currentSpace).getNCamels();
-  Rcout << "\n";
+  // Rcout << (*currentSpace).getNCamels();
+  // Rcout << "\n";
   (*currentSpace).addCamel(currentCamel);
   camels[color] = currentCamel;
 }

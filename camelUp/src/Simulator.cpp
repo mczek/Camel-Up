@@ -41,7 +41,7 @@ void Simulator::SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *
 }
 
 List Simulator::simulateDecision(bool toEndLeg, int nSims){
-  Rcout << "function called";
+  // Rcout << "function called";
   int nCamels = 5;
   int vecLength = nSims*nCamels;
   Board * boardPtr = &boardObject;
