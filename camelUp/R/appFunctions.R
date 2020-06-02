@@ -1,9 +1,23 @@
-camelScale <- function(){
-  colors <- c("darkgreen", "blue", "yellow", "white", "orange")
+camelScale <- function(useDensity = FALSE){
+  if(useDensity){
+    colors <- c("darkgreen", "blue", "yellow", "black", "orange")
+  } else {
+    colors <- c("darkgreen", "blue", "yellow", "white", "orange")
+  }
   values <- c("Green", "Blue", "Yellow", "White", "Orange")
   names(colors) <- values
 
   return(scale_fill_manual(name = "Color",values = colors))
+}
+
+getFillColor <- function(color){
+  if (color == "White") {
+    return ("black")
+  }
+  if (color == "Green") {
+    return("darkgreen")
+  }
+  return(tolower(color))
 }
 
 makeBoardGraph <- function(camelDF){
@@ -45,23 +59,26 @@ makeStackDistGraph <- function(positionDF, color){
     arrange(-Height) %>%
     slice(1)
 
-
+  graphColor <- getFillColor(color)
 
   print(prob_data)
   print(text_data)
   plt <- prob_data %>%
-    ggplot(aes(x = Space, y = Height, fill = Color, alpha = Probability)) +
+    ggplot(aes(x = Space, y = Height, fill = Probability)) +
     geom_tile(color = "black", size = 1, width = 0.9) +
+    scale_fill_gradientn(colours=c("white", graphColor),
+                         breaks=c(0,0.5,1),
+                         limits=c(0,1)) +
     scale_alpha(range = c(0, 1)) +
     geom_text(data = text_data, mapping = aes(label = round(total_prob, 3), x = Space, y = Height + 0.7), alpha = 1, size = 7) +
     geom_vline(xintercept = 16.5) + #finish line
-    ggplot2::coord_cartesian(xlim = c(1, 19), ylim = c(0.5,5.49)) +
+    ggplot2::coord_cartesian(xlim = c(1, 19), ylim = c(0.5,5.9)) +
     ggplot2::scale_x_continuous(breaks = 1:19) +
     ggplot2::scale_y_continuous(labels = c("0.00", "1.00", "2.00", "3.00", "4.00", "5.00"),
                                 breaks = 0:5) +
     theme_classic(base_size = 16) +
-    guides(alpha = FALSE) +
-    camelScale() +
+    # guides(alpha = FALSE) +
+    # camelScale() +
     labs(title = "Distribution of Camel Position",
          x = "Space",
          y = "Height")
