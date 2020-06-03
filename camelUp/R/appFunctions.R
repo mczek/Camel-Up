@@ -95,11 +95,11 @@ placeGraph <- function(rankingDF, color){
     summarize(prob = n()/nSims) %>%
     mutate(Color = color) %>%
     ggplot(aes(x = place, y = prob, fill = Color)) +
-    geom_bar(stat = "identity") +
+    geom_bar(stat = "identity", width = 0.9) +
     ggplot2::geom_text(ggplot2::aes(label = round(prob, 3)), position=ggplot2::position_dodge(width=0.9), vjust=-0.25, size = 7) +
     theme_classic(base_size = 16) +
     labs(fill = "Camel") +
-    camelScale() +
+    camelScale(TRUE) +
     labs(x = "End Ranking",
          y = "Probability",
          title = "Ranking Distribution") +
@@ -291,6 +291,10 @@ server <- function(input, output){
   # sim panel
   observeEvent(input$copyPlayBoard, {
     simBoard <- gamePlay$getBoard()
+    output$boardToSim <- renderPlot(makeBoardGraph(simBoard$getCamelDF()))
+  })
+  observeEvent(input$copyCustomBoard, {
+    simBoard <- customBoard
     output$boardToSim <- renderPlot(makeBoardGraph(simBoard$getCamelDF()))
   })
 
