@@ -104,7 +104,7 @@ placeGraph <- function(rankingDF, color){
          y = "Probability",
          title = "Ranking Distribution") +
     ylim(c(0,1)) +
-    coord_carte
+    xlim(0.5, 5.5)
   return(plt)
 
 }
