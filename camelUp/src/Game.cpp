@@ -364,7 +364,6 @@ Game Game::newGameObj(Game g){
 DataFrame Game::getDiceRemDF(){
   std::vector<Die>  dice = (*board).getDice();
   int nDice = (*board).getNDiceRemaining();
-  Rcout << nDice << "\n";
   std::vector<std::string> remaining;
   for(int i = 0; i < nDice; i++){
     remaining.push_back(dice[i].getColor());

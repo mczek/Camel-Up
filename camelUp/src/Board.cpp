@@ -9,6 +9,8 @@ using namespace Rcpp;
 using namespace std;
 // Define board class
 
+inline int randWrapper(const int n) { return floor(unif_rand()*n); }
+
 //' @name Board
 //' @title Encapsulates a double
 //' @description Type the name of the class to see its methods
@@ -100,7 +102,8 @@ Board::Board(const Board & b){
   }
 
   //unsigned seed = 0;
-  std::random_shuffle(dice.begin(), dice.end());// need to shuffle dice
+
+  std::random_shuffle(dice.begin(), dice.end(), randWrapper);// need to shuffle dice
   // Rcout << "\n copying dice  complete \n";
   getRanking();
   // Rcout << "ranking complete";
@@ -378,8 +381,9 @@ void Board::addCustomCamel(std::string color, int space, bool diePresent, int nB
     dice.push_back(Die(color));
   }
 
-  unsigned seed = 0;
-  shuffle(dice.begin(), dice.end(), std::default_random_engine(seed)); //shuffle dice
+  // unsigned seed = 0;
+  // shuffle(dice.begin(), dice.end(), std::default_random_engine(seed)); //shuffle dice
+  std::random_shuffle(dice.begin(), dice.end(), randWrapper);
 
 }
 
