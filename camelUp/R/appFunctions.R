@@ -162,7 +162,8 @@ generateUI <- function(){
                              fluidRow(
                                column(width = 4, tableOutput("positionDF")),
                                column(width = 4, tableOutput("legBetDF")),
-                               column(width = 4, tableOutput("purseDF"))
+                               column(width = 4, tableOutput("purseDF")),
+                               column(width = 4, tableOutput("diceDF"))
                              )
                     ),
 
@@ -259,7 +260,9 @@ server <- function(input, output){
   output$positionDF <- renderTable(gamePlay$getCamelDF() %>% arrange(-Space, -Height))
   output$legBetDF <- renderTable(gamePlay$getLegBetDF())
   output$purseDF <- renderTable(gamePlay$getPurseDF())
-  # output$diceDF <- renderTable(gamePlay$getBoard()$getDiceDF() %>% arrange("Dice.Remaining"))
+  # print(gamePlay$getBoard()$getDiceDF())
+  # print(gamePlay$getBoard()$getNDiceRemaining())
+  output$diceDF <- renderTable(gamePlay$getDiceRemDF() %>% arrange(Dice_Remaining))
   output$boardToSim <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
   output$customBoardGraph <- renderPlot(makeBoardGraph(customBoard$getCamelDF()))
 
@@ -291,7 +294,7 @@ server <- function(input, output){
 
     # output$positionDF <- renderTable(gamePlay$getCamelDF() %>% arrange(-Space, -Height))
     output$legBetDF <- renderTable(gamePlay$getLegBetDF())
-    output$diceDF <- renderTable(gamePlay$getBoard()$getDiceDF())
+    output$diceDF <- renderTable(gamePlay$getDiceRemDF() %>% arrange(Dice_Remaining))
 
   })
 

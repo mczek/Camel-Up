@@ -360,6 +360,19 @@ Board * Game::getBoard(){
 Game Game::newGameObj(Game g){
   return Game(g);
 }
+
+DataFrame Game::getDiceRemDF(){
+  std::vector<Die>  dice = (*board).getDice();
+  int nDice = (*board).getNDiceRemaining();
+  Rcout << nDice << "\n";
+  std::vector<std::string> remaining;
+  for(int i = 0; i < nDice; i++){
+    remaining.push_back(dice[i].getColor());
+  }
+  DataFrame df = DataFrame::create(Named("Dice_Remaining") = remaining);
+  return df;
+}
+
 // Approach 4: Module docstrings
 //
 RCPP_MODULE(game_cpp) {
@@ -388,5 +401,6 @@ RCPP_MODULE(game_cpp) {
     // .method("progressToEndLeg", &Game::progressToEndLeg)
     .method("getBoard", &Game::getBoard)
     .method("newGameObj", &Game::newGameObj)
+    .method("getDiceRemDF", &Game::getDiceRemDF)
   ;
 }

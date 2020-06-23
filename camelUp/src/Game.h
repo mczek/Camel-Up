@@ -76,6 +76,7 @@ public:
 
   Game newGameObj(Game g);
 
+  DataFrame getDiceRemDF();
 };
 
 
