@@ -72,6 +72,8 @@ public:
   void createAddCamel(std::string color, int space);
 
   void addCustomCamel(std::string color, int space, bool diePresent, int nBetsLeft);
+
+  DataFrame getDiceDF();
 };
 
 RCPP_EXPOSED_CLASS(Board)

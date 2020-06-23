@@ -384,6 +384,16 @@ void Board::addCustomCamel(std::string color, int space, bool diePresent, int nB
 }
 
 
+DataFrame Board::getDiceDF(){
+  int nDice = getNDiceRemaining();
+  std::vector<std::string> colors;
+  for(int i = 0; i < nDice; i++){
+    colors.push_back(dice[i].getColor());
+  }
+  DataFrame df = DataFrame::create(Named("Dice Remaining") = colors);
+  return df;
+}
+
 RCPP_MODULE(board_cpp){
   class_<Board>("Board")
   .constructor<int, bool>()
@@ -398,5 +408,6 @@ RCPP_MODULE(board_cpp){
   .method("placePlusTile", &Board::placePlusTile)
   .method("placeMinusTile", &Board::placeMinusTile)
   .method("addCustomCamel", &Board::addCustomCamel)
+  .method("getDiceDF", &Board::getDiceDF)
   ;
 }
