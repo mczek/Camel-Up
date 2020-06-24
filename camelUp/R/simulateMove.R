@@ -4,7 +4,6 @@
 #'
 #' @export
 #'
-#' @examples
 simulateMoveOnce <- function(g){
   newGame <- g #TODO: come back here to fix
   while(!newGame$checkIsGameOver()){
