@@ -9,4 +9,4 @@
 
 * This is a new release.
 
-I am resubmitting to fix an e
+I am resubmitting to fix an issue with importing the methods package,
