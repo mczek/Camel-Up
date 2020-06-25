@@ -2,7 +2,6 @@
 #'
 #' @param g game object
 #'
-#' @export
 #'
 simulateMoveOnce <- function(g){
   newGame <- g #TODO: come back here to fix
@@ -21,7 +20,6 @@ simulateMoveOnce <- function(g){
 #'
 #'
 #' @export
-
 simulateMoveNTimes <- function(g, N){
   # works:
   positionDFList <- list()

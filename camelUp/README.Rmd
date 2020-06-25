@@ -45,5 +45,5 @@ library(CamelUp)
 
 This will start a local shiny app with some of the functionality shown below:
 
-![](man/HomeScreen.png)
-![](man/SimScreen.png)
+![](man/figures/HomeScreen.png)
+![](man/figures/SimScreen.png)
