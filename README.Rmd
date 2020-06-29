@@ -16,7 +16,10 @@ knitr::opts_chunk$set(
 # CamelUp
 
 <!-- badges: start -->
+<<<<<<< HEAD
 [![Travis build status](https://travis-ci.org/mczekanski1/Camel-Up.svg?branch=master)](https://travis-ci.org/mczekanski1/Camel-Up)
+=======
+>>>>>>> origin/Rcpp
 <!-- badges: end -->
 
 The goal of camelUp is to implement the board game CamelUp and include simulations to assist instruction in introductory statistics courses.
