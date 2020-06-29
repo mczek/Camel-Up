@@ -5,6 +5,9 @@
 rsconnect
 *.DS_Store
 
+*.o
+*.so
+
 *tar.gz
 *.Rcheck
 
