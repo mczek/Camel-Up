@@ -3,6 +3,11 @@
 language: r
 cache: packages
 r_check_args: '--use-valgrind'
+addons:
+  apt:
+    packages:
+      - valgrind
+
 r:
   - oldrel
   - release
