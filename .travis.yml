@@ -2,9 +2,12 @@
 
 language: r
 cache: packages
+r_check_args: '--use-valgrind'
 r:
   - oldrel
   - release
   - devel
 after_success:
   - Rscript -e 'covr::codecov()'
+env:
+  - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
