@@ -7,12 +7,9 @@ addons:
   apt:
     packages:
       - valgrind
-
 r:
   - oldrel
   - release
   - devel
-after_success:
-  - Rscript -e 'covr::codecov()'
 env:
-  - VALGRIND_OPTS='--tool=memcheck --memcheck:leak-check=full --track-origins=yes --num-callers=4'
+  - VALGRIND_OPTS='--tool=memcheck --memcheck:leak-check=full --track-origins=yes'
