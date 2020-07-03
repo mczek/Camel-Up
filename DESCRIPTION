@@ -7,7 +7,7 @@ BugReports: https://github.com/mczekanski1/Camel-Up/issues
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Imports: 
 	data.table,
 	dplyr,
@@ -17,7 +17,6 @@ Imports:
 	Rcpp,
 	shiny
 Suggests:
-    testthat,
-    covr
+    testthat
 LinkingTo: 
     Rcpp
