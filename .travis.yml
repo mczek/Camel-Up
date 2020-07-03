@@ -18,8 +18,9 @@ services:
   - docker
 
 before_install:
- - docker pull r-base
- - docker run --rm -ti r-base bash
- - docker run --rm -ti -v ${PWD}:/work -w /work r-base bash
- - exit
+  - docker pull r-base
+  - docker run --rm -ti -v ${PWD}:/work -w /work r-base bash
+
+script:
+  - exit
 
