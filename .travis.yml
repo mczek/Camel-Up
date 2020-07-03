@@ -15,7 +15,5 @@ env:
   - VALGRIND_OPTS='--tool=memcheck --memcheck:leak-check=full --track-origins=yes'
 
 
-before_install:
-  - cd tests
-  - R --vanilla < testthat.R
+
 
