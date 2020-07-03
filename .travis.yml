@@ -17,5 +17,5 @@ env:
 
 before_install:
   - cd tests
-  - R -d --vanilla < testthat.R
+  - R --vanilla < testthat.R
 
