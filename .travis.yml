@@ -16,7 +16,8 @@ env:
 
 
 before_install:
-  - cd tests
+  - R CMD build .
   - R -e "install.packages('CamelUp_2.0.1.tar.gz', repos=NULL, type='source')"
+  - cd tests
   - R --vanilla < testthat.R
 
