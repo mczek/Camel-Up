@@ -14,12 +14,8 @@ r:
 env:
   - VALGRIND_OPTS='--tool=memcheck --memcheck:leak-check=full --track-origins=yes'
 
-services:
-  - docker
 
 before_install:
-  - sudo apt-get install valgrind
-  - R CMD build .
   - cd tests
   - R -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes" --vanilla < testthat.R
 
