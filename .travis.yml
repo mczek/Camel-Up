@@ -15,7 +15,7 @@ env:
   - VALGRIND_OPTS='--tool=memcheck --memcheck:leak-check=full --track-origins=yes'
 
 
-before_install:
+after_success:
   - R CMD build .
   - R -e "install.packages('CamelUp_2.0.1.tar.gz', repos=NULL, type='source')"
   - cd tests
