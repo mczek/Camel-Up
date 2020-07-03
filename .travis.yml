@@ -19,7 +19,7 @@ services:
 
 before_install:
   - sudo apt-get install valgrind
-  - docker pull r-base
+  - R CMD build .
   - cd tests
   - R -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes" --vanilla < testthat.R
 
