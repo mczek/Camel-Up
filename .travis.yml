@@ -19,8 +19,6 @@ services:
 
 before_install:
   - docker pull r-base
-  - docker run --rm -ti -v ${PWD}:/work -w /work r-base bash
-
-script:
-  - exit
+  - cd tests
+  - docker run r-base R -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes" --vanilla < testthat.R
 
