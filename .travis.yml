@@ -17,5 +17,5 @@ env:
 
 before_install:
   - cd tests
-  - R -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes" --vanilla < testthat.R
+  - R -d --vanilla < testthat.R
 
