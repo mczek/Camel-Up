@@ -19,3 +19,4 @@ services:
 
 before_install:
  - docker pull r-base
+ - docker run --rm -ti r-base bash
