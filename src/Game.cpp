@@ -10,6 +10,8 @@
 
 using namespace Rcpp;
 
+std::vector<int> kBetValues = {2,3,5};
+
 // Define space class
 
 //' @name Game
@@ -25,7 +27,22 @@ using namespace Rcpp;
 Game::Game(){}
 
 Game::~Game(){
-  int x = 5;
+  int nLegBets = kBetValues.size();
+
+  int nColors = colors.size();
+  std::string currentColor;
+  for(int i=0; i<nColors; i++){
+    currentColor = colors[i];
+    // std::stack<LegBet*> tempStack;
+    std::stack<LegBet*> betStack  = legBets[currentColor];
+    while(betStack.size() > 0){
+      LegBet* temp = betStack.top();
+      betStack.pop();
+      // delete temp;
+    }
+    // std::stack<LegBet*>* betStack = * tempStack;
+    // legBets[currentColor] = betStack; // & gets address of object
+  }
 }
 
 Game::Game(int n, int nPlayers, bool d){
@@ -150,8 +167,8 @@ std::string Game::takeTurnMove(){
 }
 
 void Game::resetLegBets(){
-  std::vector<int> betValues = {2, 3, 5};
-  int nLegBets = betValues.size();
+  // std::vector<int> kBetValues = {2, 3, 5};
+  int nLegBets = kBetValues.size();
 
   int nColors = colors.size();
   std::string currentColor;
@@ -160,7 +177,7 @@ void Game::resetLegBets(){
     // std::stack<LegBet*> tempStack;
     std::stack<LegBet*> betStack;
     for(int j=0; j<nLegBets; j++){
-      betStack.push(new LegBet(currentColor, betValues[j]));
+      betStack.push(new LegBet(currentColor, kBetValues[j]));
     }
     // std::stack<LegBet*>* betStack = * tempStack;
     legBets[currentColor] = betStack; // & gets address of object
