@@ -32,7 +32,7 @@ Board::Board(int n, bool d){
   int LengthNeeded = n + 1; // make sure there are enough spaces after th finish line
   // and index is equal to space number
   for(int i=0;i<LengthNeeded;i++){
-    spaces.push_back(std::shared_ptr<Space>(new Space(i)));
+    spaces.push_back(std::shared_ptr<Space>(std::make_shared<Space>(i)));
   }
 
   resetDice();
