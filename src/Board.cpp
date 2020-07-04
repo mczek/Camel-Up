@@ -112,6 +112,12 @@ Board::Board(const Board & b){
   // Rcout << "\n done copying board \n";
 }
 
+
+Board::~Board(){
+  int x = 5;
+}
+
+
 int Board::getNDiceRemaining(){
   return dice.size();
 }

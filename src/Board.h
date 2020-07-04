@@ -31,6 +31,8 @@ public:
 
   Board(const Board & b);
 
+  ~Board();
+
   int getNDiceRemaining();
 
   void resetDice();
