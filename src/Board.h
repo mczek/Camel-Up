@@ -32,7 +32,7 @@ public:
 
   Board(const Board & b);
 
-  ~Board();
+  ~Board(){}
 
   int getNDiceRemaining();
 

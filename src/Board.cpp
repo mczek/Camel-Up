@@ -114,10 +114,6 @@ Board::Board(const Board & b){
 }
 
 
-Board::~Board(){
-  int x = 5;
-}
-
 
 int Board::getNDiceRemaining(){
   return dice.size();

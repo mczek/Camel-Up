@@ -32,7 +32,7 @@ public:
 
   Game(const Game & g);
 
-  ~Game();
+  ~Game(){}
 
   DataFrame getPurseDF();
 

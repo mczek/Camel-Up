@@ -26,26 +26,6 @@ std::vector<int> kBetValues = {2,3,5};
 
 Game::Game(){}
 
-Game::~Game(){
-  // int nLegBets = kBetValues.size();
-  //
-  // int nColors = colors.size();
-  // std::string currentColor;
-  // for(int i=0; i<nColors; i++){
-  //   currentColor = colors[i];
-  //   // std::stack<LegBet*> tempStack;
-  //   std::stack<std::shared_ptr<LegBet>> betStack  = legBets[currentColor];
-  //   while(betStack.size() > 0){
-  //     LegBet* temp = betStack.top();
-  //     betStack.pop();
-  //     delete temp;
-  //     temp = NULL;
-  //   }
-  //   // std::stack<LegBet*>* betStack = * tempStack;
-  //   // legBets[currentColor] = betStack; // & gets address of object
-  // }
-}
-
 Game::Game(int n, int nPlayers, bool d){
   nSpaces = n;
   debug = d;
