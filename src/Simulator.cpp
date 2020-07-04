@@ -46,9 +46,9 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
   int vecLength = nSims*nCamels;
   Board * boardPtr = &boardObject;
 
-  Rcpp::CharacterVector *camelColors = new CharacterVector(vecLength);
-  Rcpp::IntegerVector *spaceVec = new IntegerVector(vecLength);
-  Rcpp::IntegerVector *heightVec = new IntegerVector(vecLength);
+  Rcpp::CharacterVector camelColors = CharacterVector(vecLength);
+  Rcpp::IntegerVector spaceVec = IntegerVector(vecLength);
+  Rcpp::IntegerVector heightVec = IntegerVector(vecLength);
 
   // Rcpp::CharacterVector *firstPlace = new CharacterVector(nSims);
   // Rcpp::CharacterVector *secondPlace = new CharacterVector(nSims);
@@ -56,7 +56,7 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
   // Rcpp::CharacterVector *fourthPlace = new CharacterVector(nSims);
   // Rcpp::CharacterVector *lastPlace = new CharacterVector(nSims);
 
-  Rcpp::CharacterVector *simRankings = new CharacterVector(5*nSims); // num camels times num sims
+  Rcpp::CharacterVector simRankings = CharacterVector(5*nSims); // num camels times num sims
 
 
   std::vector<Board> duplicateGames;
@@ -67,13 +67,13 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
 
   for(int i=0; i<nSims; i++){
     Board tempBoard = duplicateGames[i];
-    SimTask(&tempBoard, i, toEndLeg, camelColors, spaceVec, heightVec, simRankings);
+    SimTask(&tempBoard, i, toEndLeg, &camelColors, &spaceVec, &heightVec, &simRankings);
 
   }
 
 
-  DataFrame positionDF = DataFrame::create(Named("Color") = *camelColors, Named("Space") = *spaceVec, Named("Height") = *heightVec);
-  DataFrame rankingDF = DataFrame::create(Named("Color") = *simRankings); // it's clear here that the ordering is 1st through 5th repeated nSims times
+  DataFrame positionDF = DataFrame::create(Named("Color") = camelColors, Named("Space") = spaceVec, Named("Height") = heightVec);
+  DataFrame rankingDF = DataFrame::create(Named("Color") = simRankings); // it's clear here that the ordering is 1st through 5th repeated nSims times
   return List::create(Named("position") = positionDF, Named("ranking") = rankingDF);
 }
 
