@@ -5,6 +5,7 @@
 #include <stack>
 #include "Camel.h"
 #include "Player.h"
+#include <memory>
 
 using namespace Rcpp;
 
