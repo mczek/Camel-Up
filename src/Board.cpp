@@ -63,7 +63,7 @@ Board::Board(const Board & b){
     std::shared_ptr<Space> currentOldSpace = b.spaces[i];
     // std::vector<std::string> camelsToCopy = (*currentOldSpace).getCamelStrings();
     nCamelsHere = (*currentOldSpace).getNCamels();
-    std::shared_ptr<Space> currentNewSpace = std::shared_ptr<Space>(new Space(i)); // shouldn't need additional constructor?
+    std::shared_ptr<Space> currentNewSpace = std::shared_ptr<Space>(std::make_shared<Space>(i)); // shouldn't need additional constructor?
 
     if((*currentOldSpace).getPlusTile()){
       (*currentNewSpace).setPlusTile(temp);
@@ -356,7 +356,7 @@ void Board::clearBoard(){
   int LengthNeeded = nSpaces + 1;
   spaces.clear();
   for(int i=0;i<LengthNeeded;i++){
-    spaces.push_back(std::shared_ptr<Space>(new Space(i)));
+    spaces.push_back(std::shared_ptr<Space>(std::make_shared<Space>(i)));
   }
 
   camels.clear();
