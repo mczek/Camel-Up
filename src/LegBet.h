@@ -14,8 +14,10 @@ private:
   std::string camelColor;
   Player * person;
 public:
-  ~LegBet();
+  // ~LegBet();
   LegBet(std::string color, int v);
+
+  // ~LegBet();
 
   void makeBet(Player * p);
 
