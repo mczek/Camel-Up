@@ -12,7 +12,7 @@ using namespace Rcpp;
 class Space {
 private:
   int position;
-  std::stack <Camel*> camels;
+  std::stack <std::shared_ptr<Camel>> camels;
   int nCamels;
   bool plusTile, minusTile;
   Player* tilePlacedBy;
@@ -28,9 +28,9 @@ public:
 
   int getPosition();
 
-  void addCamel(Camel * c);
+  void addCamel(std::shared_ptr<Camel> c);
 
-  Camel * removeCamel();
+  std::shared_ptr<Camel> removeCamel();
 
   int getNCamels();
 
@@ -39,8 +39,8 @@ public:
   bool getMinusTile();
 
   // for both of these functions the camel stacks are assumed to be reversed
-  void addCamelsTop(std::stack<Camel*> camelsToMove); // used for when camels move to a space from behind
-  void addCamelsBottom(std::stack<Camel*> camelsToMove); // used for when camels move to a space from behind
+  void addCamelsTop(std::stack<std::shared_ptr<Camel>> camelsToMove); // used for when camels move to a space from behind
+  void addCamelsBottom(std::stack<std::shared_ptr<Camel>> camelsToMove); // used for when camels move to a space from behind
 
   int testAddCamel();
 
@@ -52,7 +52,7 @@ public:
 
   void setTilePlacedBy(Player*p);
 
-  std::vector<Camel *>  getCamelPointers(); // TODO: needs to be tested
+  std::vector<std::shared_ptr<Camel>>  getCamelPointers(); // TODO: needs to be tested
 
   std::vector<std::string> getCamelStrings(); // TODO: needs to be tested
 

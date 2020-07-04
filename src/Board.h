@@ -21,7 +21,7 @@ private:
   std::vector<std::shared_ptr<Space>> spaces;
   std::vector<Die> dice;
   // std::vector<Camel> camels;
-  std::map<std::string, Camel*> camels;
+  std::map<std::string, std::shared_ptr<Camel>> camels;
   std::vector<std::string> colors;
   bool debug;
   std::vector<std::string> ranking;
@@ -52,7 +52,7 @@ public:
 
   std::vector<std::string> getRanking();
 
-  Camel* getCamel(std::string color);
+  std::shared_ptr<Camel> getCamel(std::string color);
 
   void placePlusTile(int n, Player* p);
 

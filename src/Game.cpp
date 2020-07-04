@@ -255,7 +255,7 @@ void Game::takeTurnPlaceTile(int n, bool plus){
 
 int Game::getFirstPlaceSpace(){
   getRanking();
-  Camel* firstPlace = (*board).getCamel(rankings[0]);
+  std::shared_ptr<Camel> firstPlace = (*board).getCamel(rankings[0]);
   return (*firstPlace).getSpace();
 }
 

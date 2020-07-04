@@ -45,8 +45,8 @@ Board::Board(const Board & b){
   debug = b.debug; // ensure that debug is set
   colors = b.colors;
   nSpaces = b.nSpaces;
-  Camel * currentCamel;
-  std::stack<Camel*> tempCamelStack;
+
+  std::stack<std::shared_ptr<Camel>> tempCamelStack;
   std::string currentColor;
   int nCamelsHere;
 
@@ -74,16 +74,16 @@ Board::Board(const Board & b){
 
 
     for(int j=0;j<nCamelsHere;j++){
-      currentCamel = (*currentOldSpace).removeCamel();
+      std::shared_ptr<Camel> currentCamel = (*currentOldSpace).removeCamel();
       tempCamelStack.push(currentCamel);
     }
     // Rcout << "\n second for loop \n";
     for(int j=0;j<nCamelsHere;j++){
-      currentCamel = tempCamelStack.top();
+      std::shared_ptr<Camel> currentCamel = tempCamelStack.top();
       tempCamelStack.pop();
       (*currentOldSpace).addCamel(currentCamel);
       currentColor = (*currentCamel).getColor();
-      currentCamel = new Camel(currentColor);
+      currentCamel = std::shared_ptr<Camel>(std::make_shared<Camel>(currentColor));
 
       (*currentNewSpace).addCamel(currentCamel);
       camels[currentColor] = currentCamel;
@@ -153,7 +153,6 @@ void Board::fillCamelPosArrays(Rcpp::CharacterVector *camelColors, Rcpp::Integer
   int nCamels = colors.size();
   int index;
   std::string currentColor;
-  Camel * currentCamel;
   // Rcout << "entering for loop \n";
   for(int i=0;i<nCamels;i++){
     // Rcout << i;
@@ -161,7 +160,7 @@ void Board::fillCamelPosArrays(Rcpp::CharacterVector *camelColors, Rcpp::Integer
     currentColor = colors[i];
     // Rcout << "camel to be fetched \n";
     if(camels.find(currentColor) != camels.end()){ // if camel is in camels
-      currentCamel = camels[currentColor];
+      std::shared_ptr<Camel> currentCamel = camels[currentColor];
       // Rcout << "camel fetched";
       // Rcout << currentCamel;
       // Rcout << (*currentCamel).getColor();
@@ -203,7 +202,7 @@ std::string Board::moveTurn(){
   int dieValue = currentDie.roll();
   // Rcout << "Die rolled \n";
 
-  Camel * camelToMove = camels[camelColor];
+  std::shared_ptr<Camel>  camelToMove = camels[camelColor];
   int currentSpaceNum = (*camelToMove).getSpace();
   int currentHeight = (*camelToMove).getHeight();
   // Rcout << "got currentHeight \n";
@@ -213,7 +212,7 @@ std::string Board::moveTurn(){
   // Rcout << "got currentNCamels \n";
 
 
-  std::stack<Camel *> temp;
+  std::stack<std::shared_ptr<Camel>> temp;
 
   for(int i=currentHeight; i<=currentNCamels; i++){
     temp.push((*currentSpace).removeCamel());
@@ -274,15 +273,15 @@ void Board::generateRanking(){
     std::shared_ptr<Space> currentSpace = spaces[i];
     int nCamelsHere = (*currentSpace).getNCamels();
     if(nCamelsHere > 0){
-      std::stack<Camel*> temp;
+      std::stack<std::shared_ptr<Camel> > temp;
       for(int i=0; i<nCamelsHere; i++){
-        Camel* c = (*currentSpace).removeCamel();
+        std::shared_ptr<Camel>  c = (*currentSpace).removeCamel();
         ranking.push_back((*c).getColor());
         temp.push(c);
       }
 
       for(int i=0; i<nCamelsHere; i++){
-        Camel* c = temp.top();
+        std::shared_ptr<Camel> c = temp.top();
         temp.pop();
         (*currentSpace).addCamel(c);
       }
@@ -295,7 +294,7 @@ std::vector<std::string> Board::getRanking(){
   return ranking;
 }
 
-Camel* Board::getCamel(std::string color){
+std::shared_ptr<Camel>  Board::getCamel(std::string color){
   return camels[color];
 }
 
@@ -323,7 +322,7 @@ void Board::setDice(std::vector<Die> d){
 
 int Board::getFirstPlaceSpace(){
   std::vector<std::string> ranking = getRanking();
-  Camel* firstPlace = camels[ranking[0]];
+  std::shared_ptr<Camel>  firstPlace = camels[ranking[0]];
   return (*firstPlace).getSpace();
 }
 
@@ -369,7 +368,7 @@ void Board::createAddCamel(std::string color, int space){
   // Rcout << "\n";
   // Rcout << space;
   // Rcout << "\n";
-  Camel * currentCamel = new Camel(color);
+  std::shared_ptr<Camel> currentCamel(std::make_shared<Camel>(color));
   std::shared_ptr<Space> currentSpace = spaces[space];
   // Rcout << (*currentSpace).getNCamels();
   // Rcout << "\n";
