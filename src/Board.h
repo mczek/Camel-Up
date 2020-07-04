@@ -18,7 +18,7 @@ using namespace std;
 class Board {
 private:
   int nSpaces;
-  std::vector<Space*> spaces;
+  std::vector<std::shared_ptr<Space>> spaces;
   std::vector<Die> dice;
   // std::vector<Camel> camels;
   std::map<std::string, Camel*> camels;
@@ -58,7 +58,7 @@ public:
 
   void placeMinusTile(int n, Player* p);
 
-  Space* getSpaceN(int n);
+  std::shared_ptr<Space> getSpaceN(int n);
 
   std::vector<Die> getDice();
 
