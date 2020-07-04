@@ -32,6 +32,8 @@ public:
 
   Game(const Game & g);
 
+  ~Game();
+
   DataFrame getPurseDF();
 
   DataFrame getCamelDF();

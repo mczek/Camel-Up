@@ -24,6 +24,8 @@ public:
 
   Space(Space & s);
 
+  // ~Space();
+
   int getPosition();
 
   void addCamel(Camel * c);

@@ -24,6 +24,10 @@ using namespace Rcpp;
 
 Game::Game(){}
 
+Game::~Game(){
+  int x = 5;
+}
+
 Game::Game(int n, int nPlayers, bool d){
   nSpaces = n;
   debug = d;
