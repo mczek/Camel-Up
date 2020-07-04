@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Camel.h"
 #include <random>     // for random shuffle
+#include <memory> // shared pointers
 using namespace Rcpp;
 using namespace std;
 // Define board class

@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <random>     // for random shuffle
+#include <memory>
 
 #include <algorithm>
 #include <string>
