@@ -27,23 +27,23 @@ std::vector<int> kBetValues = {2,3,5};
 Game::Game(){}
 
 Game::~Game(){
-  int nLegBets = kBetValues.size();
-
-  int nColors = colors.size();
-  std::string currentColor;
-  for(int i=0; i<nColors; i++){
-    currentColor = colors[i];
-    // std::stack<LegBet*> tempStack;
-    std::stack<LegBet*> betStack  = legBets[currentColor];
-    while(betStack.size() > 0){
-      LegBet* temp = betStack.top();
-      betStack.pop();
-      delete temp;
-      temp = NULL;
-    }
-    // std::stack<LegBet*>* betStack = * tempStack;
-    // legBets[currentColor] = betStack; // & gets address of object
-  }
+  // int nLegBets = kBetValues.size();
+  //
+  // int nColors = colors.size();
+  // std::string currentColor;
+  // for(int i=0; i<nColors; i++){
+  //   currentColor = colors[i];
+  //   // std::stack<LegBet*> tempStack;
+  //   std::stack<std::shared_ptr<LegBet>> betStack  = legBets[currentColor];
+  //   while(betStack.size() > 0){
+  //     LegBet* temp = betStack.top();
+  //     betStack.pop();
+  //     delete temp;
+  //     temp = NULL;
+  //   }
+  //   // std::stack<LegBet*>* betStack = * tempStack;
+  //   // legBets[currentColor] = betStack; // & gets address of object
+  // }
 }
 
 Game::Game(int n, int nPlayers, bool d){
@@ -176,9 +176,10 @@ void Game::resetLegBets(){
   for(int i=0; i<nColors; i++){
     currentColor = colors[i];
     // std::stack<LegBet*> tempStack;
-    std::stack<LegBet*> betStack;
+    std::stack<std::shared_ptr<LegBet>> betStack;
     for(int j=0; j<nLegBets; j++){
-      betStack.push(new LegBet(currentColor, kBetValues[j]));
+      std::shared_ptr<LegBet> newBet(new LegBet(currentColor, kBetValues[j]));
+      betStack.push(newBet);
     }
     // std::stack<LegBet*>* betStack = * tempStack;
     legBets[currentColor] = betStack; // & gets address of object
@@ -194,9 +195,9 @@ DataFrame Game::getLegBetDF(){
   int nColors = colors.size();
   for(int i=0;i<nColors;i++){
     std::string currentColor = colors[i];
-    std::stack<LegBet*>* s = &legBets[currentColor];
+    std::stack<std::shared_ptr<LegBet>>* s = &legBets[currentColor];
 
-    LegBet* nextBet = (*s).top();
+    std::shared_ptr<LegBet> nextBet = (*s).top();
     nextBetValues.push_back((*nextBet).getValue());
     nBetsLeft.push_back((*s).size());
   }
@@ -208,8 +209,8 @@ DataFrame Game::getLegBetDF(){
 void Game::takeTurnLegBet(std::string camelColor){
   Player* currentPlayer = players[currentPlayerIndex];
 
-  std::stack<LegBet*>* colorStack = &legBets[camelColor];
-  LegBet* betToMake = (*colorStack).top();
+  std::stack<std::shared_ptr<LegBet>>* colorStack = &legBets[camelColor];
+  std::shared_ptr<LegBet> betToMake = (*colorStack).top();
   (*colorStack).pop();
   (*betToMake).makeBet(currentPlayer);
   madeLegBets.push_back(betToMake);
@@ -224,7 +225,7 @@ void Game::evaluateLegBets(){
   // (*cp).addCoins(21);
   int nBets = madeLegBets.size();
   for(int i=0; i<nBets; i++){
-    LegBet* currentBet = madeLegBets[i];
+    std::shared_ptr<LegBet> currentBet = madeLegBets[i];
     (*currentBet).evaluate(rankings[0], rankings[1]);
   }
 }

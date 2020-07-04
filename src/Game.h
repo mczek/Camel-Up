@@ -14,11 +14,11 @@ class Game {
 private:
   std::vector<Player*> players;
   Board* board;
-  std::map<std::string, std::stack<LegBet*>> legBets; // each color has a stack, all contained in a map
+  std::map<std::string, std::stack<std::shared_ptr<LegBet>>> legBets; // each color has a stack, all contained in a map
   std::vector<std::string> colors;
   std::vector<std::string> rankings;
   int currentPlayerIndex;
-  std::vector<LegBet*> madeLegBets;
+  std::vector<std::shared_ptr<LegBet>> madeLegBets;
   bool isGameOver;
   int nSpaces;
   bool debug;
