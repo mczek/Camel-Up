@@ -176,16 +176,16 @@ void Board::fillCamelPosArrays(Rcpp::CharacterVector *camelColors, Rcpp::Integer
 DataFrame Board::getCamelDF(){
   // DataFrame df;
 
-  Rcpp::CharacterVector * camelColors = new CharacterVector(5);
-  Rcpp::IntegerVector * spaceVec = new IntegerVector(5);
-  Rcpp::IntegerVector * heightVec = new IntegerVector(5);
+  Rcpp::CharacterVector camelColors = CharacterVector(5);
+  Rcpp::IntegerVector spaceVec = IntegerVector(5);
+  Rcpp::IntegerVector heightVec = IntegerVector(5);
 
   if(!camels.empty()){
-    fillCamelPosArrays(camelColors, spaceVec, heightVec, 0);
+    fillCamelPosArrays(&camelColors, &spaceVec, &heightVec, 0);
   }
 
 
-  DataFrame df = DataFrame::create(Named("Color") = *camelColors, Named("Space") = *spaceVec, Named("Height") = *heightVec);
+  DataFrame df = DataFrame::create(Named("Color") = camelColors, Named("Space") = spaceVec, Named("Height") = heightVec);
 
   return df;
 
