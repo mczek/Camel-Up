@@ -39,6 +39,7 @@ Game::~Game(){
       LegBet* temp = betStack.top();
       betStack.pop();
       delete temp;
+      temp = NULL;
     }
     // std::stack<LegBet*>* betStack = * tempStack;
     // legBets[currentColor] = betStack; // & gets address of object
