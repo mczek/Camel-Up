@@ -28,7 +28,7 @@ Space::Space(int pos){
   nCamels = 0;
   plusTile = false;
   minusTile = false;
-  tilePlacedBy = new Player("");
+  tilePlacedBy = std::make_shared<Player>(" ");
 }
 
 Space::Space(Space & s){
@@ -107,21 +107,21 @@ void Space::addCamelsBottom(std::stack<std::shared_ptr<Camel>> camelsToMove){
   }
 }
 
-void Space::setPlusTile(Player* p){
+void Space::setPlusTile(std::shared_ptr<Player> p){
   plusTile = true;
   setTilePlacedBy(p);
 }
 
-void Space::setMinusTile(Player* p){
+void Space::setMinusTile(std::shared_ptr<Player> p){
   minusTile = true;
   setTilePlacedBy(p);
 }
 
-void Space::setTilePlacedBy(Player* p){
+void Space::setTilePlacedBy(std::shared_ptr<Player> p){
   tilePlacedBy = p;
 }
 
-Player* Space::getTilePlacedBy(){
+std::shared_ptr<Player> Space::getTilePlacedBy(){
   return tilePlacedBy;
 }
 

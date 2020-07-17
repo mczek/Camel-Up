@@ -3,6 +3,7 @@
 
 #include <Rcpp.h>
 #include <stack>
+#include <memory>
 #include "Player.h"
 #include "Board.h"
 #include "LegBet.h"
@@ -12,7 +13,7 @@ using namespace Rcpp;
 
 class Game {
 private:
-  std::vector<Player*> players;
+  std::vector<std::shared_ptr<Player>> players;
   Board* board;
   std::map<std::string, std::stack<std::shared_ptr<LegBet>>> legBets; // each color has a stack, all contained in a map
   std::vector<std::string> colors;
@@ -23,8 +24,8 @@ private:
   int nSpaces;
   bool debug;
 
-  std::stack<Player *> overallWinnerStack;
-  std::stack<Player *> overallLoserStack;
+  std::stack<std::shared_ptr<Player>> overallWinnerStack;
+  std::stack<std::shared_ptr<Player>> overallLoserStack;
 public:
   Game();
 

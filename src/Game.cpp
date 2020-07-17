@@ -7,6 +7,7 @@
 #include "Camel.h"
 #include "Die.h"
 #include "Space.h"
+#include <memory>
 
 using namespace Rcpp;
 
@@ -34,7 +35,7 @@ Game::Game(int n, int nPlayers, bool d){
   board = new Board(nSpaces, d);
 
   for(int i=0;i<nPlayers;i++){
-    players.push_back(new Player("Player " + toString(i)));
+    players.push_back(std::make_shared<Player>("Player " + toString(i)));
   }
 
   currentPlayerIndex = 0;
@@ -64,7 +65,7 @@ Game::Game(const Game & g){
   // create identical players
   int nPlayers = g.players.size();
   for(int i=0;i<nPlayers;i++){
-    players.push_back(new Player("Player " + toString(i)));
+    players.push_back(std::make_shared<Player>("Player " + toString(i)));
   }
 
   //
@@ -114,7 +115,7 @@ DataFrame Game::getPurseDF(){
 
   int nPlayers = players.size();
   for(int i=0;i<nPlayers;i++){
-    Player* currentPlayer = players[i];
+    std::shared_ptr<Player> currentPlayer = players[i];
     names.push_back((*currentPlayer).getName());
     purseValues.push_back((*currentPlayer).getCoins());
   }
@@ -135,7 +136,7 @@ std::vector<std::string> Game::getRanking(){
 
 std::string Game::takeTurnMove(){
   // Rcout << "takeTurnMove called \n";
-  Player* currentPlayer = players[currentPlayerIndex];
+  std::shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
   // Rcout << "currentPlayer found \n";
   std::string result = (*board).moveTurn();
   // Rcout << "Board moved \n";
@@ -187,7 +188,7 @@ DataFrame Game::getLegBetDF(){
 }
 
 void Game::takeTurnLegBet(std::string camelColor){
-  Player* currentPlayer = players[currentPlayerIndex];
+  std::shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
 
   std::stack<std::shared_ptr<LegBet>>* colorStack = &legBets[camelColor];
   std::shared_ptr<LegBet> betToMake = (*colorStack).top();
@@ -245,7 +246,7 @@ bool Game::checkIsGameOver(){
 }
 
 void Game::takeTurnPlaceTile(int n, bool plus){
-  Player* currentPlayer = players[currentPlayerIndex];
+  std::shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
   if(plus){
     (*board).placePlusTile(n, currentPlayer);
   } else {
@@ -275,7 +276,7 @@ void Game::progressToEndGame(){
 
 
 void Game::takeTurnPlaceOverallWinner(std::string color){
-  Player* currentPlayer = players[currentPlayerIndex];
+  std::shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
   (*currentPlayer).setOverallFirst(color);
   overallWinnerStack.push(currentPlayer);
 
@@ -287,7 +288,7 @@ int Game::getNOverallWinnersPlaced(){
 }
 
 void Game::takeTurnPlaceOverallLoser(std::string color){
-  Player* currentPlayer = players[currentPlayerIndex];
+  std::shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
   (*currentPlayer).setOverallLast(color);
   overallLoserStack.push(currentPlayer);
 
@@ -307,7 +308,7 @@ void Game::evaluateOverallBets(){
   last = rankings[4];
 
   int nWinnerBets = getNOverallWinnersPlaced();
-  Player * currentPlayer;
+  std::shared_ptr<Player> currentPlayer;
   std::string camelColor;
   int nCorrect = 0;
   for(int i=0;i<nWinnerBets;i++){

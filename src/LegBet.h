@@ -3,6 +3,7 @@
 
 #include <Rcpp.h>
 #include <stack>
+#include <memory>
 #include "Player.h"
 
 using namespace Rcpp;
@@ -12,14 +13,14 @@ class LegBet {
 private:
   int value;
   std::string camelColor;
-  Player * person;
+  std::shared_ptr<Player> person;
 public:
   // ~LegBet();
   LegBet(std::string color, int v);
 
   // ~LegBet();
 
-  void makeBet(Player * p);
+  void makeBet(std::shared_ptr<Player> p);
 
   int getValue();
 

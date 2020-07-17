@@ -54,9 +54,9 @@ public:
 
   std::shared_ptr<Camel> getCamel(std::string color);
 
-  void placePlusTile(int n, Player* p);
+  void placePlusTile(int n, std::shared_ptr<Player> p);
 
-  void placeMinusTile(int n, Player* p);
+  void placeMinusTile(int n, std::shared_ptr<Player> p);
 
   std::shared_ptr<Space> getSpaceN(int n);
 

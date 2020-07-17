@@ -50,8 +50,7 @@ Board::Board(const Board & b){
   std::string currentColor;
   int nCamelsHere;
 
-  Player* temp = new Player("Temp");
-
+  std::shared_ptr<Player> temp = std::make_shared<Player>("Temp");
   // std::vector<Space*> spaces;
 
   int LengthNeeded = nSpaces + 1;
@@ -239,7 +238,7 @@ std::string Board::moveTurn(){
   // Rcout << (*newSpace).getPosition();
   // Rcout << "\n tempsize: \n";
   // Rcout << temp.size();
-  Player* p = (*newSpace).getTilePlacedBy(); // player that placed the relevant tile
+  std::shared_ptr<Player> p = (*newSpace).getTilePlacedBy(); // player that placed the relevant tile
   // Rcout << "tile found";
   //  account for tiles
   if((*newSpace).getPlusTile()){
@@ -298,12 +297,12 @@ std::shared_ptr<Camel>  Board::getCamel(std::string color){
   return camels[color];
 }
 
-void Board::placePlusTile(int n, Player* p){
+void Board::placePlusTile(int n, std::shared_ptr<Player> p){
   std::shared_ptr<Space> relevantSpace = spaces[n];
   (*relevantSpace).setPlusTile(p);
 }
 
-void Board::placeMinusTile(int n, Player* p){
+void Board::placeMinusTile(int n, std::shared_ptr<Player> p){
   std::shared_ptr<Space> relevantSpace = spaces[n];
   (*relevantSpace).setMinusTile(p);
 }
@@ -410,8 +409,8 @@ RCPP_MODULE(board_cpp){
   .method("generateRanking", &Board::generateRanking)
   .method("getRanking", &Board::getRanking)
   .method("clearBoard", &Board::clearBoard)
-  .method("placePlusTile", &Board::placePlusTile)
-  .method("placeMinusTile", &Board::placeMinusTile)
+  // .method("placePlusTile", &Board::placePlusTile)
+  // .method("placeMinusTile", &Board::placeMinusTile)
   .method("addCustomCamel", &Board::addCustomCamel)
   // .method("getDiceDF", &Board::getDiceDF)
   ;
