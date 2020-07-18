@@ -14,7 +14,7 @@ using namespace Rcpp;
 class Game {
 private:
   std::vector<std::shared_ptr<Player>> players;
-  Board* board;
+  shared_ptr<Board> board;
   std::map<std::string, std::stack<std::shared_ptr<LegBet>>> legBets; // each color has a stack, all contained in a map
   std::vector<std::string> colors;
   std::vector<std::string> rankings;
@@ -75,7 +75,9 @@ public:
 
   // void progressToEndLeg();
 
-  Board * getBoard();
+  std::shared_ptr<Board> getBoardPtr();
+
+  Board getBoard();
 
   Game newGameObj(Game g);
 

@@ -32,7 +32,7 @@ Game::Game(int n, int nPlayers, bool d){
   debug = d;
   isGameOver = false;
   colors = {"Green", "White", "Yellow", "Orange", "Blue"};
-  board = new Board(nSpaces, d);
+  board = make_shared<Board>(nSpaces, d);
 
   for(int i=0;i<nPlayers;i++){
     players.push_back(std::make_shared<Player>("Player " + toString(i)));
@@ -76,7 +76,7 @@ Game::Game(const Game & g){
   // }
   // //
 
-  board = new Board(*g.board);
+  board = make_shared<Board>(*g.board);
 
   // Board* oldBoard = g.board;
 
@@ -357,8 +357,12 @@ void Game::evaluateOverallBets(){
 //   }
 // }
 
-Board * Game::getBoard(){
+std::shared_ptr<Board> Game::getBoardPtr(){
   return board;
+}
+
+Board Game::getBoard(){
+  return *board;
 }
 
 Game Game::newGameObj(Game g){
@@ -375,6 +379,8 @@ DataFrame Game::getDiceRemDF(){
   DataFrame df = DataFrame::create(Named("Dice_Remaining") = remaining);
   return df;
 }
+
+
 
 // Approach 4: Module docstrings
 //

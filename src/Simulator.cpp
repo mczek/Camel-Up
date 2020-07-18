@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include "Simulator.h"
 #include "Board.h"
+#include "Game.h"
 
 
 using namespace Rcpp;
@@ -21,6 +22,21 @@ using namespace Rcpp;
 Simulator::Simulator(const Board & b){
   boardObject = Board(b);
 }
+//
+// Simulator::Simulator(int n){
+//   boardObject = Board(19);
+// }
+
+// Simulator::Simulator(Game g){
+//   // Rcout << "step1";
+//   Board b = *(g.getBoardPtr());
+//   // Rcout << "step1\n";
+//   boardObject = Board(b);
+// //   Rout << "step 1\n";
+// //   shared_ptr<Board> temp = g.getBoard();
+// //   Rout << "step 2\n";
+// //   boardObject = Board(*temp);
+// }
 
 void Simulator::SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *colors, Rcpp::IntegerVector *spaces, Rcpp::IntegerVector * heights, Rcpp::CharacterVector* simRankings){
   if(toEndLeg){
@@ -79,12 +95,12 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
 
 
 //
-RCPP_EXPOSED_CLASS(Simulator)
-  RCPP_MODULE(simulator_cpp) {
-    using namespace Rcpp;
+RCPP_MODULE(simulator_cpp) {
+  using namespace Rcpp;
 
-    class_<Simulator>("Simulator")
-      .constructor<Board>()
-      .method("simulateDecision", &Simulator::simulateDecision)
-    ;
-  }
+  class_<Simulator>("Simulator")
+    // .constructor<Game>()
+    .constructor<const Board &>()
+    .method("simulateDecision", &Simulator::simulateDecision)
+  ;
+}
