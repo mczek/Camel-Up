@@ -2,9 +2,18 @@
 
 language: r
 cache: packages
+addons:
+  apt:
+    packages:
+      - valgrind
 r:
   - oldrel
   - release
   - devel
+
 after_success:
-  - Rscript -e 'covr::codecov()'
+  - R -e "install.packages('${PKG_TARBALL}', repos=NULL, type='source')"
+  - cd tests
+  - R -d "valgrind --tool=memcheck --leak-check=full --track-origins=yes"  --vanilla < testthat.R
+  - cd ..
+
