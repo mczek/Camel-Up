@@ -380,6 +380,33 @@ DataFrame Game::getDiceRemDF(){
   return df;
 }
 
+std::vector<std::string> Game::getTurnOptions(){
+  std::vector<std::string> options;
+  options.push_back("move");
+
+  int nColors = colors.size();
+  for(int i=0;i<nColors;i++){
+    if(legBets[colors[i]].size() > 0){
+      options.push_back("legBet" + colors[i]);
+    }
+  }
+  // Rcout <<"colors checked\n" << currentPlayerIndex;
+  shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
+  // Rcout << "test_abcdef" << (*currentPlayer).getName() << "\n";
+  // Rcout << currentPlayer->getCoins();
+  // Rcout << currentPlayer->getOverallFirst();
+  // Rcout << "test";
+  if (currentPlayer->getOverallFirst().empty()) {
+    options.push_back("overallWinner");
+  }
+  // Rcout << "checked for overall winner";
+  if (currentPlayer->getOverallLast().empty()) {
+    options.push_back("overallLast");
+  }
+  // Rcout <<"options completed";
+  return options;
+}
+
 
 
 // Approach 4: Module docstrings
@@ -411,5 +438,6 @@ RCPP_MODULE(game_cpp) {
     .method("getBoard", &Game::getBoard)
     .method("newGameObj", &Game::newGameObj)
     .method("getDiceRemDF", &Game::getDiceRemDF)
+    .method("getTurnOptions", &Game::getTurnOptions)
   ;
 }

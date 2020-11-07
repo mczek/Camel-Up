@@ -17,11 +17,14 @@ using namespace Rcpp;
 Player::Player(std::string n){
   name = n;
   coins = 0;
+  overallLastPlaceColor = "";
+  overallFirstPlaceColor = "";
 }
 
 Player::Player(const Player & p){
   name = p.name;
   coins = p.coins;
+
 }
 
 void Player::addCoins(int n){
@@ -46,6 +49,7 @@ void Player::setOverallLast(std::string color){
 }
 
 std::string Player::getOverallFirst(){
+  // Rcout << overallFirstPlaceColor << "overallFirst";
   return overallFirstPlaceColor;
 }
 
@@ -57,16 +61,16 @@ std::string Player::getOverallLast(){
 // Approach 4: Module docstrings
 
 
-  RCPP_MODULE(player_cpp) {
+RCPP_MODULE(player_cpp) {
 
-    class_<Player>("Player")
-    .constructor<std::string>()
-    .method("addCoins", &Player::addCoins)
-    .method("getName", &Player::getName)
-    .method("getCoins", &Player::getCoins)
-    .method("setOverallFirst", &Player::setOverallFirst)
-    .method("setOverallLast", &Player::setOverallLast)
-    .method("getOverallFirst", &Player::getOverallFirst)
-    .method("getOverallLast", &Player::getOverallLast)
-    ;
-  }
+  class_<Player>("Player")
+  .constructor<std::string>()
+  .method("addCoins", &Player::addCoins)
+  .method("getName", &Player::getName)
+  .method("getCoins", &Player::getCoins)
+  .method("setOverallFirst", &Player::setOverallFirst)
+  .method("setOverallLast", &Player::setOverallLast)
+  .method("getOverallFirst", &Player::getOverallFirst)
+  .method("getOverallLast", &Player::getOverallLast)
+  ;
+}

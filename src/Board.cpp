@@ -103,11 +103,8 @@ Board::Board(const Board & b){
   //unsigned seed = 0;
 
   std::random_shuffle(dice.begin(), dice.end(), randWrapper);// need to shuffle dice
-  // Rcout << "\n copying dice  complete \n";
   getRanking();
-  // Rcout << "ranking complete";
 
-  // Rcout << "\n done copying board \n";
 }
 
 
