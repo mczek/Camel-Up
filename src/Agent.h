@@ -15,9 +15,16 @@ public:
   Game* currentGame_;
 
   Agent(std::string name);
+
   std::string getName();
+
   void joinGame(Game* g);
+
   Game getGame();
+
+  std::string getRandomChoice();
+
+  void takeTurn(std::string decision);
 };
 
 RCPP_EXPOSED_CLASS(Agent)

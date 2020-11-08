@@ -15,6 +15,8 @@
 
 using namespace std;
 
+inline int randWrapper(const int n) { return floor(unif_rand()*n); }
+
 class Board {
 private:
   int nSpaces;

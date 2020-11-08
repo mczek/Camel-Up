@@ -10,7 +10,7 @@ using namespace Rcpp;
 using namespace std;
 // Define board class
 
-inline int randWrapper(const int n) { return floor(unif_rand()*n); }
+
 
 //' @name Board
 //' @title Encapsulates a double
