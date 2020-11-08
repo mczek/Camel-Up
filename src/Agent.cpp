@@ -27,11 +27,23 @@ std::string Agent::getName(){
   return name_;
 }
 
+void Agent::joinGame(Game* g){
+  currentGame_ = g;
+}
+
+Game Agent::getGame(){
+  return *currentGame_;
+}
+
+
+
 
 RCPP_MODULE(agent_cpp){
   using namespace Rcpp;
   class_<Agent>("Agent")
   .constructor<std::string>()
   .method("getName", &Agent::getName)
+  .method("joinGame", &Agent::joinGame)
+  .method("getGame", &Agent::getGame)
   ;
 }
