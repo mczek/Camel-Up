@@ -8,7 +8,9 @@ using namespace std;
 
 class Agent {
 public:
-  Agent();
+  std::string name_;
+  Agent(std::string name);
+  std::string getName();
 };
 
 RCPP_EXPOSED_CLASS(Agent)

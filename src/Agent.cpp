@@ -16,12 +16,19 @@ using namespace std;
 //' }
 //' @export
 
-Agent::Agent(){}
+Agent::Agent(std::string name){
+  name_ = name;
+}
+
+std::string Agent::getName(){
+  return name_;
+}
 
 
 RCPP_MODULE(agent_cpp){
   using namespace Rcpp;
   class_<Agent>("Agent")
-  .constructor()
+  .constructor<std::string>()
+  .method("getName", &Agent::getName)
   ;
 }
