@@ -1,7 +1,10 @@
 #include <Rcpp.h>
 #include "Agent.h"
+#include "Game.h"
 using namespace Rcpp;
 using namespace std;
+#include <memory>
+
 // Define agent class
 
 

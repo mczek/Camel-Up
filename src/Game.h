@@ -82,6 +82,8 @@ public:
   Game newGameObj(Game g);
 
   DataFrame getDiceRemDF();
+
+  std::vector<std::string> getTurnOptions();
 };
 
 

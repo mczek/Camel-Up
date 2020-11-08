@@ -124,3 +124,9 @@ test_that("test game: evaluate overall bets", {
   expect_equal(g$getPurseDF(), true_df)
 })
 
+
+test_that("test game: get options", {
+  set.seed(1)
+  g <- Game$new(19, 3, TRUE)
+  g$getTurnOptions()
+})
