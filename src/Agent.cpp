@@ -63,8 +63,55 @@ void Agent::takeTurn(std::string decision){
     currentGame_->takeTurnLegBet("Orange");
   }
 
-  if(decision.compare("legBetGreen") == 0){
-    currentGame_->takeTurnLegBet("Green");
+  if(decision.compare("legBetBlue") == 0){
+    currentGame_->takeTurnLegBet("Blue");
+  }
+
+
+
+  // overall winner
+  if(decision.compare("overallWinnerGreen") == 0){
+    currentGame_->takeTurnPlaceOverallWinner("Green");
+  }
+
+  if(decision.compare("overallWinnerWhite") == 0){
+    currentGame_->takeTurnPlaceOverallWinner("White");
+  }
+
+  if(decision.compare("overallWinnerYellow") == 0){
+    currentGame_->takeTurnPlaceOverallWinner("Yellow");
+  }
+
+  if(decision.compare("overallWinnerOrange") == 0){
+    currentGame_->takeTurnPlaceOverallWinner("Orange");
+  }
+
+  if(decision.compare("overallWinnerBlue") == 0){
+    currentGame_->takeTurnPlaceOverallWinner("Blue");
+  }
+
+
+
+  // overall last place
+  // overall winner
+  if(decision.compare("overallLastGreen") == 0){
+    currentGame_->takeTurnPlaceOverallLoser("Green");
+  }
+
+  if(decision.compare("overallLastWhite") == 0){
+    currentGame_->takeTurnPlaceOverallLoser("White");
+  }
+
+  if(decision.compare("overallLastYellow") == 0){
+    currentGame_->takeTurnPlaceOverallLoser("Yellow");
+  }
+
+  if(decision.compare("overallLastOrange") == 0){
+    currentGame_->takeTurnPlaceOverallLoser("Orange");
+  }
+
+  if(decision.compare("overallLastBlue") == 0){
+    currentGame_->takeTurnPlaceOverallLoser("Blue");
   }
 }
 

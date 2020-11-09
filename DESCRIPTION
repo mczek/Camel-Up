@@ -15,7 +15,8 @@ Imports:
 	magrittr,
 	methods,
 	Rcpp,
-	shiny
+	shiny,
+	tidyr
 Suggests:
     testthat
 LinkingTo: 

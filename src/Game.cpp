@@ -397,11 +397,19 @@ std::vector<std::string> Game::getTurnOptions(){
   // Rcout << currentPlayer->getOverallFirst();
   // Rcout << "test";
   if (currentPlayer->getOverallFirst().empty()) {
-    options.push_back("overallWinner");
+    for(int i=0;i<nColors;i++){
+      if(colors[i].compare(currentPlayer->getOverallLast()) != 0){
+        options.push_back("overallWinner" + colors[i]);
+      }
+    }
   }
   // Rcout << "checked for overall winner";
   if (currentPlayer->getOverallLast().empty()) {
-    options.push_back("overallLast");
+    for(int i=0;i<nColors;i++){
+      if(colors[i].compare(currentPlayer->getOverallFirst()) != 0){
+        options.push_back("overallLast" + colors[i]);
+      }
+    }
   }
   // Rcout <<"options completed";
   return options;

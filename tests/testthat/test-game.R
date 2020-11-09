@@ -128,5 +128,23 @@ test_that("test game: evaluate overall bets", {
 test_that("test game: get options", {
   set.seed(1)
   g <- Game$new(19, 3, TRUE)
-  expect_equal(length(g$getTurnOptions()), 8)
+  expect_equal(length(g$getTurnOptions()), 16)
+})
+
+
+test_that("test game: get options after overall winner", {
+  set.seed(1)
+  g <- Game$new(19, 2, TRUE)
+  g$takeTurnPlaceOverallWinner("Yellow")
+  g$takeTurnMove()
+  expect_equal(length(g$getTurnOptions()), 10)
+})
+
+
+test_that("test game: get options after overall loser", {
+  set.seed(1)
+  g <- Game$new(19, 2, TRUE)
+  g$takeTurnPlaceOverallLoser("Yellow")
+  g$takeTurnMove()
+  expect_equal(length(g$getTurnOptions()), 10)
 })

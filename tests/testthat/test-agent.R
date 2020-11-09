@@ -45,3 +45,14 @@ test_that("test agent: place leg bet yellow", {
   a$takeTurn("legBetYellow")
   expect_equal(g$getNMadeLegBets(), 1)
 })
+
+
+test_that("test agent: place overall winner bet yellow", {
+  # leg bet is made
+  g <- Game$new(19, 2, TRUE)
+  a <- Agent$new("Me")
+  a$joinGame(g)
+  a$takeTurn("overallWinnerYellow")
+  expect_equal(g$getNOverallWinnersPlaced(), 1)
+})
+

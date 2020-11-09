@@ -73,8 +73,6 @@ public:
 
   void evaluateOverallBets();
 
-  // void progressToEndLeg();
-
   std::shared_ptr<Board> getBoardPtr();
 
   Board getBoard();
