@@ -7,7 +7,7 @@
 genRandomDataNTimes(n)
 }
 \arguments{
-\item{n}{}
+\item{n}{number of games to play}
 }
 \value{
 

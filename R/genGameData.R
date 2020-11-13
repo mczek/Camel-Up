@@ -1,3 +1,17 @@
+recordGameState <- function(game){
+  camelPositions <- game$getCamelDF()
+  camelPositions <- tidyr::pivot_wider(camelPositions,
+                                       id_cols = Color,
+                                       names_from = Color,
+                                       values_from = c(Space, Height))
+  purseDF  <- game$getPurseDF()
+  purseDF <- tidyr::spread(purseDF, Player, Coins)
+
+  return(cbind(purseDF, camelPositions))
+
+}
+
+
 #' Title
 #'
 #' @return
@@ -16,22 +30,9 @@ genRandomData <- function(gameID){
 
   isP1Turn <- TRUE
   turnID <- 1
-  positionsList <- list()
-  decisionsList <- list()
-  purseList <- list()
+  snapshots <- list()
   while(!g$checkIsGameOver()){
-    camelPositions <- g$getCamelDF()
-    camelPositions$turnID <- turnID
-    camelPositions$gameID <- gameID
-    positionsList[[turnID]] <- camelPositions
-
-    purseDF  <- g$getPurseDF()
-    purseDF <- tidyr::spread(purseDF, Player, Coins)
-
-    purseDF$turnID <- turnID
-    purseDF$gameID <- gameID
-    purseList[[turnID]] <- purseDF
-
+    snapshot <- recordGameState(g)
 
     if (isP1Turn){
       player <- p1$getName()
@@ -43,26 +44,25 @@ genRandomData <- function(gameID){
       p2$takeTurn(move)
     }
 
-    decisionsList[[turnID]] <- data.frame("turnID" = turnID,
-                               "choice" = move,
-                               "gameID" = gameID)
-    rawPurseData <- g$getPurseDF()
+    snapshot$choice <- move
+    snapshot$turnID <- turnID
+    snapshots[[turnID]] <- snapshot
 
     isP1Turn <- !isP1Turn
     turnID <- turnID + 1
   }
-  positionsDF <- data.table::rbindlist(positionsList)
-  choiceDF <- data.table::rbindlist(decisionsList)
-  purseData <- data.table::rbindlist(purseList)
-  return(list(positionsDF, choiceDF, purseData))
+  fullGameData <- data.table::rbindlist(snapshots)
+  fullGameData$gameID <- gameID
+  return(fullGameData)
 }
 
 
 #' Title
 #'
-#' @param n
+#' @param n number of games to play
 #'
 #' @importFrom data.table rbindlist
+#' @importFrom dplyr left_join
 #'
 #' @return
 #' @export
@@ -70,19 +70,13 @@ genRandomData <- function(gameID){
 #' @examples
 #' x <- genRandomDataNTimes(10)
 genRandomDataNTimes <- function(n){
-  positionsList <- list()
-  choiceDF <- list()
-  purseDF <- list()
+  gameList <- list()
   for (i in 1:n){
+    print(i)
     result <- genRandomData(i)
-    positionsList[[i]] <- result[[1]]
-    choiceDF[[i]] <- result[[2]]
-    purseDF[[i]] <- result[[3]]
+    gameList[[i]] <- result
   }
-
-  return(list(data.table::rbindlist(positionsList),
-              data.table::rbindlist(choiceDF),
-              data.table::rbindlist(purseDF)))
+  return(data.table::rbindlist(gameList))
 }
 
 
