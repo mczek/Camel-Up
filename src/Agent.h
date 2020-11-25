@@ -3,6 +3,7 @@
 
 #include <Rcpp.h>
 #include "Game.h"
+#include "Simulator.h"
 #include <memory>
 
 
@@ -25,6 +26,10 @@ public:
   std::string getRandomChoice();
 
   void takeTurn(std::string decision);
+
+  List simulateLeg();
+
+  std::string getLegBetMaxEV();
 };
 
 RCPP_EXPOSED_CLASS(Agent)

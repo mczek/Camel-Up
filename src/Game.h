@@ -15,7 +15,6 @@ class Game {
 private:
   std::vector<std::shared_ptr<Player>> players;
   shared_ptr<Board> board;
-  std::map<std::string, std::stack<std::shared_ptr<LegBet>>> legBets; // each color has a stack, all contained in a map
   std::vector<std::string> colors;
   std::vector<std::string> rankings;
   int currentPlayerIndex;
@@ -27,6 +26,8 @@ private:
   std::stack<std::shared_ptr<Player>> overallWinnerStack;
   std::stack<std::shared_ptr<Player>> overallLoserStack;
 public:
+  std::map<std::string, std::stack<std::shared_ptr<LegBet>>> legBets; // each color has a stack, all contained in a map
+
   Game();
 
   Game(int nSpaces, int nPlayers, bool d);

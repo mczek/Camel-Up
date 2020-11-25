@@ -62,7 +62,7 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
   int vecLength = nSims*nCamels;
   Board * boardPtr = &boardObject;
 
-  Rcpp::CharacterVector camelColors = CharacterVector(vecLength);
+  Rcpp::StringVector camelColors = StringVector(vecLength);
   Rcpp::IntegerVector spaceVec = IntegerVector(vecLength);
   Rcpp::IntegerVector heightVec = IntegerVector(vecLength);
 
@@ -72,7 +72,7 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
   // Rcpp::CharacterVector *fourthPlace = new CharacterVector(nSims);
   // Rcpp::CharacterVector *lastPlace = new CharacterVector(nSims);
 
-  Rcpp::CharacterVector simRankings = CharacterVector(5*nSims); // num camels times num sims
+  Rcpp::StringVector simRankings = StringVector(5*nSims); // num camels times num sims
 
 
   std::vector<Board> duplicateGames;

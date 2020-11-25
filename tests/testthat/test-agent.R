@@ -56,3 +56,21 @@ test_that("test agent: place overall winner bet yellow", {
   expect_equal(g$getNOverallWinnersPlaced(), 1)
 })
 
+
+test_that("test agent: simulate to end of leg", {
+  g <- Game$new(19, 2, TRUE)
+  a <- Agent$new("Me")
+  a$joinGame(g)
+  simData <- a$simulateLeg()
+  expect_equal(nrow(simData), 5000)
+})
+
+
+test_that("test agent: getLegBetMaxEV", {
+  set.seed(1)
+  g <- Game$new(19, 2, TRUE)
+  a <- Agent$new("Me")
+  a$joinGame(g)
+  expect_equal(a$getLegBetMaxEV(), "Yellow")
+})
+

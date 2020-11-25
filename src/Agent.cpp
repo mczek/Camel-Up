@@ -2,6 +2,7 @@
 #include "Agent.h"
 #include "Game.h"
 #include "Board.h"
+#include "Simulator.h"
 using namespace Rcpp;
 using namespace std;
 #include <memory>
@@ -115,6 +116,56 @@ void Agent::takeTurn(std::string decision){
   }
 }
 
+List Agent::simulateLeg(){
+  int kNSIMS = 1000;
+  Simulator sim(currentGame_->getBoard());
+  Rcpp::List results = sim.simulateDecision(TRUE, kNSIMS);
+  return results["ranking"];
+}
+
+std::string Agent::getLegBetMaxEV(){
+  List ranking = simulateLeg();
+  std::map<std::string, std::map<int, int>> distribution;
+  std::vector<std::string> colors = {"Green", "White", "Yellow", "Orange", "Blue"};
+  for(int i=0; i<colors.size(); i++){
+    for(int j=0; j<colors.size(); j++){
+      distribution[colors[i]][j] = 0;
+    }
+  }
+
+  Rcpp::StringVector simData = simulateLeg()[0];
+
+  int nElts = simData.size();
+  int nSims = nElts/5;
+
+  for(int i=0; i<nElts;i++){
+    std::string current(simData[i]);
+    distribution[current][i % 5]++;
+  }
+
+  std::map<std::string, float> expVals;
+  float maxValue = -2;
+  std::string maxColor = colors[0];
+  for(int i=0; i<colors.size();i++){
+    std::string currentColor = colors[i];
+    std::map<int, int> colorDistribution = distribution[currentColor];
+
+    int firstCoins = currentGame_->legBets[currentColor].top()->getValue();
+    float value = firstCoins*colorDistribution[0] + 2*colorDistribution[1] -colorDistribution[2] - colorDistribution[3] - colorDistribution[4];
+    value = value / nSims;
+    expVals[currentColor] = value;
+
+    if (value > maxValue){
+      maxColor = currentColor;
+      maxValue = value;
+    }
+    Rcout << currentColor << "\t" << expVals[currentColor] << "\t" << firstCoins << "\t" << expVals[currentColor] << "\n";
+  }
+
+  // Rcout << simData[0] << "first element?";
+  return maxColor;
+}
+
 
 
 RCPP_MODULE(agent_cpp){
@@ -126,5 +177,7 @@ RCPP_MODULE(agent_cpp){
   .method("getGame", &Agent::getGame)
   .method("getRandomChoice", &Agent::getRandomChoice)
   .method("takeTurn", &Agent::takeTurn)
+  .method("simulateLeg", &Agent::simulateLeg)
+  .method("getLegBetMaxEV", &Agent::getLegBetMaxEV)
   ;
 }
