@@ -4,7 +4,7 @@
 \alias{genRandomDataNTimes}
 \title{Title}
 \usage{
-genRandomDataNTimes(n)
+genRandomDataNTimes(n, agent1Name, agent1FUN, agent2Name, agent2FUN)
 }
 \arguments{
 \item{n}{number of games to play}
@@ -16,5 +16,5 @@ genRandomDataNTimes(n)
 Title
 }
 \examples{
-x <- genRandomDataNTimes(10)
+x <- genRandomDataNTimes(10, "random", getRandomChoiceAgent, "random", getRandomChoiceAgent)
 }

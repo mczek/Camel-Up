@@ -39,12 +39,13 @@ Simulator::Simulator(const Board & b){
 // }
 
 void Simulator::SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *colors, Rcpp::IntegerVector *spaces, Rcpp::IntegerVector * heights, Rcpp::CharacterVector* simRankings){
+  // Rcout << "call SimTask\n";
   if(toEndLeg){
     (*b).progressToEndLeg();
   } else {
     (*b).progressToEndGame();
   }
-
+  // Rcout << "finished progressing\n";
   int start = 5*id;
 
   (*b).fillCamelPosArrays(colors, spaces, heights, start); // five entries per sim
@@ -57,7 +58,7 @@ void Simulator::SimTask(Board *b, int id, bool toEndLeg, Rcpp::CharacterVector *
 }
 
 List Simulator::simulateDecision(bool toEndLeg, int nSims){
-  // Rcout << "function called";
+  // Rcout << "simulateDecision called\n";
   int nCamels = 5;
   int vecLength = nSims*nCamels;
   Board * boardPtr = &boardObject;
@@ -79,15 +80,19 @@ List Simulator::simulateDecision(bool toEndLeg, int nSims){
   for(int i=0; i<nSims;i++){
     duplicateGames.push_back(Board(*boardPtr));
   }
+  // Rcout << "game duplicated\n";
 
 
   for(int i=0; i<nSims; i++){
     Board tempBoard = duplicateGames[i];
+    // Rcout << "pre SimTask" << i << "\t" << tempBoard.getNDiceRemaining() << "\n";
     SimTask(&tempBoard, i, toEndLeg, &camelColors, &spaceVec, &heightVec, &simRankings);
+    // Rcout << "post SimTask\n";
+
 
   }
 
-
+  // Rcout << "task simulated\n";
   DataFrame positionDF = DataFrame::create(Named("Color") = camelColors, Named("Space") = spaceVec, Named("Height") = heightVec);
   DataFrame rankingDF = DataFrame::create(Named("Color") = simRankings); // it's clear here that the ordering is 1st through 5th repeated nSims times
   return List::create(Named("position") = positionDF, Named("ranking") = rankingDF);
