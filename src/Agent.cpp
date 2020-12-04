@@ -118,23 +118,23 @@ void Agent::takeTurn(std::string decision){
 }
 
 List Agent::simulateLeg(){
-  Rcout << "simlauteLeg called\n";
-  int kNSIMS = 1;
+  // Rcout << "simlauteLeg called\n";
+  int kNSIMS = 100;
   Simulator sim(currentGame_->getBoard());
-  Rcout << "getBoard completed\n";
-  Rcout << currentGame_->getBoard().getNDiceRemaining() << "\n";
-  Rcout << currentGame_->getBoard().getFirstPlaceSpace() << "\n";
-  Rcout << currentGame_->getBoard().getRanking()[0] << "\n";
+  // // Rcout << "getBoard completed\n";
+  // Rcout << currentGame_->getBoard().getNDiceRemaining() << "\n";
+  // Rcout << currentGame_->getBoard().getFirstPlaceSpace() << "\n";
+  // Rcout << currentGame_->getBoard().getRanking()[0] << "\n";
 
   Rcpp::List results = sim.simulateDecision(TRUE, kNSIMS);
-  Rcout << "simulation complete\n";
+  // Rcout << "simulation complete\n";
   return results["ranking"];
 }
 
 std::string Agent::getLegBetMaxEV(){
-  Rcout << "\neval leg bets for max EV\n";
+  // Rcout << "\neval leg bets for max EV\n";
   List ranking = simulateLeg();
-  Rcout << "\nranking calculated\n";
+  // Rcout << "\nranking calculated\n";
   std::map<std::string, std::map<int, int>> distribution;
   std::vector<std::string> colors = {"Green", "White", "Yellow", "Orange", "Blue"};
   for(int i=0; i<colors.size(); i++){
@@ -142,7 +142,7 @@ std::string Agent::getLegBetMaxEV(){
       distribution[colors[i]][j] = 0;
     }
   }
-  Rcout << "\ndistribution initialized\n";
+  // Rcout << "\ndistribution initialized\n";
   Rcpp::StringVector simData = simulateLeg()[0];
 
   int nElts = simData.size();
@@ -152,13 +152,13 @@ std::string Agent::getLegBetMaxEV(){
     std::string current(simData[i]);
     distribution[current][i % 5]++;
   }
-  Rcout << "\ndistribution filled\n";
+  // Rcout << "\ndistribution filled\n";
 
   std::map<std::string, float> expVals;
   float maxValue = -2;
   std::string maxColor = colors[0];
 
-  Rcout << "\ncheck legBets\n";
+  // Rcout << "\ncheck legBets\n";
   for(int i=0; i<colors.size();i++){
     std::string currentColor = colors[i];
     std::map<int, int> colorDistribution = distribution[currentColor];
@@ -175,7 +175,7 @@ std::string Agent::getLegBetMaxEV(){
         maxColor = currentColor;
         maxValue = value;
       }
-      Rcout << currentColor << "\t" << expVals[currentColor] << "\t" << firstCoins << "\t" << expVals[currentColor] << "\n";
+      // Rcout << currentColor << "\t" << expVals[currentColor] << "\t" << firstCoins << "\t" << expVals[currentColor] << "\n";
     }
   }
 

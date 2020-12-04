@@ -188,16 +188,19 @@ DataFrame Board::getCamelDF(){
 }
 
 std::string Board::moveTurn(){
+  // Rcout << "\ncalling moveTurn\n";
+  // Rcout << "dice left:" << getNDiceRemaining() << "\n";
   if(dice.size() < 1){
     throw std::range_error("Trying to access dice when leg is over: See Board::moveTurn");
   }
 
+  // Rcout << "select die\n";
   Die currentDie = dice.back();
   dice.pop_back();
   std::string camelColor = currentDie.getColor();
   int dieValue = currentDie.roll();
   // Rcout << "Die rolled \n";
-
+  // Rcout << "move camel\n";
   std::shared_ptr<Camel>  camelToMove = camels[camelColor];
   int currentSpaceNum = (*camelToMove).getSpace();
   int currentHeight = (*camelToMove).getHeight();
@@ -207,37 +210,24 @@ std::string Board::moveTurn(){
   int currentNCamels = (*currentSpace).getNCamels();
   // Rcout << "got currentNCamels \n";
 
-
+  // Rcout << "remove current camels on new space\n";
   std::stack<std::shared_ptr<Camel>> temp;
+  // Rcout << "temp stack created\n";
 
   for(int i=currentHeight; i<=currentNCamels; i++){
     temp.push((*currentSpace).removeCamel());
   }
-  // Rcout << "create temp stack \n";
-  /*
-  for(int i=0; i<nSpaces; i++){
-    Space* newSpace = spaces[i];
-    // Rcout << (*newSpace).getPosition();
-    // Rcout << "\n";
-  }
-  */
+  // Rcout << "camels removed\n";
   int newSpaceNum = currentSpaceNum + dieValue;
-  // Rcout << "values: \n";
-  // Rcout << currentSpaceNum;
-  // Rcout << "\n";
-  // Rcout << dieValue;
-  // Rcout << "\n";
-
   std::shared_ptr<Space> newSpace = spaces[newSpaceNum];
-  // Rcout << "newSpace position correct: \n";
-  // Rcout << newSpaceNum;
-  // Rcout << "\n newSpace position actual: \n";
-  // Rcout << (*newSpace).getPosition();
-  // Rcout << "\n tempsize: \n";
-  // Rcout << temp.size();
+  // Rcout << "currentSpace:" << currentSpaceNum <<"\n";
+  // Rcout << "die value:" << dieValue << "\n";
+  // Rcout << "newSpace:" << newSpaceNum <<"\n";
+  // Rcout << newSpace->getPosition() << "\n";
   std::shared_ptr<Player> p = (*newSpace).getTilePlacedBy(); // player that placed the relevant tile
-  // Rcout << "tile found";
+
   //  account for tiles
+  // Rcout << "check for tiles\n";
   if((*newSpace).getPlusTile()){
     // Rcout << "(*newSpace).getPlusTile() \n";
     std::shared_ptr<Space> newSpace = spaces[currentSpaceNum + dieValue + 1];
@@ -251,8 +241,8 @@ std::string Board::moveTurn(){
     (*newSpace).addCamelsBottom(temp);
     (*p).addCoins(1);
   } else {
-    // // Rcout << "else \n";
-    // // Rcout << (*newSpace).getPosition();
+    // Rcout << "else \n";
+    // Rcout << (*newSpace).getPosition();
     (*newSpace).addCamelsTop(temp);
   }
   // Rcout << "camels added to new space \n";
@@ -325,7 +315,11 @@ int Board::getFirstPlaceSpace(){
 void Board::progressToEndLeg(){
   int nDice = getNDiceRemaining();
   for(int i=0; i<nDice; i++){
-    moveTurn();
+    if (getFirstPlaceSpace()<17){ // check if game is over
+      moveTurn();
+    }
+    // Rcout << "calling moveTurn\n";
+
   }
 }
 

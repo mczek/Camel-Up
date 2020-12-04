@@ -62,7 +62,7 @@ test_that("test agent: simulate to end of leg", {
   a <- Agent$new("Me")
   a$joinGame(g)
   simData <- a$simulateLeg()
-  expect_equal(nrow(simData), 5000)
+  expect_equal(nrow(simData), 500)
 })
 
 
