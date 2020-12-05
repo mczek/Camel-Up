@@ -131,7 +131,7 @@ List Agent::simulateLeg(){
   return results["ranking"];
 }
 
-std::string Agent::getLegBetMaxEV(){
+std::string Agent::getLegBetMaxEV(bool canMove){
   // Rcout << "\neval leg bets for max EV\n";
   List ranking = simulateLeg();
   // Rcout << "\nranking calculated\n";
@@ -155,8 +155,13 @@ std::string Agent::getLegBetMaxEV(){
   // Rcout << "\ndistribution filled\n";
 
   std::map<std::string, float> expVals;
+
   float maxValue = -2;
-  std::string maxColor = colors[0];
+  std::string maxColor = "move";
+  if (canMove) {
+    maxValue = 1;
+  }
+
 
   // Rcout << "\ncheck legBets\n";
   for(int i=0; i<colors.size();i++){
@@ -179,13 +184,26 @@ std::string Agent::getLegBetMaxEV(){
     }
   }
 
-  if (maxValue == -2) {
-    return "move";
-  }
-
   // Rcout << simData[0] << "first element?";
   return maxColor;
 }
+
+std::string Agent::getLegBetFirstCamel(){
+
+  std::map<std::string, std::stack<std::shared_ptr<LegBet> > > betMap = currentGame_->legBets;
+  std::vector<std::string> ranking = currentGame_->getRanking();
+
+  for (int i=0; i<5; i++){
+    std::string currentColor = ranking[i];
+    if (betMap[currentColor].size() > 0) {
+      return currentColor;
+    }
+  }
+  return "move";
+
+}
+
+
 
 
 
@@ -200,5 +218,6 @@ RCPP_MODULE(agent_cpp){
   .method("takeTurn", &Agent::takeTurn)
   .method("simulateLeg", &Agent::simulateLeg)
   .method("getLegBetMaxEV", &Agent::getLegBetMaxEV)
+  .method("getLegBetFirstCamel", &Agent::getLegBetFirstCamel)
   ;
 }

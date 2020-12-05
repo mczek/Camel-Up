@@ -28,3 +28,9 @@ test_that("test genData: random choices n times", {
   genLegBetMaxEVDataNTimes(5)
   expect_equal(TRUE, TRUE)
 })
+
+test_that("test genData: random choices n times", {
+  genLegBetMoveMaxEVDataNTimes(5)
+  expect_equal(TRUE, TRUE)
+})
+

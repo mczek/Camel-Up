@@ -71,6 +71,15 @@ test_that("test agent: getLegBetMaxEV", {
   g <- Game$new(19, 2, TRUE)
   a <- Agent$new("Me")
   a$joinGame(g)
-  expect_equal(a$getLegBetMaxEV(), "Yellow")
+  expect_equal(a$getLegBetMaxEV(FALSE), "Yellow")
+})
+
+
+test_that("test agent: first leg bet", {
+  set.seed(1)
+  g <- Game$new(19,2, TRUE)
+  a <- Agent$new("Me")
+  a$joinGame(g)
+  expect_equal(a$getLegBetFirstCamel(), "Orange")
 })
 

@@ -16,12 +16,22 @@ getRandomChoiceAgent <-  function(agent){
 }
 
 getLegBetMaxEVAgent <- function(agent) {
-  color <- agent$getLegBetMaxEV()
+  color <- agent$getLegBetMaxEV(FALSE)
   if (color == "move") {
     return("move")
   }
   return(paste0("legBet", color))
 }
+
+getLegBetMoveMaxEVAgent <- function(agent) {
+  color <- agent$getLegBetMaxEV(TRUE)
+  if (color == "move") {
+    return("move")
+  }
+  return(paste0("legBet", color))
+}
+
+
 
 #' Title
 #'
@@ -111,6 +121,8 @@ genRandomDataNTimes <- function(n){
   return(data.table::rbindlist(gameList))
 }
 
+
+#' Title
 #'
 #' @param n number of games to play
 #'
@@ -131,6 +143,32 @@ genLegBetMaxEVDataNTimes <- function(n){
   }
   return(data.table::rbindlist(gameList))
 }
+
+#' Title
+#'
+#' @param n number of games to play
+#'
+#' @importFrom data.table rbindlist
+#' @importFrom dplyr left_join
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' x <- genRandomDataNTimes(10, "random", getRandomChoiceAgent, "random", getRandomChoiceAgent)
+genLegBetMoveMaxEVDataNTimes <- function(n){
+  gameList <- list()
+  for (i in 1:n){
+    print(i)
+    result <- genData(i, "legBetMoveMaxEV", getLegBetMoveMaxEVAgent, "legBetMoveMaxEV", getLegBetMoveMaxEVAgent)
+    gameList[[i]] <- result
+  }
+  return(data.table::rbindlist(gameList))
+}
+
+
+
+
 
 
 

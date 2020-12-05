@@ -29,7 +29,9 @@ public:
 
   List simulateLeg();
 
-  std::string getLegBetMaxEV();
+  std::string getLegBetMaxEV(bool canMove);
+
+  std::string getLegBetFirstCamel();
 };
 
 RCPP_EXPOSED_CLASS(Agent)
