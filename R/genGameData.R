@@ -11,10 +11,12 @@ recordGameState <- function(game){
 
 }
 
+#' @export
 getRandomChoiceAgent <-  function(agent){
   return(agent$getRandomChoice())
 }
 
+#' @export
 getLegBetMaxEVAgent <- function(agent) {
   color <- agent$getLegBetMaxEV(FALSE)
   if (color == "move") {
@@ -23,8 +25,27 @@ getLegBetMaxEVAgent <- function(agent) {
   return(paste0("legBet", color))
 }
 
+#' @export
 getLegBetMoveMaxEVAgent <- function(agent) {
   color <- agent$getLegBetMaxEV(TRUE)
+  if (color == "move") {
+    return("move")
+  }
+  return(paste0("legBet", color))
+}
+
+#' @export
+getLegBetFirstCamelAgent <- function(agent) {
+  color <- agent$getLegBetFirstCamel()
+  if (color == "move") {
+    return("move")
+  }
+  return(paste0("legBet", color))
+}
+
+#' @export
+getMoveMaxLegWinAgent <- function(agent) {
+  color <- agent$getLegBetFirstCamel()
   if (color == "move") {
     return("move")
   }
@@ -72,6 +93,8 @@ genData <- function(gameID, agent1Name, agent1FUN, agent2Name, agent2FUN){
   }
   fullGameData <- data.table::rbindlist(snapshots)
   fullGameData$gameID <- gameID
+  fullGameData$p0Strat <- agent1Name
+  fullGameData$p1Strat <- agent2Name
   return(fullGameData)
 }
 
@@ -166,6 +189,27 @@ genLegBetMoveMaxEVDataNTimes <- function(n){
   return(data.table::rbindlist(gameList))
 }
 
+#' Title
+#'
+#' @param n number of games to play
+#'
+#' @importFrom data.table rbindlist
+#' @importFrom dplyr left_join
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' x <- genRandomDataNTimes(10, "random", getRandomChoiceAgent, "random", getRandomChoiceAgent)
+genLegBetFirstCamelDataNTimes <- function(n){
+  gameList <- list()
+  for (i in 1:n){
+    print(i)
+    result <- genData(i, "legBetFirstCamel", getLegBetFirstCamel, "legBetFirstCamel", getLegBetFirstCamel)
+    gameList[[i]] <- result
+  }
+  return(data.table::rbindlist(gameList))
+}
 
 
 

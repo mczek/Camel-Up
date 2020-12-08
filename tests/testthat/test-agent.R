@@ -83,3 +83,13 @@ test_that("test agent: first leg bet", {
   expect_equal(a$getLegBetFirstCamel(), "Orange")
 })
 
+test_that("test agent: max leg bet win prob.", {
+  set.seed(1)
+  g <- Game$new(19,2, TRUE)
+  a <- Agent$new("Me")
+  a$joinGame(g)
+  a$takeTurn("legBetOrange");
+  expect_equal(a$getMaxWinLegProbDecision(), "Blue")
+})
+
+

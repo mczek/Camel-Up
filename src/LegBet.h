@@ -12,10 +12,11 @@ using namespace Rcpp;
 class LegBet {
 private:
   int value;
-  std::string camelColor;
-  std::shared_ptr<Player> person;
 public:
-  // ~LegBet();
+  std::shared_ptr<Player> person;
+  std::string camelColor;
+
+  LegBet();
   LegBet(std::string color, int v);
 
   // ~LegBet();

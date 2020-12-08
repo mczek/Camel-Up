@@ -2,6 +2,7 @@
 #define AGENT_H
 
 #include <Rcpp.h>
+#include "Player.h"
 #include "Game.h"
 #include "Simulator.h"
 #include <memory>
@@ -32,6 +33,8 @@ public:
   std::string getLegBetMaxEV(bool canMove);
 
   std::string getLegBetFirstCamel();
+
+  std::string getMaxWinLegProbDecision();
 };
 
 RCPP_EXPOSED_CLASS(Agent)

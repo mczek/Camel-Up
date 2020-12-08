@@ -9,12 +9,13 @@
 
 class Player {
 private:
-  std::string name;
   int coins;
 
   std::string overallFirstPlaceColor;
   std::string overallLastPlaceColor;
 public:
+  std::string name;
+
   Player();
 
   Player(std::string n);

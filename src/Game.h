@@ -13,12 +13,9 @@ using namespace Rcpp;
 
 class Game {
 private:
-  std::vector<std::shared_ptr<Player>> players;
   shared_ptr<Board> board;
-  std::vector<std::string> colors;
   std::vector<std::string> rankings;
-  int currentPlayerIndex;
-  std::vector<std::shared_ptr<LegBet>> madeLegBets;
+
   bool isGameOver;
   int nSpaces;
   bool debug;
@@ -26,7 +23,11 @@ private:
   std::stack<std::shared_ptr<Player>> overallWinnerStack;
   std::stack<std::shared_ptr<Player>> overallLoserStack;
 public:
+  std::vector<std::string> colors;
   std::map<std::string, std::stack<std::shared_ptr<LegBet>>> legBets; // each color has a stack, all contained in a map
+  std::vector<std::shared_ptr<LegBet>> madeLegBets;
+  int currentPlayerIndex;
+  std::vector<std::shared_ptr<Player>> players;
 
   Game();
 

@@ -19,6 +19,7 @@ using namespace Rcpp;
 //' }
 //' @export
 
+LegBet::LegBet(){}
 
 LegBet::LegBet(std::string color, int v){
   camelColor = color;

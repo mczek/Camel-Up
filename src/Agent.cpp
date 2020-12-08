@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "Agent.h"
+#include "Player.h"
 #include "LegBet.h"
 #include "Game.h"
 #include "Board.h"
@@ -133,7 +134,6 @@ List Agent::simulateLeg(){
 
 std::string Agent::getLegBetMaxEV(bool canMove){
   // Rcout << "\neval leg bets for max EV\n";
-  List ranking = simulateLeg();
   // Rcout << "\nranking calculated\n";
   std::map<std::string, std::map<int, int>> distribution;
   std::vector<std::string> colors = {"Green", "White", "Yellow", "Orange", "Blue"};
@@ -193,17 +193,151 @@ std::string Agent::getLegBetFirstCamel(){
   std::map<std::string, std::stack<std::shared_ptr<LegBet> > > betMap = currentGame_->legBets;
   std::vector<std::string> ranking = currentGame_->getRanking();
 
-  for (int i=0; i<5; i++){
-    std::string currentColor = ranking[i];
-    if (betMap[currentColor].size() > 0) {
-      return currentColor;
-    }
+  std::string firstColor = ranking[0];
+  if (betMap[firstColor].size() > 0) {
+    return firstColor;
   }
+  // for (int i=0; i<5; i++){
+  //   std::string currentColor = ranking[i];
+  //   if (betMap[currentColor].size() > 0) {
+  //     return currentColor;
+  //   }
+  // }
   return "move";
 
 }
 
 
+
+std::string Agent::getMaxWinLegProbDecision(){
+  std::vector<std::shared_ptr<LegBet>> currentlyMadeBets = currentGame_->madeLegBets;
+
+
+  int playerIndex = currentGame_->currentPlayerIndex;
+  std::string currentPlayerName = currentGame_->players[playerIndex]->name;
+  Rcout << "\n" << currentPlayerName << "\n";
+
+
+  int opponentCoins = 0;
+  int myselfCoins = 0;
+  for(int i=0; i<currentGame_->players.size(); i++){
+    std::shared_ptr<Player> p = currentGame_->players[i];
+    if (p->name.compare(currentPlayerName)) {
+      myselfCoins += p->getCoins();
+    } else {
+      opponentCoins += p->getCoins();
+    }
+  }
+  int lead = myselfCoins - opponentCoins;
+
+
+
+  std::shared_ptr<Player> myself = std::make_shared<Player>("myself");
+  std::shared_ptr<Player> opponent = std::make_shared<Player>("opponent");
+
+  // add current bets to duplicateBets
+  std::vector<std::shared_ptr<LegBet>> duplicateBets;
+  for (int i=0; i<currentlyMadeBets.size(); i++) {
+    std::shared_ptr<LegBet> currentBet = currentlyMadeBets[i];
+    std::shared_ptr<Player> bettor = currentBet->person;
+    std::string bettorName = bettor->getName();
+
+    std::shared_ptr<LegBet> newBet = std::make_shared<LegBet>(currentBet->camelColor, currentBet->getValue());
+    if(bettorName.compare(currentPlayerName) == 0) {
+      newBet->makeBet(myself);
+    } else {
+      newBet->makeBet(opponent);
+    }
+
+    duplicateBets.push_back(newBet);
+
+    Rcout << currentBet->getValue() << "\n";
+    Rcout << currentBet->person->name << "\n";
+    Rcout << currentBet->camelColor << "\n";
+    Rcout << duplicateBets.size() << "\n";
+  }
+
+
+  // get possible bets
+  std::map<std::string, LegBet> availableBets;
+  std::vector<std::string> availableColors;
+  for (int i=0; i<currentGame_->colors.size();i++){
+    std::string currentColor = currentGame_->colors[i];
+    std::stack<std::shared_ptr<LegBet>> currentStack = currentGame_->legBets[currentColor];
+    if(currentStack.size()>0){
+      availableColors.push_back(currentColor);
+      LegBet nextBet = LegBet(currentColor, currentStack.top()->getValue());
+      nextBet.makeBet(myself);
+      availableBets[currentColor] = nextBet;
+    }
+  }
+
+
+  // simulate and make a decision
+  Rcpp::StringVector simData = simulateLeg()[0];
+  int nElts = simData.size();
+  int nSims = nElts/5;
+
+  int oldLead = lead;
+  std::map<std::string, std::vector<int>> colorLeadMap;
+  for(int simID=0; simID<nSims; simID++){
+    int begin = simID*5;
+    std::vector<std::string> endLegRanking;
+    for(int i=0; i<5;i++){
+      std::string c = Rcpp::as<std::string>(simData(begin+i));
+      endLegRanking.push_back(c);
+    }
+
+    int lead = oldLead;
+    // evaluate existing bets
+    for(int i=0; i<duplicateBets.size(); i++){
+      duplicateBets[i]->evaluate(endLegRanking[0], endLegRanking[1]);
+    }
+
+    lead += myself->getCoins() - opponent->getCoins();
+    // Rcout << "lead" << lead << "\n";
+
+    if (lead > -1) {
+      colorLeadMap["move"].push_back(1); // win
+    } else {
+      colorLeadMap["move"].push_back(0);
+    }
+    // for each possible bet, evaluate it for each sim result
+
+    for(int i=0; i<availableColors.size(); i++) {
+      std::string c = availableColors[i];
+      LegBet possibleBet = availableBets[c];
+      int finalLead = lead + possibleBet.evaluate(endLegRanking[0], endLegRanking[1]);
+      // Rcout << "finalLead: \t" << c << "\t" << finalLead << "\n";
+
+      if (finalLead > 0){
+        colorLeadMap[c].push_back(1); // win
+      } else {
+        colorLeadMap[c].push_back(0);
+      }
+    }
+
+    myself->addCoins(-myself->getCoins());
+    opponent->addCoins(-opponent->getCoins());
+
+    // Rcout <<"should be 0 coins\t" << myself->getCoins() << "\t" << opponent->getCoins() << "\n";
+
+  }
+
+  std::string decision = "move";
+  float maxWinProb = std::accumulate(colorLeadMap["move"].begin(), colorLeadMap["move"].end(), 0.0) / nSims;
+  for(int i=0; i<availableColors.size(); i++) {
+    std::string c = availableColors[i];
+    float winProb = std::accumulate(colorLeadMap[c].begin(), colorLeadMap[c].end(), 0.0) / nSims;
+    Rcout << "\n" << c << "\t" << winProb << "\t" << decision << "\t" << maxWinProb << "\n";
+    if (winProb > maxWinProb) {
+      maxWinProb = winProb;
+      decision = c;
+    }
+  }
+
+  return decision;
+}
 
 
 
@@ -219,5 +353,6 @@ RCPP_MODULE(agent_cpp){
   .method("simulateLeg", &Agent::simulateLeg)
   .method("getLegBetMaxEV", &Agent::getLegBetMaxEV)
   .method("getLegBetFirstCamel", &Agent::getLegBetFirstCamel)
+  .method("getMaxWinLegProbDecision", &Agent::getMaxWinLegProbDecision)
   ;
 }
