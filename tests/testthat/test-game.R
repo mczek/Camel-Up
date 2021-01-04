@@ -63,7 +63,7 @@ test_that("test game: evaluateBets", {
   g$evaluateLegBets()
   df <- g$getPurseDF()
   true_df <- data.frame(Player = paste(rep("Player", 3), 0:2),
-                        Coins = c(8, 0, 0))
+                        Coins = c(5, 3, 0))
   expect_equal(df, true_df)
 })
 

@@ -1,3 +1,4 @@
+#' @export
 recordGameState <- function(game){
   camelPositions <- game$getCamelDF()
   camelPositions <- tidyr::pivot_wider(camelPositions,
@@ -19,37 +20,43 @@ getRandomChoiceAgent <-  function(agent){
 #' @export
 getLegBetMaxEVAgent <- function(agent) {
   color <- agent$getLegBetMaxEV(FALSE)
-  if (color == "move") {
-    return("move")
-  }
-  return(paste0("legBet", color))
+  return(color)
 }
 
 #' @export
 getLegBetMoveMaxEVAgent <- function(agent) {
   color <- agent$getLegBetMaxEV(TRUE)
-  if (color == "move") {
-    return("move")
-  }
-  return(paste0("legBet", color))
+  return(color)
 }
 
 #' @export
 getLegBetFirstCamelAgent <- function(agent) {
   color <- agent$getLegBetFirstCamel()
-  if (color == "move") {
-    return("move")
-  }
-  return(paste0("legBet", color))
+  return(color)
 }
 
 #' @export
 getMoveMaxLegWinAgent <- function(agent) {
-  color <- agent$getLegBetFirstCamel()
-  if (color == "move") {
-    return("move")
-  }
-  return(paste0("legBet", color))
+  color <- agent$getMaxWinLegProbDecision()
+  return(color)
+}
+
+#' @export
+getMaxWinProbEV50 <- function(agent) {
+  color <- agent$maxWinProbEV50()
+  return(color)
+}
+
+#' @export
+getMaxWinProbEV75Lead <- function(agent) {
+  color <- agent$maxWinProbEV75Lead()
+  return(color)
+}
+
+#' @export
+getMaxWinProbEVFurthestCamel <- function(agent) {
+  color <- agent$maxWinProbEVFurthestCamel()
+  return(color)
 }
 
 
@@ -61,6 +68,7 @@ getMoveMaxLegWinAgent <- function(agent) {
 #' @importFrom tidyr spread
 #' @export
 genData <- function(gameID, agent1Name, agent1FUN, agent2Name, agent2FUN){
+  # print("new game ...")
   p1 <- Agent$new(agent1Name)
   p2 <- Agent$new(agent2Name)
   g <- Game$new(19, 2, FALSE)
@@ -77,12 +85,18 @@ genData <- function(gameID, agent1Name, agent1FUN, agent2Name, agent2FUN){
     if (isP1Turn){
       playerName <- p1$getName()
       move <- agent1FUN(p1)
-      p1$takeTurn(move)
     } else {
       playerName <- p2$getName()
       move <- agent2FUN(p2)
-      p2$takeTurn(move)
     }
+    # print(paste("turnID, move", turnID, move))
+    if(move == "move") {
+      g$takeTurnMove()
+    } else {
+      g$takeTurnLegBet(move)
+    }
+
+
     snapshot$name <- playerName
     snapshot$choice <- move
     snapshot$turnID <- turnID

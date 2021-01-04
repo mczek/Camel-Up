@@ -12,7 +12,7 @@ test_that("test tile: plus tile",{
 
   df <- g$getPurseDF()
   true_df <- data.frame(Player = c("Player 0", "Player 1", "Player 2"),
-                        Coins = c(2, 0, 0))
+                        Coins = c(1, 1, 0))
   expect_equal(df, true_df)
 
 })
@@ -31,6 +31,6 @@ test_that("test tile: plus tile",{
 
   df <- g$getPurseDF()
   true_df <- data.frame(Player = c("Player 0", "Player 1", "Player 2"),
-                        Coins = c(2, 0, 0))
+                        Coins = c(1, 1, 0))
   expect_equal(df, true_df)
 })

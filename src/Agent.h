@@ -35,6 +35,13 @@ public:
   std::string getLegBetFirstCamel();
 
   std::string getMaxWinLegProbDecision();
+
+  std::string maxWinProbEV50();
+
+  std::string maxWinProbEV75Lead();
+
+  std::string maxWinProbEVFurthestCamel();
+
 };
 
 RCPP_EXPOSED_CLASS(Agent)

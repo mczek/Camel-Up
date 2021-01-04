@@ -195,6 +195,8 @@ void Game::takeTurnLegBet(std::string camelColor){
   (*colorStack).pop();
   (*betToMake).makeBet(currentPlayer);
   madeLegBets.push_back(betToMake);
+
+  endTurn();
 }
 
 int Game::getNMadeLegBets(){
@@ -252,6 +254,7 @@ void Game::takeTurnPlaceTile(int n, bool plus){
   } else {
     (*board).placeMinusTile(n, currentPlayer);
   }
+  endTurn();
 }
 
 int Game::getFirstPlaceSpace(){
@@ -387,30 +390,30 @@ std::vector<std::string> Game::getTurnOptions(){
   int nColors = colors.size();
   for(int i=0;i<nColors;i++){
     if(legBets[colors[i]].size() > 0){
-      options.push_back("legBet" + colors[i]);
+      options.push_back(colors[i]);
     }
   }
   // Rcout <<"colors checked\n" << currentPlayerIndex;
-  shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
+  // shared_ptr<Player> currentPlayer = players[currentPlayerIndex];
   // Rcout << "test_abcdef" << (*currentPlayer).getName() << "\n";
   // Rcout << currentPlayer->getCoins();
   // Rcout << currentPlayer->getOverallFirst();
   // Rcout << "test";
-  if (currentPlayer->getOverallFirst().empty()) {
-    for(int i=0;i<nColors;i++){
-      if(colors[i].compare(currentPlayer->getOverallLast()) != 0){
-        options.push_back("overallWinner" + colors[i]);
-      }
-    }
-  }
-  // Rcout << "checked for overall winner";
-  if (currentPlayer->getOverallLast().empty()) {
-    for(int i=0;i<nColors;i++){
-      if(colors[i].compare(currentPlayer->getOverallFirst()) != 0){
-        options.push_back("overallLast" + colors[i]);
-      }
-    }
-  }
+  // if (currentPlayer->getOverallFirst().empty()) {
+  //   for(int i=0;i<nColors;i++){
+  //     if(colors[i].compare(currentPlayer->getOverallLast()) != 0){
+  //       options.push_back("overallWinner" + colors[i]);
+  //     }
+  //   }
+  // }
+  // // Rcout << "checked for overall winner";
+  // if (currentPlayer->getOverallLast().empty()) {
+  //   for(int i=0;i<nColors;i++){
+  //     if(colors[i].compare(currentPlayer->getOverallFirst()) != 0){
+  //       options.push_back("overallLast" + colors[i]);
+  //     }
+  //   }
+  // }
   // Rcout <<"options completed";
   return options;
 }
@@ -447,5 +450,6 @@ RCPP_MODULE(game_cpp) {
     .method("newGameObj", &Game::newGameObj)
     .method("getDiceRemDF", &Game::getDiceRemDF)
     .method("getTurnOptions", &Game::getTurnOptions)
+    .field("currentPlayerIndex", &Game::currentPlayerIndex)
   ;
 }

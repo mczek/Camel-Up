@@ -215,7 +215,7 @@ std::string Agent::getMaxWinLegProbDecision(){
 
   int playerIndex = currentGame_->currentPlayerIndex;
   std::string currentPlayerName = currentGame_->players[playerIndex]->name;
-  Rcout << "\n" << currentPlayerName << "\n";
+  // Rcout << "\n" << currentPlayerName << "\n";
 
 
   int opponentCoins = 0;
@@ -251,10 +251,10 @@ std::string Agent::getMaxWinLegProbDecision(){
 
     duplicateBets.push_back(newBet);
 
-    Rcout << currentBet->getValue() << "\n";
-    Rcout << currentBet->person->name << "\n";
-    Rcout << currentBet->camelColor << "\n";
-    Rcout << duplicateBets.size() << "\n";
+    // Rcout << currentBet->getValue() << "\n";
+    // Rcout << currentBet->person->name << "\n";
+    // Rcout << currentBet->camelColor << "\n";
+    // Rcout << duplicateBets.size() << "\n";
   }
 
 
@@ -275,6 +275,7 @@ std::string Agent::getMaxWinLegProbDecision(){
 
   // simulate and make a decision
   Rcpp::StringVector simData = simulateLeg()[0];
+  // Rcout << "length of simData = " << simData.size() << "\n";
   int nElts = simData.size();
   int nSims = nElts/5;
 
@@ -326,10 +327,11 @@ std::string Agent::getMaxWinLegProbDecision(){
 
   std::string decision = "move";
   float maxWinProb = std::accumulate(colorLeadMap["move"].begin(), colorLeadMap["move"].end(), 0.0) / nSims;
+  // Rcout << "move win prob = \t" << maxWinProb << "\n";
   for(int i=0; i<availableColors.size(); i++) {
     std::string c = availableColors[i];
     float winProb = std::accumulate(colorLeadMap[c].begin(), colorLeadMap[c].end(), 0.0) / nSims;
-    Rcout << "\n" << c << "\t" << winProb << "\t" << decision << "\t" << maxWinProb << "\n";
+    // Rcout << "\n" << c << "\t" << winProb << "\t" << decision << "\t" << maxWinProb << "\n";
     if (winProb > maxWinProb) {
       maxWinProb = winProb;
       decision = c;
@@ -337,6 +339,96 @@ std::string Agent::getMaxWinLegProbDecision(){
   }
 
   return decision;
+}
+
+
+std::string Agent::maxWinProbEV50() {
+  int kNSIMS = 1000;
+  Simulator sim(currentGame_->getBoard());
+  // // Rcout << "getBoard completed\n";
+  // Rcout << currentGame_->getBoard().getNDiceRemaining() << "\n";
+  // Rcout << currentGame_->getBoard().getFirstPlaceSpace() << "\n";
+  // Rcout << currentGame_->getBoard().getRanking()[0] << "\n";
+  Rcpp::List results = sim.simulateDecision(TRUE, kNSIMS);
+  // Rcout << "sim run\n";
+  // Rcpp::DataFrame positionData = results["position"];
+  // Rcout << "positionDF extracted\n";
+  Rcpp::List positionData = results["position"];
+  Rcpp::IntegerVector spaceVec = positionData[1];
+  // Rcout << "spaceVec extracted\n";
+  int count = 0;
+  for(int i=0; i<kNSIMS; i++) {
+    Rcpp::IntegerVector singleResult = spaceVec[Rcpp::Range(5*i, 5*i + 4)];
+    int furthestSpace = Rcpp::max(singleResult);
+    // Rcout << "maxSpace" << furthestSpace << "\n";
+    if (furthestSpace > 16) { // game ended
+      count ++;
+    }
+  }
+  // Rcout << "count = " << count << "\n";
+  if (count >  kNSIMS/2) {
+    // Rcout << currentGame_->getFirstPlaceSpace() << "\n";
+    return getMaxWinLegProbDecision();
+  }
+  return getLegBetMaxEV(true);
+}
+
+
+std::string Agent::maxWinProbEV75Lead() {
+  int playerIndex = currentGame_->currentPlayerIndex;
+  std::string currentPlayerName = currentGame_->players[playerIndex]->name;
+
+  int opponentCoins = 0;
+  int myselfCoins = 0;
+  for(int i=0; i<currentGame_->players.size(); i++){
+    std::shared_ptr<Player> p = currentGame_->players[i];
+    if (p->name.compare(currentPlayerName)) {
+      myselfCoins += p->getCoins();
+    } else {
+      opponentCoins += p->getCoins();
+    }
+  }
+  int lead = myselfCoins - opponentCoins;
+
+
+
+
+  int kNSIMS = 1000;
+  Simulator sim(currentGame_->getBoard());
+  // // Rcout << "getBoard completed\n";
+  // Rcout << currentGame_->getBoard().getNDiceRemaining() << "\n";
+  // Rcout << currentGame_->getBoard().getFirstPlaceSpace() << "\n";
+  // Rcout << currentGame_->getBoard().getRanking()[0] << "\n";
+  Rcpp::List results = sim.simulateDecision(TRUE, kNSIMS);
+  Rcout << "sim run\n";
+  // Rcpp::DataFrame positionData = results["position"];
+  // Rcout << "positionDF extracted\n";
+  Rcpp::List positionData = results["position"];
+  Rcpp::IntegerVector spaceVec = positionData[1];
+  // Rcout << "spaceVec extracted\n";
+  int count = 0;
+  for(int i=0; i<kNSIMS; i++) {
+    Rcpp::IntegerVector singleResult = spaceVec[Rcpp::Range(5*i, 5*i + 4)];
+    int furthestSpace = Rcpp::max(singleResult);
+    // Rcout << "maxSpace" << furthestSpace << "\n";
+    if (furthestSpace > 16) { // game ended
+      count ++;
+    }
+  }
+  // Rcout << "count = " << count << "\n";
+  // (count >  kNSIMS*6/20)
+  if ((count > kNSIMS/4)){
+    return getMaxWinLegProbDecision();
+  }
+  return getLegBetMaxEV(true);
+}
+
+
+std::string Agent::maxWinProbEVFurthestCamel() {
+  if (currentGame_->getFirstPlaceSpace() > 12){
+    return getMaxWinLegProbDecision();
+  }
+  return getLegBetMaxEV(true);
 }
 
 
@@ -354,5 +446,8 @@ RCPP_MODULE(agent_cpp){
   .method("getLegBetMaxEV", &Agent::getLegBetMaxEV)
   .method("getLegBetFirstCamel", &Agent::getLegBetFirstCamel)
   .method("getMaxWinLegProbDecision", &Agent::getMaxWinLegProbDecision)
+  .method("maxWinProbEV50", &Agent::maxWinProbEV50)
+  .method("maxWinProbEV75Lead", &Agent::maxWinProbEV75Lead)
+  .method("maxWinProbEVFurthestCamel", &Agent::maxWinProbEVFurthestCamel)
   ;
 }
