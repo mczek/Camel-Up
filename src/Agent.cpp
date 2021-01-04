@@ -425,7 +425,7 @@ std::string Agent::maxWinProbEV75Lead() {
 
 
 std::string Agent::maxWinProbEVFurthestCamel() {
-  if (currentGame_->getFirstPlaceSpace() > 12){
+  if (currentGame_->getFirstPlaceSpace() > 13){
     return getMaxWinLegProbDecision();
   }
   return getLegBetMaxEV(true);
