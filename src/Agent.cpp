@@ -172,7 +172,7 @@ std::string Agent::getLegBetMaxEV(bool canMove){
     int nBetsLeft = betStack.size();
     if (nBetsLeft > 0){
       int firstCoins = betStack.top()->getValue();
-      float value = firstCoins*colorDistribution[0] + 2*colorDistribution[1] -colorDistribution[2] - colorDistribution[3] - colorDistribution[4];
+      float value = firstCoins*colorDistribution[0] + 1*colorDistribution[1] -colorDistribution[2] - colorDistribution[3] - colorDistribution[4];
       value = value / nSims;
       expVals[currentColor] = value;
 
